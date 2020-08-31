@@ -21,6 +21,7 @@ urlpatterns = [
     path('angular',views.angular),
     path('python',views.python),
     path('home',views.home),
-    path('subscribe',views.subsignup)
+    path('subscribe',views.subsignup),
+    path('sw.js',views.sw)
  
     ]

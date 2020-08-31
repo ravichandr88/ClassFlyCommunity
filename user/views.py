@@ -126,7 +126,8 @@ def subsignup(request):
     return render(request,'videos.html',context={})
 
 
-
+def sw(request):
+    return render(request,'sw.js',{})
 
 # @csrf_exempt
 # def signupapi(request):
