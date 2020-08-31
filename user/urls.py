@@ -5,9 +5,10 @@ from django.conf import settings
 from . import views
 from django.contrib.auth.views import LogoutView
 
-
+ 
 urlpatterns = [
 		path('signup',views.signup,name='signup'),
+    path('login',views.loginview,name='login'),
     path('video',views.videoupload),
     path('',views.home),
     path('php',views.php),
@@ -19,6 +20,7 @@ urlpatterns = [
     path('ml',views.ml),
     path('angular',views.angular),
     path('python',views.python),
-    path('home',views.home)
+    path('home',views.home),
+    path('subscribe',views.subsignup)
  
     ]

@@ -1,94 +1,272 @@
-{% extends "header.html" %}
-{% block content %}
-	<div class="register">
-                <div class="row">
-                    <div class="col-md-3 register-left">
-                        <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
-                        <h3>Welcome</h3>
-                        <p>You are 30 seconds away from register with us!</p>
-                        <input type="submit" name="" value="Sign-Up"/><br/>
-                    </div>
-                    <div class="col-md-9 register-right">
-                        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Register</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Login</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <h3 class="register-heading">Apply as a New User</h3>
-                                <form class="row register-form">
-                                    <div class="col-md-12">
-									<div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Username *" value=""name='username' required/>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="First Name *" value=""name='first_name' required/>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Last Name *" value="" name='last_name'/>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control" placeholder="Password *" value="" name='password1' required/>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control"  placeholder="Confirm Password *" value="" name='password2' required/>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="maxl">
-                                                <label class="radio inline"> 
-                                                    <input type="radio" name="gender" value="male" checked>
-                                                    <span> Male </span> 
-                                                </label>
-                                                <label class="radio inline"> 
-                                                    <input type="radio" name="gender" value="female">
-                                                    <span>Female </span> 
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-10">
-                                        <div class="form-group">
-                                            <input type="email" class="form-control" placeholder="Your Email *" value="" name='email' required/>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" minlength="10" maxlength="10" name="phone" required class="form-control" placeholder="Your Phone *" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Name of the College" value="" name='college' required/>
-										</div>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" placeholder="Department" value="" name='dept' required/>
-                                        </div>
-										
-										<p id='error' style="color:red;"></p>
-										<p id='good' style="color:blue;"></p>
-											<button type="submit" class="btnRegister"  value="Register">Register</button>
-										
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                <h3  class="register-heading">Apply as Registered User</h3>
-                                <div class="row register-form">
-                                    <div class="col-md-10">
-										<div class="form-group">
-                                            <input type="email" class="form-control" placeholder="Your Email *" value="" />
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control" placeholder="Password *" value="" />
-                                        </div>
-										<button type="submit" class="btnRegister"  value="Login">Login</button>
-                                    </div>
+{% load static %}
 
-                                </div>
-                            </div>
-                        </div>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CF Registration</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- LINEARICONS -->
+        <link rel="stylesheet" href="fonts/linearicons/style.css">
+        
+        <!-- STYLE CSS -->
+        <link rel="stylesheet" href="css/style.css">
+          <link href="{% static 'sign/style.css' %}" rel="stylesheet">
+
+
+          <!-- script code starts -->
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <script>
+
+        $(document).ready(function(){
+       $('#phase2').hide()
+        });
+        
+
+        $(document).ready(function(){
+            //hide the submit button
+            $('#finalsubmit').hide()
+        });
+
+    var usrnm='lnlknlknlk';
+    var psswd='lknlknlknlk';
+    var access_token = ''
+
+   
+    
+    function submitm()
+    {
+        var data = {};
+        usrnm = document.forms[0][0].value;
+        psswd = document.forms[0][2].value;
+
+        console.log(document.forms[0].length)
+        for(var x = 0;x < document.forms[0].length; x++ )
+        {
+            data[document.forms[0][x].name] = document.forms[0][x].value
+        }
+        
+        
+        console.log(data)
+
+        signup(data)
+    
+
+    }
+
+
+    function signup(data)
+    {
+        //preparing error diviosn
+        $('#error').html('');
+
+
+        $.ajax({
+    url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/users',
+    type: 'post',
+    data:JSON.stringify(data),
+    headers: {
+        "Authorization" : "Basic a21qdWZ4aHVqOTExOjY4MjY3ZWQ5NmVmOTQ4M2VhYjE1OWVkMjdlN2U0ODgz",
+  "Content-Type": "application/vnd.kii.RegistrationRequest+json"
+    },
+    
+    success: function (data) {
+        //success of signup
+        login();
+        console.info(data);
+       
+
+    }
+}).fail(
+    function(jqXHR, textStatus, errorThrown) {
+
+          console.log(JSON.parse(jqXHR.responseText).message);
+          $('#error').html(JSON.parse(jqXHR.responseText).message);
+
+        
+     })
+    }
+
+
+
+     //REST for login after signup
+     function login(){
+
+         console.log('very good');
+         
+     $.ajax({
+    url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/oauth2/token',
+    type: 'post',
+    data:JSON.stringify({"grant_type": "password",
+        "username": usrnm,
+        "password": psswd}),
+    headers: {
+        "Authorization" : "Basic a21qdWZ4aHVqOTExOjY4MjY3ZWQ5NmVmOTQ4M2VhYjE1OWVkMjdlN2U0ODgz",
+  "Content-Type": "application/json"
+    },
+    
+    success: function (data) {
+        console.info(data['access_token']);
+        access_token = data['access_token']
+        $('#phase1').hide();
+        $('#phase1_1').hide();
+        $('#phase2').show();
+    }
+}).fail(
+    function(jqXHR, textStatus, errorThrown) {
+
+          console.log(JSON.parse(jqXHR.responseText).message);
+        
+     })
+       }
+
+
+
+// rest api to verify otp
+       function verifyotp(){
+
+        var otp = document.getElementById('otp').value;
+        console.log(otp)
+        
+console.log('very good');
+
+$.ajax({
+url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/users/me/phone-number/verify',
+type: 'post',
+data:JSON.stringify({ "verificationCode": otp}),
+headers: {
+"Authorization" : "Bearer "+access_token,
+"Content-Type": "application/vnd.kii.AddressVerificationRequest+json"
+},
+
+success: function (data) {
+    console.info(data);
+    $('#finalsubmit').show();
+    $('#finalsubmit').click();
+}
+}).fail(
+function(jqXHR, textStatus, errorThrown) {
+
+ console.log(JSON.parse(jqXHR.responseText).message);
+ $('#error').html(JSON.parse(jqXHR.responseText).message)
+
+})
+}
+
+
+
+//resend otp
+function resendOTP()
+{
+
+
+$.ajax({
+url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/users/me/phone-number/resend-verification',
+type: 'post',
+headers: {
+"Authorization" : "Bearer "+access_token,
+},
+
+success: function (data) {
+console.info(data);
+
+}
+}).fail(
+function(jqXHR, textStatus, errorThrown) {
+
+ console.log(JSON.parse(jqXHR.responseText).message);
+
+})
+
+//end of resen otp function
+}
+
+    </script>
+
+   
+    </head>
+
+    <body>
+
+        <div class="wrapper">
+            <div class="inner">
+                
+                <div id="phase1">
+                <form name="myForm" id="jun" action="/subscribe" method="POST">
+                    <img src="{% static 'images/classfly.jpg' %}"/>
+                    <h3></h3>
+                    <div class="form-holder">
+                        <span class="lnr lnr-user"></span>
+                        <input type="text" name="loginName" class="form-control" placeholder="Username">
                     </div>
+                    <div class="form-holder">
+                        <span class="lnr lnr-phone-handset"></span>
+                        <input type="text" class="form-control" name="displayName"  placeholder="Full Name">
+                    </div>
+                    
+                    <div class="form-holder">
+                        <span class="lnr lnr-lock"></span>
+                        <input type="password" name="password"  class="form-control" placeholder="Password">
+                    </div>
+
+                    <div class="form-holder">
+                            <span class="lnr lnr-lock"></span>
+                            <input type="text" name="phoneNumber"  class="form-control" placeholder="Phone Number">
+                        </div>
+
+                    <div class="form-holder">
+                            <span class="lnr lnr-lock"></span>
+                        <select name="country" id="cars" class="form-control">
+                                <option value="IN">India</option>
+                                <option value="JP">Japan</option>
+                                <option value="US">U.S</option>
+                                <option value="NP">Nepal</option>
+                              </select> 
+                    </div>
+                    <p id='error' style="color: red"></p>
+
+                    <input type="submit" id="finalsubmit" value='Save' name='Save' >
+                   
+                </form>
+                </div>
+                   <!-- //button for sms signup -->
+                   <button onclick="submitm()" id="phase1_1">
+                        <span>Register</span>
+                    </button>
+
+                    <!-- automatic login button for testing -->
+                    
+                    <!-- <button onclick="login()">login-testing</button> -->
+
+
+
+                    <!-- form to submit OTP -->
+                    <div id="phase2">
+                    <form name="myForm" id="jun">
+                            <img src="{% static 'images/classfly.jpg' %}"/>
+                   <br>
+                        <div class="form-holder">
+                                <span class="lnr lnr-lock"></span>
+                                <input type="text"  class="form-control" maxlength="4" name='otp' id = 'otp' placeholder="SMS OTP">
+                                <p id='error' style="color: red"></p>
+                            </div>
+                    
+                    </form>
+                    <br>
+                    <button onclick="verifyotp()">Verify OTP</button>
+                    <button onclick="resendOTP()">Resend OTP</button>
                 </div>
 
+                    
             </div>
-{% endblock content%}
+            
+        </div>
+        
+        <!-- <script src="js/jquery-3.3.1.min.js"></script> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+          <!-- <script src="{%static 'js/main.js' %}"></script> -->
+
+    </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

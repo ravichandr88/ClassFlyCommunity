@@ -49,3 +49,14 @@ class VideoUploadForm(forms.Form):
     class Meta:
         fields = ['title', 'video_link','thumbnail_link','dept_head','descripion']
  
+
+class Loginform(forms.Form):
+    username = forms.CharField(max_length=100,required = True)
+    password = forms.CharField(max_length=100,required = True)
+
+    class Meta:
+        fields = ['username','password']
+ 
+
+
+

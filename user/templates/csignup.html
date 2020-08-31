@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<head>
+    <title>ClassFly Community</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <script>
+
+        
+        $(document).ready(function(){
+            //hide the submit button
+            $('#finalsubmit').hide()
+        });
+
+    var usrnm='lnlknlknlk';
+    var psswd='lknlknlknlk';
+    var access_token = ''
+    function submitm()
+    {
+        var data = {};
+        usrnm = document.forms[0][0].value;
+        psswd = document.forms[0][2].value;
+
+        console.log(document.forms[0].length)
+        for(var x = 0;x < document.forms[0].length; x++ )
+        {
+            data[document.forms[0][x].name] = document.forms[0][x].value
+        }
+        
+        
+        console.log(data)
+
+        signup(data)
+    
+
+    }
+
+
+    function signup(data)
+    {
+        //preparing error diviosn
+        $('#error').html('');
+
+
+        $.ajax({
+    url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/users',
+    type: 'post',
+    data:JSON.stringify(data),
+    headers: {
+        "Authorization" : "Basic a21qdWZ4aHVqOTExOjY4MjY3ZWQ5NmVmOTQ4M2VhYjE1OWVkMjdlN2U0ODgz",
+  "Content-Type": "application/vnd.kii.RegistrationRequest+json"
+    },
+    
+    success: function (data) {
+        //success of signup
+        login();
+        console.info(data);
+       
+
+    }
+}).fail(
+    function(jqXHR, textStatus, errorThrown) {
+
+          console.log(JSON.parse(jqXHR.responseText).message);
+          $('#error').html(JSON.parse(jqXHR.responseText).message);
+
+        
+     })
+    }
+
+
+
+     //REST for login after signup
+     function login(){
+
+         console.log('very good');
+         
+     $.ajax({
+    url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/oauth2/token',
+    type: 'post',
+    data:JSON.stringify({"grant_type": "password",
+        "username": usrnm,
+        "password": psswd}),
+    headers: {
+        "Authorization" : "Basic a21qdWZ4aHVqOTExOjY4MjY3ZWQ5NmVmOTQ4M2VhYjE1OWVkMjdlN2U0ODgz",
+  "Content-Type": "application/json"
+    },
+    
+    success: function (data) {
+        console.info(data['access_token']);
+        access_token = data['access_token']
+    }
+}).fail(
+    function(jqXHR, textStatus, errorThrown) {
+
+          console.log(JSON.parse(jqXHR.responseText).message);
+        
+     })
+       }
+
+
+
+// rest api to verify otp
+       function verifyotp(){
+
+        var otp = document.getElementById('otp').value;
+        console.log(otp)
+        
+console.log('very good');
+
+$.ajax({
+url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/users/me/phone-number/verify',
+type: 'post',
+data:JSON.stringify({ "verificationCode": otp}),
+headers: {
+"Authorization" : "Bearer "+access_token,
+"Content-Type": "application/vnd.kii.AddressVerificationRequest+json"
+},
+
+success: function (data) {
+    console.info(data);
+    $('#finalsubmit').show();
+    $('#finalsubmit').click();
+}
+}).fail(
+function(jqXHR, textStatus, errorThrown) {
+
+ console.log(JSON.parse(jqXHR.responseText).message);
+ $('#error').html(JSON.parse(jqXHR.responseText).message)
+
+})
+}
+
+
+
+//resend otp
+function resendOTP()
+{
+
+
+$.ajax({
+url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/users/me/phone-number/resend-verification',
+type: 'post',
+headers: {
+"Authorization" : "Bearer "+access_token,
+},
+
+success: function (data) {
+console.info(data);
+
+}
+}).fail(
+function(jqXHR, textStatus, errorThrown) {
+
+ console.log(JSON.parse(jqXHR.responseText).message);
+
+})
+
+//end of resen otp function
+}
+
+    </script>
+</head>
+<!-- app id kmjufxhuj911 -->
+<!-- app key 68267ed96ef9483eab159ed27e7e4883 -->
+<!-- https://api-jp.kii.com/ -->
+<body>
+    <form name="myForm" id="jun" action="/subscribe" method="POST">
+        <p><label for="loginName">Username:</label><br>
+        <input type="text" name="loginName" id="fname"></p>
+
+        <p><label for="displayName">Full Name:</label><br>
+        <input type="text" name="displayName" id="lname"></p>
+
+        <p><label for="password">Password:</label><br>
+            <input type="password" name="password" id="lname"></p>
+
+            <p><label for="phoneNumber">Phone Number (10 Digits):</label><br>
+                <input type="text" name="phoneNumber" id="lname"></p>
+                
+
+                <label for="cars">Choose a car:</label>
+
+                <select name="country" id="cars">
+                  <option value="IN">India</option>
+                  <option value="JP">Japan</option>
+                  <option value="US">U.S</option>
+                  <option value="NP">Nepal</option>
+                </select>     
+                <p id='error'></p>
+        <input type="submit" id="finalsubmit" value='Save' name='Save'>
+    </form>
+    <button onclick="submitm()">Submit</button>
+
+    <br>
+
+    <button onclick="login()">login-testing</button>
+
+
+
+    <br>
+    <br>
+    <br>
+    <input type="text" maxlength="4" name='otp' id = 'otp' placeholder="SMS OTP">
+    <br>
+    <button onclick="verifyotp()">Verify OTP</button><button onclick="resendOTP()">Resend OTP</button>
+
+</body>
+
+
+</html>
