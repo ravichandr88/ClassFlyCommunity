@@ -13,6 +13,8 @@
         <!-- STYLE CSS -->
         <link rel="stylesheet" href="css/style.css">
           <link href="{% static 'sign/style.css' %}" rel="stylesheet">
+        <link href="{% static 'fonts/style.css' %}" rel="stylesheet">
+
 
 
           <!-- script code starts -->
@@ -202,7 +204,7 @@ function(jqXHR, textStatus, errorThrown) {
                         <input type="text" name="loginName" class="form-control" placeholder="Username">
                     </div>
                     <div class="form-holder">
-                        <span class="lnr lnr-phone-handset"></span>
+                        <span class="lnr lnr-user"></span>
                         <input type="text" class="form-control" name="displayName"  placeholder="Full Name">
                     </div>
                     
@@ -212,12 +214,12 @@ function(jqXHR, textStatus, errorThrown) {
                     </div>
 
                     <div class="form-holder">
-                            <span class="lnr lnr-lock"></span>
+                            <span class="lnr lnr-phone-handset"></span>
                             <input type="text" name="phoneNumber"  class="form-control" placeholder="Phone Number">
                         </div>
 
                     <div class="form-holder">
-                            <span class="lnr lnr-lock"></span>
+                            <span class="lnr lnr-menu"></span>
                         <select name="country" id="cars" class="form-control">
                                 <option value="IN">India</option>
                                 <option value="JP">Japan</option>
@@ -245,19 +247,19 @@ function(jqXHR, textStatus, errorThrown) {
                     <!-- form to submit OTP -->
                     <div id="phase2">
                     <form name="myForm" id="jun">
-                            <img src="{% static 'images/classfly.jpg' %}"/>
-                   <br>
+                        <img src="{% static 'images/classfly.jpg' %}"/>
+                        <br>
                         <div class="form-holder">
                                 <span class="lnr lnr-lock"></span>
                                 <input type="text"  class="form-control" maxlength="4" name='otp' id = 'otp' placeholder="SMS OTP">
                                 <p id='error' style="color: red"></p>
-                            </div>
+                        </div>
                     
                     </form>
                     <br>
                     <button onclick="verifyotp()">Verify OTP</button>
                     <button onclick="resendOTP()">Resend OTP</button>
-                </div>
+                    </div>
 
                     
             </div>

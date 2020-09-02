@@ -9,3 +9,5 @@ def home(request):
 
 def community(request):
     return render(request, 'community.html',{'title':'Community'})
+def library(request):
+    return render(request, 'library.html',{'title':'Video Library'})
