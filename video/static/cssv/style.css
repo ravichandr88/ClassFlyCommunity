@@ -404,12 +404,13 @@ header {
   margin-top: 20px;
   margin-bottom: 20px; }
   .video-title h6 {
-    font-size: 1rem;
+    font-size: 22px;
+    color: skyblue;
     font-weight: 600;
-    font-family: "Glacial Indifference", "Open Sans", sans-serif; }
+ }
     .video-title h6 i {
       margin-right: 5px;
-      color: #cc1821; }
+      color: skyblue; }
 
 .video-card {
   margin-bottom: 15px; }
@@ -437,8 +438,8 @@ header {
       padding-left: 0px; }
       .video-blog .video-ro .detail h6 {
         font-size: 1rem;
-        font-weight: 600;
-        font-family: "Glacial Indifference", "Open Sans", sans-serif;
+        font-weight:normal;
+        font-family: "Open Sans", sans-serif;
         margin-top: 4px; }
       .video-blog .video-ro .detail .counts {
         font-size: .85rem; }
@@ -516,14 +517,19 @@ header {
   display: flex;
   margin-bottom: 20px; }
   .contri-bghy .image img {
-    width: 180px; }
-  .contri-bghy .detail {
+    width: 300px; }
+  .detail {
     padding: 0px 5px; }
-    .contri-bghy .detail h6 {
+   .detail h6 {
       margin-bottom: 0px;
-      font-size: 1.2rem; }
-    .contri-bghy .detail span {
-      font-size: .9rem; }
+      font-size: 18px; 
+      padding-bottom: 15px;}
+  .detail p {
+      padding-bottom: 15px;}
+.detail p span {
+      font-size: 16px;
+      color: skyblue;
+      font-weight: bold; }
 
 /* ===================================== Ads CSS ================================== */
 /* ===================================== Category CSS ================================== */
