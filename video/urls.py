@@ -10,6 +10,8 @@ urlpatterns = [
 	path('about',views.about,name='about-us'),
 	path('cfhome',views.home,name='home'),
 	path('community',views.community,name='community'),
-	path('library',views.library,name='library'),
+	path('library',views.lib,name='library'),
+	path('default',views.default,name='default'),
+
 
     ]
