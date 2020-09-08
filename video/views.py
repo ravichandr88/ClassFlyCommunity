@@ -10,6 +10,6 @@ def home(request):
 def community(request):
     return render(request, 'community.html',{'title':'Community'})
 def lib(request):
-    return render(request, 'lib.html')
+    return render(request, 'lib.html',{'title':'Video Library'})
 def default(request):
 	return render(request, 'default.html',{'title':'error'})
