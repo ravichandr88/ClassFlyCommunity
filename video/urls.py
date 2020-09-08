@@ -8,8 +8,8 @@ from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
 	path('about',views.about,name='about-us'),
-	path('cfhome',views.home,name='home'),
-	path('community',views.community,name='community'),
+	path('community',views.home,name='home'),
+	path('player',views.community,name='community'),
 	path('library',views.lib,name='library'),
 	path('default',views.default,name='default'),
 
