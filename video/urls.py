@@ -9,7 +9,7 @@ from django.contrib.auth.views import LogoutView
 urlpatterns = [
 	path('about',views.about,name='about-us'),
 	path('community',views.home,name='home'),
-	path('video',views.community,name='community'),
+	path('player',views.community,name='community'),
 	path('library',views.lib,name='library'),
 	path('default',views.default,name='default'),
 
