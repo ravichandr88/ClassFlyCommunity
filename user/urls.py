@@ -10,7 +10,7 @@ urlpatterns = [
 		path('signup',views.signup,name='signup'),
     path('login',views.loginview,name='login'),
     path('video',views.videoupload),
-    path('',views.home),
+    path('',views.home,name='cfhome'),
     path('php',views.php),
     path('eh',views.eh),
     path('ds',views.ds),
