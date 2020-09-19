@@ -9,6 +9,7 @@ from django.contrib.auth.views import LogoutView
 urlpatterns = [
 		path('signup',views.signup,name='signup'),
     path('login',views.loginview,name='login'),
+    path('password_reset',views.password_reset),
     path('video',views.videoupload),
     path('',views.home,name='cfhome'),
     path('php',views.php),

@@ -1,8 +1,7 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
@@ -42,8 +41,9 @@ def loginview(request):
         #if everything is good
         login(request,user)
         
-        return render(request,'videos.html',{})
-            
+        return redirect('cfhome') 
+
+         
 
         
 
@@ -126,14 +126,59 @@ def subsignup(request):
     return render(request,'videos.html',context={})
 
 
-# def sw(request):
-#     return render(request,'sw.js',{})
 
-# @csrf_exempt
-# def signupapi(request):
-#     data = request.data
-#     user = UserCreationForm(data)
-#     if user.is_valid():
-#         user.save()
-#         login(request)
+@csrf_exempt
+@api_view(["POST","GET"])
+def password_reset(request):
+    print('good')
+    if request.method == 'POST':
+        data = dict(request.data)
+        print(data)
+        new_password = data['new_password'][0]
+        phoneNumber = data['phoneNumber'][0]
+        country = data['countryCode'][0]
+        otp_code = data['otpcode'][0]
+
+
+        #Using username and oldpassword, try to login,If user is genuine, we will get access toke,
+        #Change the password to  new password
+        import requests 
+        import json
+
+        # api-endpoint 
+        URL = "https://api-jp.kii.com/api/apps/kmjufxhuj911/users/PHONE:"+ country + phoneNumber +"/password/complete-reset"
+
+        
+        # defining a params dict for the parameters to be sent to the API 
+        PARAMS = {
+                "pinCode": otp_code,
+                "newPassword": new_password
+            }
+            
+        HEADERS= {
+               "Authorization" : "Basic a21qdWZ4aHVqOTExOjY4MjY3ZWQ5NmVmOTQ4M2VhYjE1OWVkMjdlN2U0ODgz",
+                "Content-Type": "application/vnd.kii.CompletePasswordResetRequest+json"
+                 }			
+
+
+        # sending get request and saving the response as response object 
+        r = requests.post(url = URL,headers=HEADERS, data = json.dumps(PARAMS))
+        # print(r.content)
+        print(r.status_code)
+        
+        # extracting data in json format 
+        if str(r.status_code) != '204':   #if YES, change the password,
+            return Response(data={'code':'failed','message':r.json()['message']},status=500)
+            #get the new password and add it as current password for the user
+        else:   
+            user =  Phonenumber.objects.get(phone_number=phoneNumber).user
+            user.set_password(new_password)
+            user.save()
+            return Response(data={'code':'success','message':'Password Changed Successfully'},status=200)
+       
+            
+        return Response(data={'code':'good'})
     
+    return render(request,'password.html',{})
+    
+   
