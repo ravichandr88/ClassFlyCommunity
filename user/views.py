@@ -8,6 +8,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import Loginform
 from .models import Phonenumber
+from django.contrib.auth.password_validation import validate_password
+import django.contrib.auth.password_validation as validators
+
+from django.core import exceptions
 
 
 def signup(request):
@@ -133,11 +137,19 @@ def password_reset(request):
     print('good')
     if request.method == 'POST':
         data = dict(request.data)
-        print(data)
         new_password = data['new_password'][0]
         phoneNumber = data['phoneNumber'][0]
         country = data['countryCode'][0]
         otp_code = data['otpcode'][0]
+
+        user = Phonenumber.objects.get(phone_number=phoneNumber)
+
+        try:
+            validators.validate_password(password=new_password, user=user)
+        except exceptions.ValidationError as e:
+            error = list(e.messages)[0]
+            return Response(data={'message':error},status=400)
+                
 
 
         #Using username and oldpassword, try to login,If user is genuine, we will get access toke,
