@@ -18,17 +18,7 @@ def default(request):
 def upload(request):
     return render(request,'upload.html',{'title':'Community'})
 
+import os
+
 def generate_PDF(request):
-    # file = open('PHPClassFly.pdf', "w+b")
-    # file.seek(0)
-    # pdf = file.read()
-    # file.close()
-    # return HttpResponse(open('PHPClassFly.pdf', "w+b"), 'application/pdf')
-    
-    # return FileResponse(open('PHPClassFly.pdf', 'rb'), content_type='application/pdf')
-   
-    return FileResponse(open('PHPClassFly.pdf', 'r'), content_type='application/pdf')
-    # with open('PHPClassFly.pdf', 'rb') as pdf:
-    #     response = HttpResponse(pdf.read(), content_type='application/pdf')
-    #     response['Content-Disposition'] = 'inline;filename=some_file.pdf'
-    #     return response
+    return FileResponse(open('PHPClassFly.pdf', 'rb'), content_type='application/pdf')
