@@ -108,7 +108,7 @@ def videoupload(request):
 def subsignup(request):
     if request.method == 'GET':
         return render(request,'signup.html',context={})
-    print(request.POST)
+    # print(request.POST)
     data = request.POST
     user = User(username = data['loginName'],
     first_name = data['displayName'],
@@ -193,4 +193,12 @@ def password_reset(request):
     
     return render(request,'password.html',{})
     
+
+
+
+@csrf_exempt
+@api_view(['POST','GET'])
+def example(request):
+    print(request.data)
+    return Response(data={})
    

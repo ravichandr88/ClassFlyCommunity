@@ -12,6 +12,7 @@ urlpatterns = [
 	path('player',views.community,name='community'),
 	path('library',views.lib,name='library'),
 	path('default',views.default,name='default'),
-
+	path('upload',views.upload),
+	path('pdf',views.generate_PDF)
 
     ]
