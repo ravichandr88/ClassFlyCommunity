@@ -22,3 +22,7 @@ import os
 
 def generate_PDF(request):
     return FileResponse(open('ClassFlyTraining.pdf', 'rb'), content_type='application/pdf')
+
+
+def generate_detailsPDF(request):
+    return FileResponse(open('ClassFlyTrainingCollege.pdf', 'rb'), content_type='application/pdf')

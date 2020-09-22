@@ -13,6 +13,7 @@ urlpatterns = [
 	path('library',views.lib,name='library'),
 	path('default',views.default,name='default'),
 	path('upload',views.upload),
-	path('training.pdf',views.generate_PDF)
+	path('training.pdf',views.generate_PDF),
+	path('training_details.pdf',views.generate_detailsPDF)
 
     ]
