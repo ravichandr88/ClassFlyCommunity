@@ -21,4 +21,4 @@ def upload(request):
 import os
 
 def generate_PDF(request):
-    return FileResponse(open('PHPClassFly.pdf', 'rb'), content_type='application/pdf')
+    return FileResponse(open('ClassFlyTraining.pdf', 'rb'), content_type='application/pdf')
