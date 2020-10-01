@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5></h5>
-                    <span>Click on row to perform edit action then Enter for save</span>
+                    <span>Welcome , this page is only for department head.</span>
                 </div>
                 <div class="card-block">
                     <div class="table-responsive">
@@ -37,28 +37,47 @@
                             <thead>
                                 <tr>
                                     <th style="display: none;">#</th>
-                                    <th id='header'>First 
-                                        <br><input type="text">
-                                        <button>update</button>
+                                    <th ><h2 id='header'>First </h2>
+                                        <br><input type="text" id="headline">
+                                        <button onclick="update()">update</button>
                                        </th>
                                     
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id='rowj'>
+                                    <tr id='d1'>
+                                            <th scope="row" style="display: none;">1</th>
+                                            <td><select id='subject'>
+                                                    {% for icon in subject %}
+                                                    <option>{{ icon.name }}</option>
+                                                  {% endfor %}
+                                            </select>  </td>
+                                         
+                                        </tr>
 
 
-
-                                <tr>
+                               
+                                <tr id='head1'>
                                     <th scope="row" style="display: none;">1</th>
-                                    <td class="tabledit-view-mode"  style="cursor: pointer;"  onblur="god()" onkeypress="enter(event)"><span  class="tabledit-span" id='title'>Sam
-                                        </span><input class="tabledit-input form-control input-sm" id="good" type="text" name="First Name" value="" style="display: none;" disabled=""></td>
-                                   
+                                    <td class="tabledit-view-mode"  style="cursor: pointer;"   onkeypress="enter(event,1)">  <span  class="tabledit-span" id="title1">ClassFly Community
+                                        </span><input class="tabledit-input form-control input-sm"  type="text" name="First Name" value="" id="good1" style="display: none;" disabled=""></td>
+                                 
                                 </tr>
-                                <tr>
+                               
+                                <tr id='body1'>
                                         <th scope="row" style="display: none;">1</th>
-                                    <td id='video'><iframe width="250" height="150" src="https://www.youtube.com/embed/jf6F3z40qbg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
-                                   
+                                    <td id="video1"><iframe width="250" height="150" src="https://www.youtube.com/embed/nUPAbWOcwb4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+                                  
                                 </tr>
+                                <tr id="tail1">
+                                    <th scope="row" style="display: none;">1</th>
+                              <td>
+                                <p id='youtube1'></p>  
+                                <button  onclick="del(1)">delete</button>  </td>
+                            </tr>
+                                <br>
+                                <br>
+                                <!-- new row,  -->
 
 
 
@@ -84,8 +103,12 @@
                                     <td class="tabledit-view-mode"><span class="tabledit-span">Hybris Developer</span>
                                     </td>
                                 </tr> -->
+                               
                             </tbody>
                         </table>
+                        <button onclick="add_row()">add</button>
+                        <br>
+                        <button onclick="load_all()">Final Submit</button>
                     </div>
                 </div>
             </div>

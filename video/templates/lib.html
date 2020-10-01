@@ -18,9 +18,9 @@
   <!--####################### Js Here ###################-->
 
     <script src="{% static 'jsv/jquery-3.2.1.min.js' %}"></script>
-    <script src="{% static 'pluginsv/scroll-fixed/jquery-scrolltofixed-min.js' %}"></script>
+    <!-- <script src="{% static 'pluginsv/scroll-fixed/jquery-scrolltofixed-min.js' %}"></script> -->
     <script src="{% static 'jsv/script.js' %}"></script>
-
+    <script src="{% static 'jsv/library.js' %}"></script>
 
   <link rel="stylesheet" href="{% static 'cssv/bootstrap.min.css' %}"/>
   <link rel="stylesheet" href="{% static 'cssv/font-awesome.min.css' %}"/>
@@ -31,13 +31,13 @@
     <link rel="stylesheet" href="{% static 'bulma.css' %}">-->
 
     <!--New slide-->
-     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+     <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-        <!--New slide-->
+        <!-- New slide -->
 
     <style>
 
-      .carousel-cell {
+    .carousel-cell {
     width: 20%;
     padding: 15px;
     background-color: #f1f1f1;
@@ -52,7 +52,7 @@
     	padding: 30px;
     			background-color: #f1f1f1;    }
 
-    }
+    
     .bg{
     	background-color: #f1f1f1; 
     }
@@ -65,6 +65,10 @@
     	color: 	#00008B;
     	text-align: center;
     	padding-top: 5%;
+    }
+    .rc-dep-title{
+      color: 	#0066ff;
+      padding-top: 5px;
     }
     .course-item{
 background-color: #f1f1f1;
@@ -102,10 +106,15 @@ background-color: #f1f1f1;
     		  	padding-bottom: 15px;
 
     		text-align: center;
-    		font-size: 12px;
+    		font-size: 15px;
     		color: grey
 
     	}
+
+      .carousel-cell  img{
+        width: 340px;
+        height: 185px;
+      }
     	hr.new5 {
  			 border: 5px solid grey;
  			 border-radius: 5px;
@@ -125,24 +134,44 @@ background-color: #f1f1f1;
   .carousel-cell {
     width: 60%;
   }
+  .carousel-cell img{
+    width:330px;
+    height:200px;
+  }
 }
 @media screen and (max-width: 400px) {
   .carousel-cell{
     width: 70%;
   }
+  .carousel-cell img{
+    width:250px;
+    height:150px;
+  }
+
 }
 @media screen and (max-width: 600px) {
   .course-text p {
-font-size: 12px;  }
+font-size: 15px;  }
 }
 
-}
+
 @media screen and (max-width: 400px) {
   .course-text p{
-font-size: 5px;  }
+font-size: 15px; 
+
+ }
 }
 
-
+.buttonc {
+  background-image: linear-gradient(to right, #0000ff , #80aaff); /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
 
 
     </style>
@@ -159,7 +188,7 @@ font-size: 5px;  }
               <div class="container">
                   <div class="row nav-row">
                       <div class="col-md-3 logo">
-                         <img src="static/imagesv/classfly.jpg" alt="">
+                         <img src="/static/imagesv/classfly.jpg" alt="">
                       </div>
                       <div class="col-md-9 nav-col">
                         <nav class="navbar navbar-expand-lg navbar-light">
@@ -196,78 +225,53 @@ font-size: 5px;  }
           </div>
       </header>
 
-	<!-- Page -->
+  <!-- Page -->
+  {% for dom,dept in domain.items %}
 		<section class="realated-coursee3 spad">
+       
 		<div class="course-warp">
-			<h2 class="rc-title">Top Subjects</h2>
+      
+			<h1 class="rc-title">{{ dom }} </h1>
 			<p class="small">We are bunch of programmers with an hope of helping everyone to learn coding.We set this website with a vision of bringing new learners to interact with professionals in meeting.Over 5000 videos from one Platform.Vision of bringing new learners to interact with professionals in meeting.</p>
-		</div>
-	</section>
-
-    <div class="bg" class="carousel" data-flickity='{ "wrapAround": true, "autoPlay": true }'>
-      <div class="carousel-cell">
-        <img class="w3-image" src="static/imagesv/1.jpg">
-        	<div class="course-info">
-				<div class="course-text">
-					<h5 >Science</h5>
-						<p>The strength of Science and its online journal sites rests with the strengths of </p>
-				</div>
-
-			</div>
-      </div>
-
-      <div class="carousel-cell">
-        <img class="w3-image" src="static/imagesv/2.jpg">
-        	<div class="course-info">
-				<div class="course-text">
-					<h5 >Arts</h5>
-						<p>The strength of Science and its online journal sites rests with the strengths of </p>
-				</div>
-
-			</div>
-      </div>
-      <div class="carousel-cell">
-        <img class="w3-image" src="static/imagesv/3.jpg">
-        	<div class="course-info">
-				<div class="course-text">
-					<h5 >Engineering</h5>
-						<p>The strength of Science and its online journal sites rests with the strengths of </p>
-				</div>
-
-			</div>
-      </div>
-	        <div class="carousel-cell">
-        <img class="w3-image" src="static/imagesv/4.jpg">
-        	<div class="course-info">
-				<div class="course-text">
-					<h5 >Python</h5>
-						<p>The strength of Science and its online journal sites rests with the strengths of </p>
-				</div>
-
-			</div>
-      </div>
-	        <div class="carousel-cell">
-        <img class="w3-image" src="static/imagesv/5.jpg">
-        	<div class="course-info">
-				<div class="course-text">
-					<h5 >BCA</h5>
-						<p>The strength of Science and its online journal sites rests with the strengths of </p>
-				</div>
-
-			</div>
-      </div>
-	        <div class="carousel-cell">
-        <img class="w3-image" src="static/imagesv/6.jpg">
-        	<div class="course-info">
-				<div class="course-text">
-					<h5 >CIVIL</h5>
-						<p>The strength of Science and its online journal sites rests with the strengths of </p>
-				</div>
-
-			</div>
-      </div>
     </div>
+    <!-- <p>{{dept.items}}</p> -->
+  </section>
+  {% for dep,sub in dept.items %}
+  <h2 class="rc-dep-title">{{dep}} </h2>
+  <div class="bg" class="carousel"  data-flickity='{ "wrapAround": true, "autoPlay": true }'>
+   
+  {% for s in sub %}
+   
+    
+      <div class="carousel-cell"  >
+        <img class="w3-image" src="{{s.imgurl}}" >
+        <br>
+        	<div class="course-info">
+				<div class="course-text">
+          <br>
+					<h5 style="color:#0066ff"> {{ s.name }}</h5>
+            <p >{{ s.descp }}</p>
+            <button class="buttonc" style="width:100%" onclick="jug(id='{{s.id}}')">Go To Videos</button>
+				</div>
+
+			</div>
+      </div>
+     
+
+
+   
+
+    {% endfor %}
+  </div>
+  <br>
+    <br>
+    {% endfor %}
+    
+    {% endfor %}
 <br>
+
+
+
 <hr class="new5">
 
 	<!-- Page -->
@@ -283,7 +287,7 @@ font-size: 5px;  }
         <img class="w3-image" src="static/imagesv/1.jpg">
         	<div class="course-info">
 				<div class="course-text">
-					<h5 >Science</h5>
+					<h5 >Chemistry</h5>
 						<p>The strength of Science and its online journal sites rests with the strengths of </p>
 				</div>
 

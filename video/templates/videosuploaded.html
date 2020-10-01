@@ -1,0 +1,39 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% if title %}
+        <title>ClassFly - {{ title }}</title>
+    {% else %}
+        <title>ClassFly - Community</title>
+    {% endif %} 
+  
+
+    <script type="text/javascript" src="{% static 'jsv/jquery-3.2.1.min.js' %}"></script>
+
+<link rel="stylesheet" href="{% static 'cssv/bootstrap.min.css' %}">
+
+<link rel="stylesheet" href="{% static 'cssv/upload.css' %}">
+
+<!-- <script type="text/javascript" src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1567487539/jquery.tabledit.js"></script> -->
+
+<script type="text/javascript" src="{% static 'jsv/upload.js' %}"></script>
+
+</head>
+<body>
+    {% for icon in playlist %}
+    <p>{{ icon.name }}</p>
+    <p>{{ icon.subject }}</p>
+    <br>
+    {% for i in icon.videos %}
+    <p>{{ i }}</p>
+  {% endfor %}
+  {% endfor %}
+<p>
+
+</p>
+
+</body>
+</html>

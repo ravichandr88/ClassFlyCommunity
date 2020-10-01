@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import Loginform
@@ -202,3 +202,8 @@ def example(request):
     print(request.data)
     return Response(data={})
    
+
+def logout_request(request):
+    logout(request)
+    # messages.info(request, "Logged out successfully!")
+    return redirect("cfhome")

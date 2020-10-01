@@ -1,0 +1,289 @@
+
+<script>
+
+  
+  //function to read cookie names
+		function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+		
+	 
+// //function to change the related videos are clicked
+// 		$(document).ready(function(){
+		
+// 		$(document).delegate('.contri-bghy', 'click', function()
+// {
+      
+      
+      
+//       //check if the user has logged in or not
+//       if(readCookie('key')==null)
+// {alert('Please login using Google');
+//  return;
+// }
+//       if(readCookie('saved')==null)
+//       {
+// 	  var maild = {'email':readCookie('key')};
+// 	  //console.log(maild);
+//          $.post("https://datafly.herokuapp.com/save",maild, function(data, status){
+// 		 if(data['code']==200)
+// 		 {
+//            document.cookie = 'saved=true';
+// 		   }
+//   });
+//       }
+//  //console.log($(this).attr('id'));
+//  var id = $(this).attr('idi');
+//  $(this).remove(); 
+//  var i = $("iframe").attr('idi');
+// console.log(i,id)
+ 
+//  //console.log(h[id]);
+//  document.getElementById("lst").innerHTML = document.getElementById("lst").innerHTML + '<div class="contri-bghy"  idi="'+i+'" >'+
+                            
+						
+// });
+
+
+
+	
+	
+	
+
+
+		var l1 = '<iframe src="https://drive.google.com/file/d/';
+		var l2 = '/preview" width="640" height="480"></iframe>';
+        var h = []
+        if(readCookie('list')==undefined || readCookie('list')==null || readCookie('list')=='mech')
+       { h=[
+		['https://i.ytimg.com/vi/jHu9xCL180k/hqdefault.jpg',
+  'Elements of Mechanical Engineering   Module 1 Lecture 1  Energy Resources & Fuel',
+  'jHu9xCL180k'],
+  ['https://i.ytimg.com/vi/OxunxqpiPPE/hqdefault.jpg',
+  'Elements of Mechanical Engineering   Module 1 Lecture 2  Various Power Sources',
+  'OxunxqpiPPE'],
+  ['https://i.ytimg.com/vi/Ou5ttlzfPBU/hqdefault.jpg',
+  'Elements of Mechanical Engineering   Module 1 Lecture 3  Steam',
+  'Ou5ttlzfPBU'],
+  ['https://i.ytimg.com/vi/xalPwavwjVc/hqdefault.jpg',
+  'Elements of Mechanical Engineering   Module 1 Lecture 4  Boiler & Accessories',
+  'xalPwavwjVc'],
+  ['https://i.ytimg.com/vi/-JmdYKLqvRM/hqdefault.jpg',
+  'Elements of Mechanical Engineering   Module 1 Lecture 5  Lancashire Boiler',
+  '-JmdYKLqvRM'],
+  ['https://i.ytimg.com/vi/HAFMetA6BSY/hqdefault.jpg',
+  'Elements of Mechanical Engineering   Module 1 Lecture 6  Babcock & Wilcox Boiler',
+  'HAFMetA6BSY']
+		];
+       }
+
+        //if list has value = m2, then the list will be mathematics 2
+    if(readCookie('list')=='m2')
+    {
+
+h =[['https://i.ytimg.com/vi/fAs31KYWBKM/hqdefault.jpg',
+  "Module 1 Vector Integration Green's Theorem Problem 10 B S GREWAL Exersice 8 8 4",
+  'fAs31KYWBKM'],
+ ['https://i.ytimg.com/vi/sSMRtQODWKs/hqdefault.jpg',
+  'Engineering Mathematics 2 B S GREWAL   Exercise 8 6 4',
+  'sSMRtQODWKs'],
+ ['https://i.ytimg.com/vi/BW8clAtC_ks/hqdefault.jpg',
+  'Engineering Mathematics 2 B S GREWAL   Exercise  8 8 2',
+  'BW8clAtC_ks'],
+ ['https://i.ytimg.com/vi/kg_QSNY9xgg/hqdefault.jpg',
+  'Engineering Mathematics 2, B S GREWAL   Exersice 8 4 2',
+  'kg_QSNY9xgg'],
+ ['https://i.ytimg.com/vi/39kjgexWxYw/hqdefault.jpg',
+  'VTU Engineering mathematics 2 B S GREWAL   Exercise 8 4 1',
+  '39kjgexWxYw'],
+ ['https://i.ytimg.com/vi/12ZobXLcIm0/hqdefault.jpg',
+  "Module 1 Vector Integration Stokes' Theorem Problem 1",
+  '12ZobXLcIm0'],
+ ['https://i.ytimg.com/vi/ikAaiw9B30o/hqdefault.jpg',
+  'Engineering Mathematics 2 B S GREWAL   Exercise 8 5 1',
+  'ikAaiw9B30o'],
+ ['https://i.ytimg.com/vi/0QpMyUaiQz8/hqdefault.jpg',
+  "Module 1 Vector Integration Stokes' Theorem Problem 5",
+  '0QpMyUaiQz8'],
+ ['https://i.ytimg.com/vi/G8u-dawbCSQ/hqdefault.jpg',
+  'Engineering Mathematics 2 B S GREWAL   Exercise 8 6 2',
+  'G8u-dawbCSQ'],
+ ['https://i.ytimg.com/vi/a6soLKrBUU0/hqdefault.jpg',
+  "Module 1 Vector Integration Stokes' Theorem Problem 2",
+  'a6soLKrBUU0'],
+ ['https://i.ytimg.com/vi/s5wIRjR4s3M/hqdefault.jpg',
+  "Module 1 Vector Integration Stokes' Theorem Problem 4",
+  's5wIRjR4s3M'],
+ ['https://i.ytimg.com/vi/CsJ0LVqI4vI/hqdefault.jpg',
+  "Module 1 Vector Integration Green's theorem Problem 1",
+  'CsJ0LVqI4vI'],
+ ['https://i.ytimg.com/vi/PcC1xF5oo0o/hqdefault.jpg',
+  "Module 1 Vector Integration Green's Theorem Problem 12 B S GREWAL Exercise 8 8 6",
+  'PcC1xF5oo0o'],
+ ['https://i.ytimg.com/vi/4XPH-whz1Fk/hqdefault.jpg',
+  'Engineering Mathematics 2 - B S GREWAL   Exersice 8 4 3',
+  '4XPH-whz1Fk'],
+ ['https://i.ytimg.com/vi/Hc-Iaxm-f7k/hqdefault.jpg',
+  'Module 1 Vector Integration Line Integrals Problem 3 B S GREWAL   Exercise 8 6 1',
+  'Hc-Iaxm-f7k'],
+ ['https://i.ytimg.com/vi/uVIRTDz3ZJs/hqdefault.jpg',
+  'Engineering Mathematics 2 B S GREWAL   Exercise 8 8 1',
+  'uVIRTDz3ZJs'],
+ ['https://i.ytimg.com/vi/8foEf41MuoE/hqdefault.jpg',
+  'Engineering Mathematics 2 B S GREWAL   Exercise 8 5 2',
+  '8foEf41MuoE'],
+ ['https://i.ytimg.com/vi/8HvO57AV2WU/hqdefault.jpg',
+  "Module 1 Vector Integration Green's Theorem Problem 11 B S GREWAL Exercise 8 8 5",
+  '8HvO57AV2WU'],
+ ['https://i.ytimg.com/vi/RwC13z96fLg/hqdefault.jpg',
+  "Module 1 Vector Integration Green's Theorem Problem 9 B S GREWAL Exercise 8 8 3",
+  'RwC13z96fLg'],
+ ['https://i.ytimg.com/vi/TqeZFiYVcqo/hqdefault.jpg',
+  "Module 1 Vector Integration Stokes' Theorem Problem 3",
+  'TqeZFiYVcqo']]	
+    }
+
+    if(readCookie('list')=='chem2')
+    {
+        h=[['https://i.ytimg.com/vi/bDG3xoo1YV8/hqdefault.jpg',
+  'Engg Part 10 | Module 2 |  Elctrlss plting & Distinction betwn elctrpltng and electroless plating',
+  'bDG3xoo1YV8'],
+ ['https://i.ytimg.com/vi/Mo498o4K1NE/hqdefault.jpg',
+  'Engg Chemistry | Module 2 | Part 9 | Electroplating of chromium',
+  'Mo498o4K1NE'],
+ ['https://i.ytimg.com/vi/VSVQd4LSdhY/hqdefault.jpg',
+  'Chemistry | Corrosion | Part 1 |  Electrochemical theory of corrosion',
+  'VSVQd4LSdhY'],
+ ['https://i.ytimg.com/vi/9ILDw5bmYTc/hqdefault.jpg',
+  'Engg Chemistry | Module 2 | Part 8 | Metal Finishing | Electroplating',
+  '9ILDw5bmYTc'],
+ ['https://i.ytimg.com/vi/JZ-mnc3VTS0/hqdefault.jpg',
+  'Engg Chsntry | Module 2 | Part 12 | Electroless plating of Nickel',
+  'JZ-mnc3VTS0'],
+ ['https://i.ytimg.com/vi/UxcJ_KZvexc/hqdefault.jpg',
+  'Part 4  | Types of corrosion | Engg | Chemistry | Module 2',
+  'UxcJ_KZvexc'],
+ ['https://i.ytimg.com/vi/sJy9YC-RsS8/hqdefault.jpg',
+  'Engg Chemistry | Part 3 | Module 2 | Factors influencing rate of corrosion',
+  'sJy9YC-RsS8'],
+ ['https://i.ytimg.com/vi/kn1wfcN7wKI/hqdefault.jpg',
+  'Engg Chemistry  | Module 2 | Part 2 | Galvanic series',
+  'kn1wfcN7wKI'],
+ ['https://i.ytimg.com/vi/lUe17x0RewE/hqdefault.jpg',
+  'Chesmtry | Part 11 | Electroless plating of copper and Manufacture of double sided PCB with copper',
+  'lUe17x0RewE'],
+ ['https://i.ytimg.com/vi/O3yL3CePMp4/hqdefault.jpg',
+  'Module 2 |  Part  5 | Corrosion control',
+  'O3yL3CePMp4'],
+ ['https://i.ytimg.com/vi/kOzJZROTecA/hqdefault.jpg',
+  'Module 2 | Part 6 | Cathodic protection | Chemistry | engineering',
+  'kOzJZROTecA']]
+    }
+	     		
+	if(readCookie('list') == 'chem')
+    {
+        h=[['https://i.ytimg.com/vi/WRuQlge9V2U/hqdefault.jpg',
+  "Engineering Chemistry Module 1 Lecture 10 Battery & it's classification",
+  'WRuQlge9V2U'],
+ ['https://i.ytimg.com/vi/dHy8FuuOveg/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture   18 Construction & Working of methanol oxygen fuel cell',
+  'dHy8FuuOveg'],
+ ['https://i.ytimg.com/vi/DvvXFdX7lec/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture   14 Li Batteries & Construction,Working &Application of Li M',
+  'DvvXFdX7lec'],
+ ['https://i.ytimg.com/vi/49aH5xJOjhQ/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture 6  Construction and working of Glass electrode',
+  '49aH5xJOjhQ'],
+ ['https://i.ytimg.com/vi/rji7Tt63GtM/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture 7  Determination of pH using glass electrode',
+  'rji7Tt63GtM'],
+ ['https://i.ytimg.com/vi/hyfleIdzCdo/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture  11 Characteristics of battery',
+  'hyfleIdzCdo'],
+ ['https://i.ytimg.com/vi/0E6AbjpZGzc/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture   16 Fuel cell',
+  '0E6AbjpZGzc'],
+ ['https://i.ytimg.com/vi/w_1EjIQy5eE/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture 8 concentration of cell',
+  'w_1EjIQy5eE'],
+ ['https://i.ytimg.com/vi/a_oknz03dKg/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture 5  Measurement of standard electrode using calomel electrode',
+  'a_oknz03dKg'],
+ ['https://i.ytimg.com/vi/HkBYcd1vQ5E/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture   12 Construction, Working and Application of Zinc air batter',
+  'HkBYcd1vQ5E'],
+ ['https://i.ytimg.com/vi/jeEvwMdtV8E/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture   17 Classification of fuel cell',
+  'jeEvwMdtV8E'],
+ ['https://i.ytimg.com/vi/ys0tC0E5eo0/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture   15 Li   ion Battery',
+  'ys0tC0E5eo0'],
+ ['https://i.ytimg.com/vi/_bi4m6Ro2wA/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture 2  Types of electrode',
+  '_bi4m6Ro2wA'],
+ ['https://i.ytimg.com/vi/jyf3cNl0aDM/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture 9 Numerical problems on electrolyte concentration',
+  'jyf3cNl0aDM'],
+ ['https://i.ytimg.com/vi/f6aGTY0CgZs/hqdefault.jpg',
+  'Engineering Chemistry Lecture 1 Introduction & Derivation of Nernst equation for electrode potential',
+  'f6aGTY0CgZs'],
+ ['https://i.ytimg.com/vi/AE0XoYN9LS0/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture   13 Construction, Working and Application of Nickel metal hy',
+  'AE0XoYN9LS0'],
+ ['https://i.ytimg.com/vi/VDxFWRTrRbw/hqdefault.jpg',
+  'Engineering Chemistry Module 1 Lecture 3  Construction, Working and Application of calomel electrode',
+  'VDxFWRTrRbw'],
+ ['https://i.ytimg.com/vi/Msz0JqlzyRs/hqdefault.jpg',
+  'Engg Chemistry Lecture 4 construction Working & Applications of silver   silver chloride electrode',
+  'Msz0JqlzyRs']]
+    }	
+				
+		
+		
+	// document.getElementById("gotl").innerHTML = "Login for more";
+		//name="'+i+'"
+		for(var i=1;i<h.length;i++)
+				{
+				// document.getElementById("lst").innerHTML = document.getElementById("lst").innerHTML + '<div class="contri-bghy"  idi="'+i+'" >'+
+                            '<div class="image">'+
+                                '<img src="'+h[i][0]+'" alt="">'+
+                            '</div>'+
+                            '<div class="detail" >'+
+							'<h3>Part '+(i+1)+'</h3>'+
+                               ' <h6>'+ h[i][1]+'</h6>'+
+                           
+                           ' </div>'+
+                        '</div>'; 
+				}
+				
+				
+				// document.getElementById("video-responsive").innerHTML= '<iframe idi="0" width="548" height="409"  src="https://www.youtube.com/embed/'+h[0][2]+'"  allowfullscreen></iframe>'+'<h2>'+h[0][1]+'</h2>';
+      			
+				
+				
+				
+					
+				
+	
+
+   	</script>
+		
+	
+		<script>
+            function changelist(name)
+    {
+        if(readCookie('list') == name)
+        {
+            return 
+        }
+        document.cookie = 'list='+name;
+        location.reload();
+    }	
+            </script>
