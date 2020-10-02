@@ -31,11 +31,32 @@
                     <h5></h5>
                     <span>Welcome , this page is only for department head.</span>
                 </div>
+
                 <div class="card-block">
                     <div class="table-responsive">
-                        <table class="table table-striped table-bordered" id="example-1">
+
+                            <h2 id='header'>First </h2>
+                            <br><input type="text" id="headline">
+                            <button onclick="update()">update</button>
+                            <br>
+                            <br>
+                            <p></p>
+                            <select id='subject'>
+                                    {% for icon in subject %}
+                                    <option>{{ icon.name }}</option>
+                                  {% endfor %}
+                            </select> 
+                            <br>
+                            <br>
+                                                        
+                            <textarea id='in' rows='10'></textarea>
+                            <button onclick='good()'>Split</button>
+                            
+                            <p id='ji'></p>
+                        <!-- <table class="table table-striped table-bordered" id="example-1">
                             <thead>
                                 <tr>
+                                    
                                     <th style="display: none;">#</th>
                                     <th ><h2 id='header'>First </h2>
                                         <br><input type="text" id="headline">
@@ -102,11 +123,11 @@
 " style="display: none;" disabled=""></td>
                                     <td class="tabledit-view-mode"><span class="tabledit-span">Hybris Developer</span>
                                     </td>
-                                </tr> -->
+                                </tr> 
                                
                             </tbody>
-                        </table>
-                        <button onclick="add_row()">add</button>
+                        </table> -->
+                        <!-- <button onclick="add_row()">add</button> -->
                         <br>
                         <button onclick="load_all()">Final Submit</button>
                     </div>

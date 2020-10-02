@@ -90,15 +90,14 @@ from django.urls import reverse_lazy
 
 @csrf_exempt
 @login_required
-
 def playlist(request):
     print(request.user)
     if DeptHead.objects.filter(user=request.user).count() == 0:
         return HttpResponseRedirect(reverse('login'))
-        
+    
     if request.method == 'GET':
         subject = Subject.objects.all().values('name')
-        
+    
         return render(request,'upload.html',{'title':'Community','subject':subject})
     
     subject = Subject.objects.get(name=request.POST['subject'])

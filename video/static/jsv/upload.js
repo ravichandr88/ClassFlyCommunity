@@ -63,15 +63,16 @@ var title = '';
 
 
 //clean the link and get the youtube id
-function clean(str,id)
+function clean(str)
 {
-console.log(str);
+console.log(str); 
 var youtubeid;
 var link;
 var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
 var match = str.match(regExp);
 if (match && match[2].length == 11) {
     youtubeid =  match[2];
+    return youtubeid;
 } else {
  alert('Sorry, not a valid youtube');
 }
@@ -79,7 +80,7 @@ if (match && match[2].length == 11) {
 
 
 var link = '<iframe width="250" height="150" src="https://www.youtube.com/embed/' + youtubeid +'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-document.getElementById('video'+id).innerHTML=link;
+// document.getElementById('video'+id).innerHTML=link;
 
 document.getElementById('youtube'+id).innerHTML = youtubeid;
 
@@ -142,21 +143,23 @@ function add_row()
 
 
 //final submit function
-function load_all()
+function load_all(playlistname,sub,playlist)
 {
-    console.log(window.row_count);
-    var id_link= [];
-    for (var x = 1; x <= window.row_count;x++)
-    {
-        id_link[x-1] = document.getElementById("youtube"+x).innerHTML
-        // id_link.push(document.getElementById("youtube"+x).innerHTML);
-    }
-    console.log(id_link);
+    // console.log(window.row_count);
+    // var id_link= [];
+    // for (var x = 1; x <= window.row_count;x++)
+    // {
+    //     id_link[x-1] = document.getElementById("youtube"+x).innerHTML
+    //     // id_link.push(document.getElementById("youtube"+x).innerHTML);
+    // }
+    // console.log(id_link);
+
+   
 
     $.ajax({
         type: "POST",
         url: 'playlist',
-        data: {'id_list':JSON.stringify(id_link),
+        data: {'id_list':JSON.stringify( window.id_list),
                 'subject':document.getElementById('subject').value,
                 'playlist':document.getElementById('header').innerHTML},
         success:  function( data ) {
@@ -187,3 +190,26 @@ function update()
 
 
 
+
+
+var id_list = [];
+
+function good()
+{
+
+var h = document.getElementById('in').value;
+
+var k = h.split('\n');
+
+var s = [];
+console.log(k.length);
+for (var x = 0; x < k.length; x++)
+{
+
+	s.push(clean(k[x]));
+}
+window.id_list = s;
+
+document.getElementById('ji').innerHTML = s;
+console.log(s);
+}
