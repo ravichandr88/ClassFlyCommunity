@@ -68,6 +68,7 @@
     }
     .rc-dep-title{
       color: 	#0066ff;
+      text-align: center;
       padding-top: 5px;
     }
     .course-item{
@@ -237,7 +238,7 @@ font-size: 15px;
     <!-- <p>{{dept.items}}</p> -->
   </section>
   {% for dep,sub in dept.items %}
-  <h2 class="rc-dep-title">{{dep}} </h2>
+  <h4 class="rc-dep-title"><b>{{dep}}</b> </h4>
   <div class="bg" class="carousel"  data-flickity='{ "wrapAround": true, "autoPlay": true }'>
    
   {% for s in sub %}
