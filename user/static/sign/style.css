@@ -13,7 +13,7 @@ body {
   font-family: "Muli-Regular";
   font-size: 14px;
   margin: 0;
-  color: #999; }
+  background-image: url("https://assets.tvo.org/prod/s3fs-public/media-library/classroom.jpg");}
 
 input, textarea, select, button {
   font-family: "Muli-Regular"; }

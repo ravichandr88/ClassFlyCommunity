@@ -237,10 +237,10 @@ background-color: #f1f1f1;
                          
 						   <div class="video-responsive" id="video-responsive">
                  {% if cf %}
-                <iframe width="780" height="439" id="ytVideo" name="{{first_video | default:'f6aGTY0CgZs' }}" src="https://www.youtube.com/embed/{{first_video | default:'f6aGTY0CgZs' }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="780" height="439" id="ytVideo" name="{{first_video | default:'f6aGTY0CgZs' }}" src="https://www.youtube.com/embed/{{first_video | default:'f6aGTY0CgZs' }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>
                 {% else %}
                 <p >Thid </p>
-                <iframe width="780" height="439" id="ytVideo" name="{{first_video.0 | default:'f6aGTY0CgZs' }}" src="https://www.youtube.com/embed/{{first_video.0 | default:'f6aGTY0CgZs' }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="780" height="439" id="ytVideo" name="{{first_video.0 | default:'f6aGTY0CgZs' }}" src="https://www.youtube.com/embed/{{first_video.0 | default:'f6aGTY0CgZs' }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>
                 {% endif %}
 
 </div> 
@@ -260,13 +260,13 @@ background-color: #f1f1f1;
 
 {% endfor %}
   
-    <section class="realated-coursee3 spad">
+    <!-- <section class="realated-coursee3 spad">
     <div class="course-warp">
       <h2 class="rc-title">Top Subjects</h2>
       <p class="small">We are bunch of programmers with an hope of helping everyone to learn coding.We set this website with a vision of bringing new learners to interact with professionals in meeting.Over 5000 videos from one Platform.Vision of bringing new learners to interact with professionals in meeting.</p>
     </div>
-  </section>
-
+  </section> -->
+<!-- 
     <div class="bg" class="carousel" data-flickity='{ "wrapAround": true, "autoPlay": true }'>
       <div class="carousel-cell">
         <img class="w3-image" src="/static/imagesv/1.jpg">
@@ -329,7 +329,7 @@ background-color: #f1f1f1;
 
       </div>
       </div>
-    </div>
+    </div> -->
 <br>
 <hr class="new5">
 

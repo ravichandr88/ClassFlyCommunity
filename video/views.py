@@ -28,7 +28,15 @@ def community(request,sub,chp=1):
     
     chptrs = list(range(1,len(subjct_chptrs)+1))
     chptrs.remove(chp)
-  
+    print(subjct_chptrs)
+    
+    chptrs_name = [i.name for i in Subject.objects.get(id=sub).subject_playlist.all().order_by('chapter')]
+    chptrs_name = dict(zip(range(1,len(chptrs_name)+1),chptrs_name))
+
+
+
+    chptrs_name.pop(chp)
+    print(chptrs_name) 
     chptr_one = subjct_chptrs[chp-1]
     video_list = []  # the list of related videos
     first_video = ''    #The id of the first video
