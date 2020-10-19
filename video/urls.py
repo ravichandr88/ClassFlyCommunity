@@ -9,8 +9,11 @@ from django.contrib.auth.views import LogoutView
 urlpatterns = [
 	path('about',views.about,name='about-us'),
 	path('community',views.lib,name='home'),
+	path('community/1',views.lib,name='home'),
+
+
 	
-	path('community',views.home,name='community'),
+	path('communityhome',views.home,name='community'),
 	path('player/<int:sub>',views.community,name='player'),
 	
 	path('player/<int:sub>/<int:chp>',views.community,name='player'),
