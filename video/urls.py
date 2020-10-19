@@ -16,8 +16,8 @@ urlpatterns = [
 	path('communityhome',views.home,name='community'),
 	path('community/player/<int:sub>',views.community,name='player'),
 	
-	path('coomunity/player/<int:sub>/<int:chp>',views.community,name='player'),
-	path('coomunity/player',views.communityn,name='player'),
+	path('community/player/<int:sub>/<int:chp>',views.community,name='player'),
+	path('community/player',views.communityn,name='player'),
 	
 	path('player/<int:sub>',views.community,name='player'),
 	
