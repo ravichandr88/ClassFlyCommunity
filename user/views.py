@@ -207,3 +207,6 @@ def logout_request(request):
     logout(request)
     # messages.info(request, "Logged out successfully!")
     return redirect("cfhome")
+
+def webinar(request):
+    return render(request,'webinar.html')

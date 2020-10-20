@@ -25,6 +25,7 @@ urlpatterns = [
     path('home',views.home),
     path('subscribe',views.subsignup),
     path('example',views.example),
-    path('logout',views.logout_request,name='logout')
+    path('logout',views.logout_request,name='logout'),
+    path('webinar',views.webinar)
  
     ] 

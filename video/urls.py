@@ -12,12 +12,11 @@ urlpatterns = [
 	path('community/v1',views.lib,name='home'),
 
 
-	
 	path('communityhome',views.home,name='community'),
-	path('community/player/<int:sub>',views.community,name='player'),
+	path('community/player/<int:sub>',views.community,name='player'),		#for mobile app
 	
-	path('community/player/<int:sub>/<int:chp>',views.community,name='player'),
-	path('community/player',views.communityn,name='player'),
+	path('community/player/<int:sub>/<int:chp>',views.community,name='player'),# for mobile app
+	path('community/player',views.community,name='player'),	#for mobile app
 	
 	path('player/<int:sub>',views.community,name='player'),
 	
