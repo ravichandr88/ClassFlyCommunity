@@ -3,118 +3,99 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - Clash of Clans Cards</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-<link rel='stylesheet' href='https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css'>
-<link rel='stylesheet' href='https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick-theme.css'><link rel="stylesheet" href="{% static 'css/webinar.css' %}">
+  <title>ClassFly</title>
+  <link rel="stylesheet" href="{% static 'css/webinar.css' %}">
+  <link href="/static/assets/img/fav.png" rel="icon">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-165421960-1"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="66089437958-9qai3nufijclobprh164n62hfcparv6i.apps.googleusercontent.com">
+ 
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-165421960-1');
+    </script>
+
+
+
+
+<meta name="google-signin-scope" content="profile email">    
+
+
+<script>
+  function onSignIn(googleUser) {
+    // Useful data for your client-side scripts:
+    var profile = googleUser.getBasicProfile();
+   console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+   // console.log('Full Name: ' + profile.getName());
+    //console.log('Given Name: ' + profile.getGivenName());
+   // console.log('Family Name: ' + profile.getFamilyName());
+   // console.log("Image URL: " + profile.getImageUrl());
+   // console.log("Email: " + profile.getEmail());
+
+    // The ID token you need to pass to your backend:
+    var id_token = googleUser.getAuthResponse().id_token;
+    console.log("gmail: " + profile.getEmail());
+    
+    document.cookie = 'key='+profile.getEmail();
+    // document.getElementById("go").innerHTML = "";
+    // document.getElementById("gotl").innerHTML = "Logged In";
+    
+  }
+</script>
 
 </head>
 <body>
 <!-- partial:index.partial.html -->
-<div class="slide-container">
+
+</div>
+<div class="container">
+  <div class="card">
+    <div class="img-box">
+      <img src="https://i.ibb.co/dBPvwvs/webinarcommunity.png" width="260px" height="170px" alt="img">        
+      <h2>ClassFly Community</h2>
+    </div>
+    <div class="content">
+      <br>
+      <p>Online Library to improve Indian Education, Filled with student made videos for every domain and popular languages.
+        <br> App with support of different Youtube channel training videos in sorted order for easy learning.</p>
+    </div>
+  </div>
   
-  <div class="wrapper">
-    <div class="clash-card barbarian">
-      <div class="clash-card__image clash-card__image--barbarian">
-        <img src="https://i.ibb.co/tqGrvw8/classflycommunityt-small-2.png" alt="Community" />
-      </div>
-      <div class="clash-card__level clash-card__level--barbarian">Indian Education</div>
-      <div class="clash-card__unit-name">ClassFly Community</div>
-      <div class="clash-card__unit-description">
-        Platform where students share their knowledge for next generation.
-      </div>
-
-      <div class="clash-card__unit-stats clash-card__unit-stats--barbarian clearfix">
-        <div class="one-third">
-          <div class="stat">20<sup>S</sup></div>
-          <div class="stat-value">Training</div>
-        </div>
-
-        <div class="one-third">
-          <div class="stat">16</div>
-          <div class="stat-value">Speed</div>
-        </div>
-
-        <div class="one-third no-border">
-          <div class="stat">150</div>
-          <div class="stat-value">Cost</div>
-        </div>
-
-      </div>
-
-    </div> <!-- end clash-card barbarian-->
-  </div> <!-- end wrapper -->
+    <div class="card">
+    <div class="img-box">
+      <img src="https://i.ibb.co/D71qWTk/professinoalbanner.png" width="260px" height="170px" alt="img">        
+      <h2>ClassFly Professional</h2>
+    </div>
+    <div class="content">
+      <br>
+      <br>
+      <p>Program helping students getting exposed to Industry required technologies and skills by having meeting with working professionals.
+        <br>
+        Students can build projects assigned by Professionals which in turn bring affiliated work into their Portfolio.
+      </p>
+    </div>
+  </div>
   
-  <div class="wrapper">
-    <div class="clash-card archer">
-      <div class="clash-card__image clash-card__image--archer">
-        <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/archer.png" alt="archer" />
-      </div>
-      <div class="clash-card__level clash-card__level--archer">Level 5</div>
-      <div class="clash-card__unit-name">The Archer</div>
-      <div class="clash-card__unit-description">
-        The Archer is a female warrior with sharp eyes. She wears a short, light green dress, a hooded cape, a leather belt and an attached small pouch.
-      </div>
-
-      <div class="clash-card__unit-stats clash-card__unit-stats--archer clearfix">
-        <div class="one-third">
-          <div class="stat">25<sup>S</sup></div>
-          <div class="stat-value">Training</div>
-        </div>
-
-        <div class="one-third">
-          <div class="stat">24</div>
-          <div class="stat-value">Speed</div>
-        </div>
-
-        <div class="one-third no-border">
-          <div class="stat">300</div>
-          <div class="stat-value">Cost</div>
-        </div>
-
-      </div>
-
-    </div> <!-- end clash-card archer-->
-  </div> <!-- end wrapper -->
-  
-
-  <div class="wrapper">
-      <div class="clash-card archer">
-        <div class="clash-card__image clash-card__image--archer">
-          <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/archer.png" alt="archer" />
-        </div>
-        <div class="clash-card__level clash-card__level--archer">Interview</div>
-        <div class="clash-card__unit-name">The Archer</div>
-        <div class="clash-card__unit-description">
-          The Archer is a female warrior with sharp eyes. She wears a short, light green dress, a hooded cape, a leather belt and an attached small pouch.
-        </div>
-  
-        <div class="clash-card__unit-stats clash-card__unit-stats--archer clearfix">
-          <div class="one-third">
-            <div class="stat">25<sup>S</sup></div>
-            <div class="stat-value">Training</div>
-          </div>
-  
-          <div class="one-third">
-            <div class="stat">24</div>
-            <div class="stat-value">Speed</div>
-          </div>
-  
-          <div class="one-third no-border">
-            <div class="stat">300</div>
-            <div class="stat-value">Cost</div>
-          </div>
-  
-        </div>
-  
-      </div> <!-- end clash-card archer-->
-    </div> <!-- end wrapper -->
-    
-</div> <!-- end container -->
+    <div class="card">
+    <div class="img-box">
+      <img src="https://i.ibb.co/dBPvwvs/webinarcommunity.png" width="260px" height="170px" alt="img">        
+      <br>
+    <h2>ClassFly Event </h2>
+    <meta name="google-signin-scope" content="profile email">  
+    <div id="go"> <div class="g-signin2" data-onsuccess="onSignIn"></div>  </div>
+  </div>
+    <div class="content">
+      <br>
+      <br>
+      <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+    </div>
+  </div>
+</div>
 <!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
-<script src='https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js'></script>
-<script  src="{% static 'js/webinar.js' %}"></script>
 
 </body>
 </html>
