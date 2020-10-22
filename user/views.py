@@ -209,4 +209,4 @@ def logout_request(request):
     return redirect("cfhome")
 
 def webinar(request):
-    return render(request,'webinar.html')
+    return render(request,'temp.html')
