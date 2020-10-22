@@ -69,7 +69,7 @@ img {
   padding: 1rem;
 }
 
-@media (min-width: 40rem) {
+/* @media (min-width: 40rem) {
   .cards_item {
     width: 50%;
   }
@@ -79,7 +79,27 @@ img {
   .cards_item {
     width: 33.3333%;
   }
+} */
+
+  /* .cards_item {
+    width: 90.3333%;
+  } */
+
+
+  
+@media screen and (max-width: 767px) {
+.cards_item {
+    width: 90.3333%;
+  } 
 }
+
+
+@media screen and (max-width: 991px) {
+  .cards_item {
+    width: 90.3333%;
+  } 
+}
+
 
 .card {
   background-color: white;
