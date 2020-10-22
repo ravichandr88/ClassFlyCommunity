@@ -217,3 +217,6 @@ def webinar(request):
 def save_email(request):
     Email(gmail=request.GET['gmail']).save()
     return Response(data={'code':'success'})
+
+def redirect_event(request):
+    return redirect(request,'register_email')
