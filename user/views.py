@@ -13,6 +13,7 @@ import django.contrib.auth.password_validation as validators
 
 from django.core import exceptions
 
+from .models import Email
 
 def signup(request):
     return render(request, 'signup.html', {'title': 'Sign-Up'})
@@ -209,4 +210,10 @@ def logout_request(request):
     return redirect("cfhome")
 
 def webinar(request):
-    return render(request,'temp.html')
+    return render(request,'register.html')
+
+@csrf_exempt
+@api_view(['GET'])
+def save_email(request):
+    Email(gmail=request.GET['gmail']).save()
+    return Response(data={'code':'success'})

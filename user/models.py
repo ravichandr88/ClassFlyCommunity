@@ -16,3 +16,11 @@ class VideoUpload(models.Model):
 
     def __str__(self):
         return "Title {}  Description {} VideoLink {} description {}".format(self.title,self.video_link,self.descripion,self.thumbnail_link,self.dept_head)
+
+
+
+class Email(models.Model):
+    gmail = models.CharField(max_length=200,default='')
+
+    def __str__(self):
+        return "Email: {}".format(self.gmail)
