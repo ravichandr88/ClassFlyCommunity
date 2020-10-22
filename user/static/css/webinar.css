@@ -12,17 +12,11 @@
 
 body {
   display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
+  justify-content: center;
+  align-items: center;
+  background: #16384c;
   background:  url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/coc-background.jpg") ;
-  /* no-repeat center center fixed */
-  background-repeat: no-repeat;
-  background-size: auto;
-  /* background: -webkit-gradient(linear, left top, left bottom, from(#8c7a7a), color-stop(65%, #af877c), to(#af877c)) fixed; */
-  background: linear-gradient(to bottom, #8c7a7a 0%, #af877c 65%, #af877c 100%) fixed;
-  background-size: cover;
-  background-color: #823b3b;
-  /* margin-top: 30px; */
+  
 }
 
 .container {
