@@ -67,6 +67,38 @@ class VideoId(models.Model):
 
 
 
+#the following tables are made for video uploading and analytics for depthead and videoamker
+
+DEFAULTUSER = 1
+class VideoDeptHead(models.Model):
+    user = models.OneToOneField(User,related_name='dept_head',on_delete=models.CASCADE,default=DEFAULTUSER)
+    name        = models.CharField(max_length=100)
+    usn         = models.CharField(max_length=20)
+    report_to   = models.ForeignKey(User,related_name='dept_head_report_to',on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "name {}, usn {}, report_to {}".format(self.name,self.usn,self.report_to)
+
+
+class VideoMaker(models.Model):
+    user = models.OneToOneField(User,related_name='video_maker',on_delete=models.CASCADE,default=DEFAULTUSER)
+    name = models.CharField(max_length=40)
+    usn = models.CharField(max_length=20)
+    dept_head = models.ForeignKey(VideoDeptHead,on_delete=models.CASCADE,related_name='report_to_dept_head')
+
+class VideosMade(models.Model):
+    video_link = models.CharField(max_length=600)
+    title = models.CharField(max_length=100)
+    thumbnail_link = models.CharField(max_length=600)
+    video_maker = models.ForeignKey(VideoMaker,on_delete=models.CASCADE,related_name='videos_made')
+    datetime = models.DateTimeField(auto_now=True)
+    report = models.TextField(max_length=1000,default='')
+    status = models.BooleanField(null=True)
+
+    def __str__(self):
+        return "Name {} Title {} report {} status {}".format(self.video_maker.name,self.title,self.report,self.status)
+#this is the end for tables including work for video uploader and depthead
+
 
 
 

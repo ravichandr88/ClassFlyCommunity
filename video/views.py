@@ -1,14 +1,40 @@
 
+from django.contrib.auth.models import User
 from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
 from django.http import FileResponse
 import os
+from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from .models import DeptHead,Playlist,Subject,VideoId,Subject,EducationDomain,Department
+from .models import DeptHead,Playlist,Subject,VideoMaker,VideosMade,VideoId,VideoDeptHead,Subject,EducationDomain,Department
 from rest_framework.response import Response
 import json
 
+#header for dept head
+
+def depthead_required(function):
+    # @wraps(function)
+    def inner(request, *args, **kwargs):
+        user = User.objects.get(username=request.user)
+        if VideoDeptHead.objects.filter(user=user).count() == 1:
+            return function(request,  **kwargs)
+        else:
+            return HttpResponse('Sorry, you are not signedup as Department Head')
+
+    return inner
+
+# video maker header
+def videomaker_required(function):
+    # @wraps(function)
+    def inner(request, *args, **kwargs):
+        user = User.objects.get(username=request.user)
+        if VideoMaker.objects.filter(user=user).count() == 1:
+            return function(request,  **kwargs)
+        else:
+            return HttpResponse('Sorry, you are not signedup as Video Maker')
+
+    return inner
 
 
 # Create your views here.
@@ -143,4 +169,76 @@ def videos_list(request):
         i['videos'] = Playlist.objects.get(id=i['id']).playlist_videos.all().values('video_id')
         i['subject'] = Subject.objects.get(id=i['subject']).name
     return render(request,'videosuploaded.html',{'title':'Community','playlist':all_playlist})
+
+
+
+#videoDeptHead Dashboard
+@login_required
+@depthead_required
+def depthead_dashboard(request,page='p'):
+    
+    user = request.user
+    #videomakers under this depthead
+    video_makers = VideoDeptHead.objects.get(user__username=user)
+    videos_made = []
+    if page == 'r':
+        #Iterate over the video_makers
+        for i in video_makers.report_to_dept_head.all():
+            videos_made.append(i.videos_made.filter(status=False))
+    elif page == 'a':
+        for i in video_makers.report_to_dept_head.all():
+            videos_made.append(i.videos_made.filter(status=True))
+    else:
+        for i in video_makers.report_to_dept_head.all():
+            videos_made.append(i.videos_made.filter(status=None))
+    # print(videos_made)
+    return render(request,'depthead_dashboard.html',context={'videos':videos_made,'mode':page})
+
+
+@login_required
+@depthead_required
+@api_view(['POST','GET'])
+def approve_reject_video(request):
+    if request.method == 'POST':
+        video = VideosMade.objects.get(id=request.data['id'][0])
+        video.report = request.data['report']
+        video.status = False
+        video.save()
+        return Response(data={'code':200})
+    if request.method == 'GET':
+        video = VideosMade.objects.get(id= request.GET['id'][0])
+        video.status = True
+        video.save()
+        return Response(data={'code':200})
+
+#function for video makers to submit the video.
+@login_required
+@videomaker_required
+def video_uploader(request):
+    if request.method == 'POST':
+        print(request.POST['title'])
+        VideosMade(
+            title=request.POST['title'],
+            video_link=request.POST['video_link'],
+            thumbnail_link=request.POST['thumbnail_link'],
+            video_maker=VideoMaker.objects.get(user__username=request.user)).save()
+        return HttpResponseRedirect(reverse('videom_dashboard'))
+
+    dept_head = VideoMaker.objects.get(user__username=request.user)
+    return render(request,'video_submit.html',context={'dept_head':dept_head.dept_head.name})
+
+
+#function for video_makers dashboard
+@login_required
+@videomaker_required
+def videos_uploaded_list(request):
+    vmaker = VideoMaker.objects.get(user__username=request.user)
+    vlist = vmaker.videos_made.all()
+    vlist = vlist[::-1]
+    print(vlist)
+
+    return render(request,'videos_list.html',context={'videos':vlist})
+
+
+
        
