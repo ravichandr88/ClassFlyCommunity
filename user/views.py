@@ -10,6 +10,9 @@ from .forms import Loginform
 from .models import Phonenumber
 from django.contrib.auth.password_validation import validate_password
 import django.contrib.auth.password_validation as validators
+from django.urls import resolve, Resolver404
+from django.http import HttpResponseRedirect 
+from django.shortcuts import redirect
 
 from django.core import exceptions
 
@@ -45,9 +48,13 @@ def loginview(request):
 
         #if everything is good
         login(request,user)
-        
-        return redirect('cfhome') 
-
+        url = request.POST.get("next")
+        # print(request.POST)
+        try:
+            resolve(url)
+            return HttpResponseRedirect(url)
+        except Resolver404: # Make sure the url comes from your project
+            return redirect("cfhome") # A default view
          
 
         

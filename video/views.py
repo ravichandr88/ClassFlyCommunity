@@ -102,7 +102,7 @@ def lib(request):
         #{'VTU': {'Mech' : [Subject Lists]}}
        depts[i] = {j.name: list(j.domain_subjects.all().values('name','imgurl','descp','id')) for j in depts[i]}
 
-    print(depts)
+    # print(depts)
 
 
 
@@ -235,7 +235,7 @@ def videos_uploaded_list(request):
     vmaker = VideoMaker.objects.get(user__username=request.user)
     vlist = vmaker.videos_made.all()
     vlist = vlist[::-1]
-    print(vlist)
+    # print(vlist)
 
     return render(request,'videos_list.html',context={'videos':vlist})
 

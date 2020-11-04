@@ -30,7 +30,7 @@ urlpatterns = [
 	path('training_details.pdf',views.generate_detailsPDF),
 	path('playlist',views.playlist),
 	path('videoslist',views.videos_list),
-	path('dept_dashboard',views.depthead_dashboard),	#link for dept head dashboard
+	path('dept_dashboard',views.depthead_dashboard,name='dept_dashboard'),	#link for dept head dashboard
 	path('dept_dashboard/<slug:page>',views.depthead_dashboard),
 	path('video_upload',views.video_uploader),
 	path('videos_list',views.videos_uploaded_list,name='videom_dashboard'),	#link for video maker dashboard

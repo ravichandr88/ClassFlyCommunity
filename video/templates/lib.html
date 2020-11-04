@@ -35,6 +35,17 @@
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
         <!-- New slide -->
 
+        <script>
+          function vdash(){
+            window.location.href = 'videos_list'
+          }
+
+           function ddash(){
+            window.location.href = 'dept_dashboard'
+          }
+
+          </script>
+
     <style>
 
     .carousel-cell {
@@ -175,6 +186,31 @@ font-size: 15px;
 }
 
 
+.buttonvd {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #0066cc;
+}
+
+.button1:hover {
+  background-color: #0066cc;
+  color: white;
+}
+
     </style>
        <!--####################### Css Here ###################-->
       
@@ -210,9 +246,6 @@ font-size: 15px;
                                 <li class="nav-item">
                                   <a class="nav-link" href="{% url 'signup' %}">SignUp</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'community' %}">Videos</a>
-                                  </li>
                                   <li class="nav-item">
                                     <a class="nav-link" href="home">ClassFly</a>
                                   </li>
@@ -231,6 +264,16 @@ font-size: 15px;
   <!-- Page -->
 <br>
 <h2 style="text-align: center; color:#34a1eb"><b>Welcome</b></h2>
+
+<h4 style="text-align: center; color:#34a1eb">
+  <button class='buttonvd button1' onclick="vdash()">Video Maker</button>
+  <button class='buttonvd button1' onclick="ddhas()">Department Head</button>
+  <!-- <a class="nav-link" href="{% url 'videom_dashboard' %}">VideoMaker</a> -->
+
+  <!-- <a class="nav-link" href="{% url 'dept_dashboard' %}">DeptHead</a> -->
+</h4>
+
+
   <h6 style="text-align: center;">We aim to provide an Indian Online Education Library. Platform where students can help other students in their education by sharing content.</h6>
    
   {% for dom,dept in domain.items %}

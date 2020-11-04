@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>CF Login</title>
+        <title>ClassFly Login</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- LINEARICONS -->
@@ -38,6 +38,7 @@
                     
                     <a href="password_reset" style="color:#03b1fc">Forgot password?</a>
                     <br>
+                    <input type="hidden" name="next" value="{{ request.GET.next }}"/>
                     <button>
                         <span>Login</span>
                     </button>
