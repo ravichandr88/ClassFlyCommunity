@@ -23,72 +23,75 @@
   <link rel="stylesheet" href="{% static 'cssv/bootstrap.min.css' %}"/>
   <link rel="stylesheet" href="{% static 'cssv/owl.carousel.css' %}"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js" integrity="sha512-Z8CqofpIcnJN80feS2uccz+pXWgZzeKxDsDNMD/dJ6997/LSRY+W4NmEt9acwR+Gt9OHN0kkI1CTianCwoqcjQ==" crossorigin="anonymous"></script>
-    <!-- <script>
-   
-  async function init() {
-(async () => {
-    const pdfjs = await import('pdfjs-dist/build/pdf');
-  const pdfjsWorker = await import('pdfjs-dist/build/pdf.worker.entry');
+ 
+<script>
+var w = $(window).width();
+var h = $(window).height();
+var scale = 1;
 
-  pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
-  const loadingTask = pdfjsLib.getDocument("/training_details.pdf");
-  const pdf = await loadingTask.promise;
-
-  // Load information from the first page.
-  const page = await pdf.getPage(1);
-
-  const scale = 1;
-  const viewport = page.getViewport(scale);
-
-  // Apply page dimensions to the <canvas> element.
-  const canvas = document.getElementById("pdf");
-  const context = canvas.getContext("2d");
-  canvas.height = viewport.height;
-  canvas.width = viewport.width;
-
-  // Render the page into the <canvas> element.
-  const renderContext = {
-    canvasContext: context,
-    viewport: viewport
-  };
-  await page.render(renderContext);
-  console.log("Page rendered!");
-})();
-
-
+function zoom(x) {
+  if (x === -1) {
+    scale = scale * 1.1;
+    w = w * 0.9;
+    h = h * 0.9;
+    $("#myiframe").width(w + "px");
+    $("#myiframe").height(h + "px")
+  } else {
+    scale = scale * 0.9;
+    w = w * 1.1;
+    h = h * 1.1;
+    $("#myiframe").width(w + "px");
+    $("#myiframe").height(h + "px")
   }
 
-  
-  </script> -->
+  $('#myiframe').css('transform', `scale(${scale})`);
+}</script>
+  <style>
+  html,
+body {
+  background-color: #ccc;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+#iframe_container {
+  background-color: #ffffff;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+}
+
+#myiframe {
+  overflow: scroll;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  transform: scale(1);
+  -ms-transform-origin: 0 0;
+  -moz-transform-origin: 0 0;
+  -o-transform-origin: 0 0;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+
+button {
+  display: inline-block;
+}
+</style>
 </head>
 <body>
-        <!-- <canvas id="pdf"></canvas>
-     -->
-  <!--  <object
-  data="/training_details.pdf"
-  type="application/pdf"
-  width="100%"
-  height="100%">
-  <iframe
-    src="/training_details.pdf"
-    width="100%"
-    height="100%"
-    style="border: none;">
-    <p>Your browser does not support PDFs.
-       <a href="/training_details.pdf">Download the PDF</a>.</p> 
-      <object data="myfile.pdf" type="application/pdf" width="100%" height="100%">
-  <p>Alternative text - include a link <a href="myfile.pdf">to the PDF!</a></p>
-</object>
-  </iframe> 
-</object> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <button type="button" onclick="zoom(1)">- ZOOM OUT</button>
+    <button type="button" onclick="zoom(-1)">+ ZOOM IN</button>
+    <br>
+    <div id="iframe_container" >
+        
+            <iframe  id="myiframe" src="https://drive.google.com/file/d/1Y97cnYWAqI7ku7j6O6nwtmcJPOkMaDNt/preview" ></iframe>
+            <div style="width: 50px; height: 50px; position: absolute; opacity: 0; right: 12px; top: 12px;">&nbsp;</div>
+          </div>
 
-<!-- <iframe src="https://drive.google.com/file/d/1Y97cnYWAqI7ku7j6O6nwtmcJPOkMaDNt/preview" width="100%" height="100%"></iframe> -->
-
-<div style="width: 100%; height: 100%; position: relative;"> 
-  <iframe src="https://drive.google.com/file/d/1Y97cnYWAqI7ku7j6O6nwtmcJPOkMaDNt/preview" width="100%" height="100%"></iframe>
-  <div style="width: 50px; height: 50px; position: absolute; opacity: 0; right: 12px; top: 12px;">&nbsp;</div>
-</div>
 </body>
 <!-- <script>
 init();</script> -->
