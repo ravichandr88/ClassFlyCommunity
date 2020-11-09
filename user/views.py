@@ -135,7 +135,7 @@ def subsignup(request):
     
     login(request,user)
 
-    return render(request,'videos.html',context={})
+    return render(request,'lib.html',context={})
 
 
 

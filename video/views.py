@@ -241,4 +241,5 @@ def videos_uploaded_list(request):
 
 
 
-       
+def reader(request):
+    return render(request,'reader.html',context={})

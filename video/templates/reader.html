@@ -1,0 +1,36 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% if title %}
+        <title>ClassFly - {{ title }}</title>
+    {% else %}
+        <title>ClassFly - Community</title>
+    {% endif %} 
+
+    <link rel="stylesheet" href="{% static 'cssv/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'cssv/fontawsom-all.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'cssv/style.css' %}"/>
+
+
+  <!--####################### Js Here ###################-->
+
+    <script src="{% static 'jsv/jquery-3.2.1.min.js' %}"></script>
+    <!-- <script src="{% static 'pluginsv/scroll-fixed/jquery-scrolltofixed-min.js' %}"></script> -->
+    <script src="{% static 'jsv/script.js' %}"></script>
+    <script src="{% static 'jsv/library.js' %}"></script>
+
+  <link rel="stylesheet" href="{% static 'cssv/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'cssv/font-awesome.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'cssv/owl.carousel.css' %}"/>
+  <!--<link rel="stylesheet" href="{% static 'mystyle.css' %}"/>
+
+        <script src="{% static 'jsv/navbar-burger.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'bulma.css' %}">-->
+</head>
+<body>
+    <iframe src="http://localhost:8000/training_details.pdf" title="description"> 
+</body>
+</html>
