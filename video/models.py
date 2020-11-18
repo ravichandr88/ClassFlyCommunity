@@ -86,6 +86,10 @@ class VideoMaker(models.Model):
     usn = models.CharField(max_length=20)
     dept_head = models.ForeignKey(VideoDeptHead,on_delete=models.CASCADE,related_name='report_to_dept_head')
 
+    def __str__(self):
+        return "Name {} USN {} Report_to {}".format(self.name,self.usn,self.dept_head.name)
+
+
 class VideosMade(models.Model):
     video_link = models.CharField(max_length=600)
     title = models.CharField(max_length=100)
