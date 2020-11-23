@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import DeptHead,Subject,Playlist,Department,VideoId,EducationDomain
-from .models import VideoDeptHead,VideoMaker,VideosMade,Notes
+from .models import VideoDeptHead,VideoMaker,VideosMade,Notes,Book
 
 admin.site.register(DeptHead)
+admin.site.register(Book)
 admin.site.register(Subject)
 admin.site.register(Playlist)
 admin.site.register(Department)

@@ -121,4 +121,19 @@ class Notes(models.Model):
         return "Created_By {} Subject {} Chapter {} Uploaded_By {} note_link {} datetime {}".format(self.name,self.subject,self.chapter,self.uploaded_by.name,self.note_link,self.datetime)
 
 
+class Book(models.Model):
+    name = models.CharField(max_length = 200,null=False)    #Name of the notes written by teacher 
+    subject = models.ForeignKey(Subject,on_delete=models.CASCADE,related_name='subject_bookslist')
+    chapter = models.IntegerField(null=False,default=1)
+    uploaded_by = models.ForeignKey(VideoMaker,on_delete=models.CASCADE,related_name='books_uploaded')
+    note_link = models.CharField(max_length=300)
+    active = models.BooleanField(null=True) 
+    datetime = models.DateTimeField(auto_now=True)
+    report = models.CharField(max_length=500,default='')
+
+
+    def __str__(self):
+        return "Created_By {} Subject {} Chapter {} Uploaded_By {} note_link {} datetime {}".format(self.name,self.subject,self.chapter,self.uploaded_by.name,self.note_link,self.datetime)
+
+
 

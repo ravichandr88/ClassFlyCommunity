@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from .models import DeptHead,Notes,Playlist,Subject,VideoMaker,VideosMade,VideoId,VideoDeptHead,Subject,EducationDomain,Department
+from .models import DeptHead,Book,Playlist,Subject,VideoMaker,VideosMade,VideoId,VideoDeptHead,Subject,EducationDomain,Department
 from rest_framework.response import Response
 import json
 
@@ -244,9 +244,9 @@ def videos_uploaded_list(request):
 
 #PDF viewer page
 def reader(request,id):
-    if Notes.objects.filter(id=id).count() == 0:
+    if Book.objects.filter(id=id).count() == 0:
         return HttpResponse('Stop playing the notes ID')
-    link = Notes.objects.get(id=id).note_link
+    link = Book.objects.get(id=id).note_link
     return render(request,'reader.html',context={'link':link})
 
 
@@ -256,7 +256,7 @@ def reader(request,id):
 def notes_upload(request):
     if request.method == 'POST':
         print(request.POST)
-        Notes(
+        Book(
             name=request.POST['name'], #book written author name
             note_link=str(request.POST['notes_link']).split('/d/')[1].split('/')[0],
             subject = Subject.objects.get(id=request.POST['subject_id']),
@@ -271,12 +271,12 @@ def notes_upload(request):
 
 
 
-#function for video_makers dashboard to see Notes
+#function for video_makers dashboard to see Book
 @login_required
 @videomaker_required
 def notes_uploaded_list(request):
     vmaker = VideoMaker.objects.get(user__username=request.user)
-    vlist = vmaker.notes_uploaded.all().values('id','name','subject__name','chapter','datetime','active')
+    vlist = vmaker.books_uploaded.all().values('id','name','subject__name','chapter','datetime','active')
     vlist = vlist[::-1]
     # print(vlist)
 
@@ -284,7 +284,7 @@ def notes_uploaded_list(request):
 
 
 
-#videoDeptHead Notes Dashboard
+#videoDeptHead Book Dashboard
 @login_required
 @depthead_required
 def depthead_notes_dashboard(request,page='p'):
@@ -296,32 +296,32 @@ def depthead_notes_dashboard(request,page='p'):
     if page == 'r':
         #Iterate over the video_makers
         for i in video_makers.report_to_dept_head.all():
-            notes_made.append(i.notes_uploaded.filter(active=False))
-            print(i.notes_uploaded.filter(active=False))
+            notes_made.append(i.books_uploaded.filter(active=False))
+            print(i.books_uploaded.filter(active=False))
     elif page == 'a':
         for i in video_makers.report_to_dept_head.all():
-            notes_made.append(i.notes_uploaded.filter(active=True))
+            notes_made.append(i.books_uploaded.filter(active=True))
     else:
         for i in video_makers.report_to_dept_head.all():
-            notes_made.append(i.notes_uploaded.filter(active=None))
+            notes_made.append(i.books_uploaded.filter(active=None))
     # print(videos_made)
     return render(request,'depthead_notes_dashboard.html',context={'notes':notes_made,'mode':page})
 
 
-#API to approve or Reject the Notes, Dept Head
+#API to approve or Reject the Book, Dept Head
 @login_required
 @depthead_required
 @api_view(['POST','GET'])
 def approve_reject_notes(request):
     if request.method == 'POST':
-        notes = Notes.objects.get(id=request.data['id'][0])
+        notes = Book.objects.get(id=request.data['id'][0])
         notes.report = request.data['report']
         notes.active = False
         notes.save()
         # print(notes.active)
         return Response(data={'code':200})
     if request.method == 'GET':
-        notes = Notes.objects.get(id= request.GET['id'][0])
+        notes = Book.objects.get(id= request.GET['id'][0])
         notes.active = True
         notes.save()
         return Response(data={'code':200})
