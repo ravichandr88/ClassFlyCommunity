@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>ClassFly Community</title>
+  <link rel="stylesheet" href="{% static 'cssv/videos_list.css' %}">
+  
+
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!-- profile: 300x300  -->
+<!-- poster: 136x190 -->
+<!-- thumbnail: 320x240 -->
+
+<div class="l-nav">
+  <div class="l-nav__container">
+    <a href='/video_upload' class="l-nav__button">
+   Submit a New Video</a>
+  </div>
+</div>
+
+
+<div class="l-container">
+  
+  <ul>
+    <h3>Videos uploaded by you</h3>
+    {% for j in videos %}
+    <li class="list" data-name="JoeBrown">
+      <!-- Profile Section -->
+      <div class="list__profile">
+        <!-- -->
+        <div class="list__label">
+            <div> <img src="https://www.classfly.in/static/4.jpg"> </div>
+          <div class="list__label--header">Author: {{j.name}} </div>
+          <div class="list__label--value"> <a href='/reader/{{j.id}}'>View Notes</a> </div>
+          <h4>Subject : {{j.subject__name}}</h4>
+          <h4>Chapter : {{j.chapter}}</h4>
+          <h4>Submitted On : {{j.datetime}}</h4>
+          <h5>Status:{{j.active}}</h5>
+          <p>{{j.report}}</p>
+        </div>
+      </div>
+      <!-- Photo Thumbnail Section -->
+      <div class="list__photos">
+        <!-- <span>Report </span> -->
+       
+        <!-- <span><button class=' but_w3 report'>Report</button></span>
+        <span><button class=' but_w3 report' style="margin-left: 8px;">Accept</button></span> -->
+        <br>
+        
+      </div>
+      
+    </li>
+    {% endfor %}
+    <!-- <div >
+    <textarea  rows="10" cols="30" class='report' style="font-style: inherit; font-size: 20px"><button>Report</button></textarea>
+    <button class=' but_w3 report'>Submit</button>
+  </div> -->
+    
+ 
+  </ul>
+  
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>

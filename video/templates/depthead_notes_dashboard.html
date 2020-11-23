@@ -1,0 +1,164 @@
+<!-- 
+    <body>
+        {% for i in videos %}
+        {% for j in i %}
+        <div class="card">
+                
+                <div class="container">
+                        <h3>{{j.video_maker.name}}</h3>  
+                  <h4><b>{{j.title}}</b></h4>
+                  <a href="{{j.video_link}}" target="_blank" rel="noopener noreferrer">Video Link</a>
+               <br><br> <a href="{j.thumbnail_link}}" target="_blank" rel="noopener noreferrer">Thumbnail Link</a>
+                    <h4>Submitted On: {{j.datetime}}</h4>
+                    <h3>Status:{{j.status  }}</h3>
+                    <textarea placeholder="Maximum 1000 letters">
+
+                    </textarea>
+                    <br>
+                    <button class='button2'>Reject</button>
+                    <br>
+                    <button class='button2'>Accept</button>
+            </div>
+              </div> 
+        {% endfor %}
+        {% endfor %}
+    </body>
+ -->
+
+
+ {% load static %}
+ <!DOCTYPE html>
+ <html lang="en" >
+ <head>
+   <meta charset="UTF-8">
+   <title>ClassFly Community</title>
+   <link rel="stylesheet" href="{% static 'cssv/videos_list.css' %}">
+   <script src="{% static 'jsv/jquery-3.2.1.min.js' %}"></script>
+   <script src="{% static 'jsv/department_dashboard.js' %}"></script>
+ 
+ 
+ </head>
+ <body>
+ <!-- partial:index.partial.html -->
+ <!-- profile: 300x300  -->
+ <!-- poster: 136x190 -->
+ <!-- thumbnail: 320x240 -->
+ 
+ <div class="l-nav">
+     <div class="l-nav__container" style=" color:white">
+       
+      <h2>ClassFly</h2>
+      
+     </div>
+   </div>
+ <div class="l-container">
+     <button class='but_w3' style="margin-bottom:10px"><a  href='/notes_dept_dash/a' style="color:white">Approved Notes</a></button><br>
+     <button class='but_w3' style="margin-bottom:20px"><a  href='/notes_dept_dash/p' style="color:white">Pending Notes</a></button><br>
+     <button class='but_w3' style="margin-bottom:10px"><a  href='/notes_dept_dash/r' style="color:white">Rejected Notes</a></button>
+   <ul>
+         {% for i in notes %}
+         {% for j in i %}
+     <li class="list" data-name="JoeBrown">
+       <!-- Profile Section -->
+       <div class="list__profile">
+         <div> <img src="https://www.online-image-editor.com/styles/2019/images/power_girl.png"> </div>
+         <div class="list__label">
+                 <div class="list__label--header">{{j.video_maker.name}} </div>
+           <div class="list__label--header">{{j.name}}</div>
+           <div class="list__label--value"> <a href='/reader/{{j.id}}'>Notes</a> </div>
+           <h4>Submitted On : {{j.datetime}}</h4>
+           <h5>Status : {{j.active}}</h5>
+           <p>{{j.report}}</p>
+         </div>
+       </div>
+       <!-- Photo Thumbnail Section -->
+       <div class="list__photos">
+         <!-- <span>Report </span> -->
+        {% if mode == "p" %}
+         <span><button class=' but_w3 report' id='b{{j.id}}' >Report</button></span>
+         <span><button class=' but_w3 report' id='d{{j.id}}' style="margin-left: 8px;">Accept</button></span>
+         <br>
+         {% endif %}
+       </div>
+       
+     </li>
+     <div>
+     <textarea  id='s{{j.id}}'  rows="10" cols="30" class='report hide ' style="font-style: inherit; font-size: 20px" placeholder="Report why the notes is rejected" ></textarea>
+     <button id='c{{j.id}}' class=' but_w3 report hide'  >Submit</button>
+   </div>
+   {% endfor %}
+   {% endfor %}
+ 
+   </ul>
+   
+ </div>
+ <!-- partial -->
+   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script><script  src="./script.js"></script>
+ 
+ <script>
+ 
+   // 'b' id for report button
+   // 'c' id for Submit button
+   // 's' id for textarea elemnet
+   // 'd' id for Approve button
+ $( document ).ready(function() {
+  {% for i in notes %}
+  {% for j in i %}
+   $('#s{{j.id}}').hide();
+   $('#c{{j.id}}').hide();
+ 
+   $('#b{{j.id}}').click(function (){
+     $('#s{{j.id}}').show();
+     $('#c{{j.id}}').show();
+   });
+ 
+ //function to forward report to reject the video
+   $('#c{{j.id}}').click(function () {
+     // var $crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+     // console.log('{{csrf_token}}');
+     // console.log($csrf_token);
+     $.ajax({
+   type: "POST",
+   url: '/ap_rj_vd_notes',
+   headers:{"X-CSRFToken": '{{csrf_token}}' },
+   data: {
+       id:'{{j.id}}',
+       report:$('#s{{j.id}}').val() 
+     },
+   success: function(){
+     location.reload();
+   }
+ });
+ 
+ });
+ 
+ //code to approve the video for uploading
+ $('#d{{j.id}}').click(function () {
+   console.log('good');
+     $.ajax({
+   type: "GET",
+   url: '/ap_rj_vd_notes',
+   headers:{"X-CSRFToken": '{{csrf_token}}' },
+   data: {
+       id:'{{j.id}}',
+     },
+   success: function(){
+     location.reload();
+   }
+ });
+ });
+ 
+     
+  {% endfor %}
+  {% endfor %}
+ 
+ 
+  
+ });
+ 
+ </script>
+ 
+ 
+ </body>
+ </html>
+ 

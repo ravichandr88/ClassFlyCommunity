@@ -195,6 +195,8 @@ def depthead_dashboard(request,page='p'):
     return render(request,'depthead_dashboard.html',context={'videos':videos_made,'mode':page})
 
 
+
+#API to reject or approve Videos , this is for dept head
 @login_required
 @depthead_required
 @api_view(['POST','GET'])
@@ -240,9 +242,86 @@ def videos_uploaded_list(request):
     return render(request,'videos_list.html',context={'videos':vlist})
 
 
-
+#PDF viewer page
 def reader(request,id):
     if Notes.objects.filter(id=id).count() == 0:
         return HttpResponse('Stop playing the notes ID')
     link = Notes.objects.get(id=id).note_link
     return render(request,'reader.html',context={'link':link})
+
+
+#uploading notes by a student/video maker
+@login_required
+@videomaker_required
+def notes_upload(request):
+    if request.method == 'POST':
+        print(request.POST)
+        Notes(
+            name=request.POST['name'], #book written author name
+            note_link=str(request.POST['notes_link']).split('/d/')[1].split('/')[0],
+            subject = Subject.objects.get(id=request.POST['subject_id']),
+            chapter = request.POST['chapter'],
+            uploaded_by=VideoMaker.objects.get(user__username=request.user)).save()
+        return HttpResponseRedirect(reverse('videom_dashboard'))
+
+    dept_head = VideoMaker.objects.get(user__username=request.user)
+    subjects = Subject.objects.all().values('id','name')
+    print(subjects)
+    return render(request,'notes_upload.html',context={'dept_head':dept_head.dept_head.name,'subjects':subjects})
+
+
+
+#function for video_makers dashboard to see Notes
+@login_required
+@videomaker_required
+def notes_uploaded_list(request):
+    vmaker = VideoMaker.objects.get(user__username=request.user)
+    vlist = vmaker.notes_uploaded.all().values('id','name','subject__name','chapter','datetime','active')
+    vlist = vlist[::-1]
+    # print(vlist)
+
+    return render(request,'notes_list.html',context={'videos':vlist})
+
+
+
+#videoDeptHead Notes Dashboard
+@login_required
+@depthead_required
+def depthead_notes_dashboard(request,page='p'):
+    
+    user = request.user
+    #videomakers under this depthead
+    video_makers = VideoDeptHead.objects.get(user__username=user)
+    notes_made = []
+    if page == 'r':
+        #Iterate over the video_makers
+        for i in video_makers.report_to_dept_head.all():
+            notes_made.append(i.notes_uploaded.filter(active=False))
+            print(i.notes_uploaded.filter(active=False))
+    elif page == 'a':
+        for i in video_makers.report_to_dept_head.all():
+            notes_made.append(i.notes_uploaded.filter(active=True))
+    else:
+        for i in video_makers.report_to_dept_head.all():
+            notes_made.append(i.notes_uploaded.filter(active=None))
+    # print(videos_made)
+    return render(request,'depthead_notes_dashboard.html',context={'notes':notes_made,'mode':page})
+
+
+#API to approve or Reject the Notes, Dept Head
+@login_required
+@depthead_required
+@api_view(['POST','GET'])
+def approve_reject_notes(request):
+    if request.method == 'POST':
+        notes = Notes.objects.get(id=request.data['id'][0])
+        notes.report = request.data['report']
+        notes.active = False
+        notes.save()
+        # print(notes.active)
+        return Response(data={'code':200})
+    if request.method == 'GET':
+        notes = Notes.objects.get(id= request.GET['id'][0])
+        notes.active = True
+        notes.save()
+        return Response(data={'code':200})

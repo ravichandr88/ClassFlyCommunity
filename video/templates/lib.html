@@ -266,9 +266,6 @@ font-size: 15px;
 <h2 style="text-align: center; color:#34a1eb"><b>Welcome</b></h2>
 
 <h4 style="text-align: center; color:#34a1eb">
-  <a href='/reader'>Book</a>
-  <button class='buttonvd button1' onclick="vdash()">Video Maker</button>
-  <button class='buttonvd button1' onclick="ddash()">Department Head</button>
   <!-- <a class="nav-link" href="{% url 'videom_dashboard' %}">VideoMaker</a> -->
 
   <!-- <a class="nav-link" href="{% url 'dept_dashboard' %}">DeptHead</a> -->
@@ -319,8 +316,22 @@ font-size: 15px;
     <br>
     {% endfor %}
     
-<hr class="new5">
     {% endfor %}
+<br>
+
+<a  class='buttonvd button1' href='/reader'>Sample Book Viewer</a>
+<br>
+
+<a  class='buttonvd button1' href='/videos_list'>Video_Maker_Dashboard</a>
+<br>
+
+<a  class='buttonvd button1' href='/dept_dashboard'>DeptHead_Video_Dashboard</a>
+<br>
+
+<a  class='buttonvd button1' href='/notes_list'>Notes_Dashboard</a>
+<br>
+
+<a  class='buttonvd button1' href='/notes_dept_dash'>Notes_DeptHead_Dashboard</a>
 <br>
 
 
