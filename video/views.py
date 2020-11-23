@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from .models import DeptHead,Playlist,Subject,VideoMaker,VideosMade,VideoId,VideoDeptHead,Subject,EducationDomain,Department
+from .models import DeptHead,Notes,Playlist,Subject,VideoMaker,VideosMade,VideoId,VideoDeptHead,Subject,EducationDomain,Department
 from rest_framework.response import Response
 import json
 
@@ -54,7 +54,7 @@ def community(request,sub,chp=1):
     
     chptrs = list(range(1,len(subjct_chptrs)+1))
     chptrs.remove(chp)
-    print(subjct_chptrs)
+    # print(Subject.objects.get(id=sub).subject_noteslist.all().filter(chapter=1))
     
     chptrs_name = [i.name for i in Subject.objects.get(id=sub).subject_playlist.all().order_by('chapter')]
     chptrs_name = dict(zip(range(1,len(chptrs_name)+1),chptrs_name))
@@ -62,7 +62,7 @@ def community(request,sub,chp=1):
 
 
     chptrs_name.pop(chp)
-    print(chptrs_name) 
+    # print(chptrs_name) 
     chptr_one = subjct_chptrs[chp-1]
     video_list = []  # the list of related videos
     first_video = ''    #The id of the first video
@@ -71,7 +71,6 @@ def community(request,sub,chp=1):
         video_list = [ i.video_id for i in chptr_one.playlist_videos.all()]
         first_video = video_list[0]
     else:
-        
         video_list = [i.video_id for i in chptr_one.playlist_videos.all()]
         title_list = [i.title for i in chptr_one.playlist_videos.all()]
         first_video = []
@@ -82,12 +81,13 @@ def community(request,sub,chp=1):
 
     chptrs_vcount = {}
     for i in chptrs:
-        chptrs_vcount[i] = len(subjct_chptrs[i-1].playlist_videos.all())
+        chptrs_vcount[i] = [len(subjct_chptrs[i-1].playlist_videos.all()),Subject.objects.get(id=sub).subject_noteslist.all().filter(chapter=i)]
+    fristChptrNotes = Subject.objects.get(id=sub).subject_noteslist.all().filter(chapter=1)
     
 
 
     
-    return render(request, 'community.html',{'title':'Community','video_list':video_list,'cf':subjct_chptrs[chp-1].cf,'chapters':chptrs,'chptrs_videos':chptrs_vcount,'vcount':len(video_list),'first_video':first_video,'cchpt':chp})
+    return render(request, 'community.html',{'title':'Community','video_list':video_list,'cf':subjct_chptrs[chp-1].cf,'chapters':chptrs,'chptrs_videos':chptrs_vcount,'vcount':len(video_list),'first_video':first_video,'cchpt':chp,'fristChptrNotes':fristChptrNotes})
 
 
 def communityn(request):
@@ -126,7 +126,7 @@ from django.urls import reverse_lazy
 @csrf_exempt
 @login_required
 def playlist(request):
-    print(request.user)
+    # print(request.user)
     if DeptHead.objects.filter(user=request.user).count() == 0:
         return HttpResponseRedirect(reverse('login'))
     
@@ -139,7 +139,7 @@ def playlist(request):
 
     id_list = eval(request.POST['id_list'])
    
-    print(request.POST)
+    # print(request.POST)
     if len(id_list) == 0:
         # return render(request,'videosuploaded.html',{'title':'Community'})
 
@@ -150,9 +150,9 @@ def playlist(request):
     
     playlist = Playlist(name=playlist_name,subject=subject,uploaded_by=dept_head)
     playlist.save()
-    print(id_list)
+    # print(id_list)
     for i in id_list:
-        print(i)
+        # print(i)
         VideoId(video_id=i,playlist=playlist).save()
 
     return HttpResponse(json.dumps({'code':'Videos Playlist Saved'}), content_type="application/json")
@@ -162,7 +162,7 @@ def videos_list(request):
     dept_head = DeptHead.objects.get(user__username=request.user)
     all_playlist = dept_head.depthead_playlist.all().values('id','name','subject','uploaded_by')
     
-    print(all_playlist)
+    # print(all_playlist)
 
     for i in all_playlist:
         print(Playlist.objects.get(id=i['id']).playlist_videos.all().values('video_id'))
@@ -216,7 +216,7 @@ def approve_reject_video(request):
 @videomaker_required
 def video_uploader(request):
     if request.method == 'POST':
-        print(request.POST['title'])
+        # print(request.POST['title'])
         VideosMade(
             title=request.POST['title'],
             video_link=request.POST['video_link'],
@@ -241,5 +241,8 @@ def videos_uploaded_list(request):
 
 
 
-def reader(request):
-    return render(request,'reader.html',context={})
+def reader(request,id):
+    if Notes.objects.filter(id=id).count() == 0:
+        return HttpResponse('Stop playing the notes ID')
+    link = Notes.objects.get(id=id).note_link
+    return render(request,'reader.html',context={'link':link})

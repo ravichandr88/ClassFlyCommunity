@@ -1,9 +1,11 @@
+// function to change chapter window
 function chng_window(sub,id)
 {
     console.log('sub:'+sub+'Chaptrid :'+id);
     window.location = id;
   
 }
+
 
 function get(list)
 {

@@ -50,6 +50,7 @@ class Playlist(models.Model):
     chapter = models.IntegerField(null=False,default=1)
     uploaded_by = models.ForeignKey(DeptHead,on_delete=models.CASCADE,related_name='depthead_playlist')
     cf = models.BooleanField(default = False)
+
     def __str__(self):
         return " Playlist Name: {} Subject: {}  Chapter : {} UploadedBy: {}".format(self.name,self.subject.name,self.chapter,self.uploaded_by.user.username)
 
@@ -103,6 +104,17 @@ class VideosMade(models.Model):
         return "Name {} Title {} report {} status {}".format(self.video_maker.name,self.title,self.report,self.status)
 #this is the end for tables including work for video uploader and depthead
 
+
+#table for notes
+class Notes(models.Model):
+    name = models.CharField(max_length = 200,null=False)
+    subject = models.ForeignKey(Subject,on_delete=models.CASCADE,related_name='subject_noteslist')
+    chapter = models.IntegerField(null=False,default=1)
+    uploaded_by = models.ForeignKey(VideoMaker,on_delete=models.CASCADE,related_name='notes_uploaded')
+    note_link = models.CharField(max_length=300)
+
+    def __str__(self):
+        return "Created_By {} Subject {} Chapter {} Uploaded_By {} note_link {}".format(self.name,self.subject,self.chapter,self.uploaded_by.name,self.note_link)
 
 
 

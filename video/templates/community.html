@@ -32,6 +32,7 @@
 
 
       <script src="{% static 'jsv/player.js' %}"></script>
+  <!-- popup code link --><script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
 
       <script>
       
@@ -162,10 +163,82 @@ background-color: #f1f1f1;
 }
 
   </style>
+
       <!--New slide-->
      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
         <!--New slide-->
+
+
+        <!-- popup css  -->
+        <style>
+ #text {
+  max-width: 800px;
+}
+#show {
+  position: fixed;
+  top: 30px;
+  left: 10px;
+}
+#show,
+#close {
+  background: #da1b60;
+  border: none;
+  color: #fff;
+  display: block;
+  font-size: 1em;
+  padding: 1em;
+  width: 200px;
+}
+#show:hover,
+#close:hover {
+  background: #ff8a00;
+  cursor: pointer;
+}
+.dialog {
+  display: none;
+  position: fixed;
+  top: 10vh;
+  left: 10vw;
+  width: 80vw;
+  height: 80vh;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 10px;
+  text-align: center;
+  z-index: 1;
+  background-color: #444;
+  color: #fff;
+}
+.dialog.show {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+        </style>
+        <!-- popup end code -->
+
+        <!-- popup close button code -->
+        <style>.close-button {
+          border: none;
+          display: inline-block;
+          padding: 8px 16px;
+          vertical-align: middle;
+          overflow: hidden;
+          text-decoration: none;
+          color: inherit;
+          background-color: inherit;
+          text-align: center;
+          cursor: pointer;
+          white-space: nowrap
+        }
+        
+        .topright {
+          position: absolute;
+          right: 0;
+          top: 0
+        }</style>
+        <!-- end of popup close button code -->
 </head>
 <body>
   
@@ -219,6 +292,7 @@ background-color: #f1f1f1;
       <div class="container-fluid video-blog">
 	  
             <div class="container">
+              
                 <!-- <button class="pure-button">A Pure Button</button> -->
                 <!--
                 <button class="pure-button" onclick="changelist('m2')">Maths2</button>
@@ -253,11 +327,35 @@ background-color: #f1f1f1;
 <br>
 <br>
 <h2>Chapters</h2>
+<!-- popup code -->
+
+<button class="button_class" onClick='showDialog({{cchpt}})'> Chapter {{cchpt}} Notes</button>
+<div id='dialog{{cchpt}}' class='dialog'>
+   <div style="overflow-y: scroll; height:400px;">
+    
+{% for item in fristChptrNotes %}
+<a  class="button_class" style='color:white' href='/reader/{{item.id}}'>Chapter {{item.chapter}} Notes Wriiten by {{item.name}}</a>
+{% endfor %}
+  </div>
+    <button id='close' class="button_class" onClick='closeDialog()'>Close Dialog</button>
+  </div>
+<!-- end of popup code -->
+
 {% for key,value in chptrs_videos.items %}
-<button class="button_class" onclick="chng_window(sub='{{subject}}',id='{{key}}')">Chapter {{key}} have   {{value}} videos</button>
+<button class="button_class" onclick="chng_window(sub='{{subject}}',id='{{key}}')">Chapter {{key}}  ({{value.0}} videos)</button>
+<button class="button_class" onClick='showDialog({{key}})'> Chapter {{key}} Notes</button>
 
+<div id='dialog{{key}}' class='dialog'>
+   <div style="overflow-y: scroll; height:400px;">
+ 
+{% for item in value.1 %}
+<button  class="button_class" >Chapter {{item.chapter}} Notes Written by {{item.name}}</button>
 <br>
+{% endfor %}
 
+  </div>
+    <button id='close' class="button_class" onClick='closeDialog()'>Close Dialog</button>
+  </div>
 {% endfor %}
   
     <!-- <section class="realated-coursee3 spad">
@@ -278,58 +376,7 @@ background-color: #f1f1f1;
 
       </div>
       </div>
-
-      <div class="carousel-cell">
-        <img class="w3-image" src="/static/imagesv/2.jpg">
-          <div class="course-info">
-        <div class="course-text">
-          <h5 >Arts</h5>
-            <p>The strength of Science and its online journal sites rests with the strengths of </p>
-        </div>
-
-      </div>
-      </div>
-      <div class="carousel-cell">
-        <img class="w3-image" src="/static/imagesv/3.jpg">
-          <div class="course-info">
-        <div class="course-text">
-          <h5 >Engineering</h5>
-            <p>The strength of Science and its online journal sites rests with the strengths of </p>
-        </div>
-
-      </div>
-      </div>
-          <div class="carousel-cell">
-        <img class="w3-image" src="/static/imagesv/4.jpg">
-          <div class="course-info">
-        <div class="course-text">
-          <h5 >Python</h5>
-            <p>The strength of Science and its online journal sites rests with the strengths of </p>
-        </div>
-
-      </div>
-      </div>
-          <div class="carousel-cell">
-        <img class="w3-image" src="/static/imagesv/5.jpg">
-          <div class="course-info">
-        <div class="course-text">
-          <h5 >BCA</h5>
-            <p>The strength of Science and its online journal sites rests with the strengths of </p>
-        </div>
-
-      </div>
-      </div>
-          <div class="carousel-cell">
-        <img class="w3-image" src="/static/imagesv/6.jpg">
-          <div class="course-info">
-        <div class="course-text">
-          <h5 >CIVIL</h5>
-            <p>The strength of Science and its online journal sites rests with the strengths of </p>
-        </div>
-
-      </div>
-      </div>
-    </div> -->
+ -->
 <br>
 <hr class="new5">
 
@@ -397,8 +444,7 @@ background-color: #f1f1f1;
         </div>   
 
 
-
-
+      
           <script>
       function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
@@ -439,7 +485,7 @@ background-color: #f1f1f1;
 }
 		</style>
 		
-
+    
          <!--####################### Footer Starts Here ###################-->
     <div class="copy">
         <div class="container">
@@ -454,6 +500,34 @@ background-color: #f1f1f1;
         </div>
 
     </div>
-</body>
+
+    <!-- popup code -->
+<script>
+  
+  window.f = 0;
+const showDialog = (f) => {
+  window.f = f;
+  document.getElementById('dialog'+f).classList.add('show')
+  const scrollY = document.documentElement.style.getPropertyValue('--scroll-y');
+  const body = document.body;
+  body.style.position = 'fixed';
+  body.style.top = `-${scrollY}`;
+};
+const closeDialog = () => {
+  const body = document.body;
+  const scrollY = body.style.top;
+  body.style.position = '';
+  body.style.top = '';
+  window.scrollTo(0, parseInt(scrollY || '0') * -1);
+  document.getElementById('dialog'+window.f).classList.remove('show');
+}
+window.addEventListener('scroll', () => {
+  document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
+});
+</script>
+<!-- end of popup code -->
+  </body>
+
+
 
 </html>
