@@ -121,10 +121,5 @@ class Migration(migrations.Migration):
                 ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subject_noteslist', to='video.Subject')),
                 ('uploaded_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notes_uploaded', to='video.VideoMaker')),
             ],
-        ),
-        migrations.AddField(
-            model_name='department',
-            name='domain',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='departments', to='video.EducationDomain'),
-        ),
+        )
     ]

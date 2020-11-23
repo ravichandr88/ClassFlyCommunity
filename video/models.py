@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 #     name = models.CharField(max_length=200,null=False)
 #     place = models.CharField(max_length=100,null=False)
 
+DEFAULTUSER = 1
 
 
 class DeptHead(models.Model):
@@ -30,7 +31,7 @@ class EducationDomain(models.Model):
 
 class Department(models.Model):
     name = models.CharField(max_length=200,null=False)
-    domain = models.ForeignKey(EducationDomain,on_delete=models.CASCADE,related_name='departments')
+    domain = models.ForeignKey(EducationDomain,on_delete=models.CASCADE,related_name='departments',default=DEFAULTUSER)
 
     def __str__(self):
         return "Name {} Domain {}".format(self.name,self.domain.name)
@@ -70,7 +71,6 @@ class VideoId(models.Model):
 
 #the following tables are made for video uploading and analytics for depthead and videoamker
 
-DEFAULTUSER = 1
 class VideoDeptHead(models.Model):
     user = models.OneToOneField(User,related_name='dept_head',on_delete=models.CASCADE,default=DEFAULTUSER)
     name        = models.CharField(max_length=100)
