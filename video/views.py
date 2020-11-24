@@ -81,8 +81,8 @@ def community(request,sub,chp=1):
 
     chptrs_vcount = {}
     for i in chptrs:
-        chptrs_vcount[i] = [len(subjct_chptrs[i-1].playlist_videos.all()),Subject.objects.get(id=sub).subject_noteslist.all().filter(chapter=i)]
-    fristChptrNotes = Subject.objects.get(id=sub).subject_noteslist.all().filter(chapter=1)
+        chptrs_vcount[i] = [len(subjct_chptrs[i-1].playlist_videos.all()),Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=i)]
+    fristChptrNotes = Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=1)
     
 
 
