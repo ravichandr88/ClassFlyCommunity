@@ -79,17 +79,25 @@ def community(request,sub,chp=1):
 
         video_list = dict(zip(video_list,title_list))
 
+    #chapter numbers to display playlist, if present
     chptrs_vcount = {}
-    for i in range(1,6):
-        chptrs_vcount[i] = [len(subjct_chptrs[i-1].playlist_videos.all()),Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=i)]
+    for i in chptrs:
+        chptrs_vcount[i] = len(subjct_chptrs[i-1].playlist_videos.all())
     fristChptrNotes = Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=chp)
     
+    allChptrNts = {}
+    #Prepare notes buttons
+    for i in range(1,11):
+        if (i != chp ) :
+            notes = Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=i)
+            if len(notes) > 0:
+                allChptrNts[i] = notes
+            # print(allChptrNts)
+    return render(request, 'community.html',{'title':'Community','video_list':video_list,'cf':subjct_chptrs[chp-1].cf,'chapters':chptrs,'chptrs_videos':chptrs_vcount,'vcount':len(video_list),'first_video':first_video,'cchpt':chp,'fristChptrNotes':fristChptrNotes,'allChptrNts':allChptrNts})
 
+'''
 
-    
-    return render(request, 'community.html',{'title':'Community','video_list':video_list,'cf':subjct_chptrs[chp-1].cf,'chapters':chptrs,'chptrs_videos':chptrs_vcount,'vcount':len(video_list),'first_video':first_video,'cchpt':chp,'fristChptrNotes':fristChptrNotes})
-
-
+'''
 def communityn(request):
     return render(request, 'community.html',{'title':'Community'})
 

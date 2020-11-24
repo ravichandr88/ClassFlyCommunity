@@ -342,22 +342,28 @@ background-color: #f1f1f1;
 <!-- end of popup code -->
 
 {% for key,value in chptrs_videos.items %}
-<button class="button_class" onclick="chng_window(sub='{{subject}}',id='{{key}}')">Chapter {{key}}  ({{value.0}} videos)</button>
+<button class="button_class" onclick="chng_window(sub='{{subject}}',id='{{key}}')">Chapter {{key}}  ({{value}} videos)</button>
+{% endfor %}
+
+
+
+
+{% for key,value in allChptrNts.items %}
 <button class="button_class" onClick='showDialog({{key}})'> Chapter {{key}} Notes</button>
 
 <div id='dialog{{key}}' class='dialog'>
-   <div style="overflow-y: scroll; height:400px;">
- 
-{% for item in value.1 %}
-<button  class="button_class" >Chapter {{item.chapter}} Notes Written by {{item.name}}</button>
+  <div style="overflow-y: scroll; height:400px;">
+
+{% for item in value %}
+<button  class="button_class" >Chapter {{key}} Notes Written by {{item.name}}</button>
 <br>
 {% endfor %}
 
-  </div>
-    <button id='close' class="button_class" onClick='closeDialog()'>Close Dialog</button>
-  </div>
+ </div>
+   <button id='close' class="button_class" onClick='closeDialog()'>Close Dialog</button>
+ </div>
 {% endfor %}
-  
+
     <!-- <section class="realated-coursee3 spad">
     <div class="course-warp">
       <h2 class="rc-title">Top Subjects</h2>
