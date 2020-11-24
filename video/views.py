@@ -83,13 +83,13 @@ def community(request,sub,chp=1):
     chptrs_vcount = {}
     for i in chptrs:
         chptrs_vcount[i] = len(subjct_chptrs[i-1].playlist_videos.all())
-    fristChptrNotes = Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=chp)
+    fristChptrNotes = Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=chp,active=True)
     
     allChptrNts = {}
     #Prepare notes buttons
     for i in range(1,11):
         if (i != chp ) :
-            notes = Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=i)
+            notes = Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=i,active=True)
             if len(notes) > 0:
                 allChptrNts[i] = notes
             # print(allChptrNts)
