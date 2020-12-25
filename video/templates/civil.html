@@ -1,0 +1,553 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!--meta tags --> 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--fav-->
+    <link rel="icon" 
+      type="image/svg" 
+      href="/static/comnty/Classfly.svg">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'comnty/style.css'%} ">
+    <link rel="stylesheet" href="{% static 'comnty/css/bootstrap.min.css' %}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'comnty/css/dark-mode.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'comnty/slick/slick.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'comnty/slick/slick-theme.css' %}"/>
+    <link rel="stylesheet" href="{% static 'comnty/src/llyv.css' %}">
+
+
+    <title>{{subject}} | Classfly Community</title>
+  </head>
+  <style>
+::placeholder {
+  font-size: 12px;
+}
+html {
+  scroll-behavior: smooth;
+}
+html, body {
+    max-width: 100%;
+    overflow-x: hidden !important;
+}
+/*text selecting color*/
+::selection {
+  color: rgb(255, 255, 255);
+  background: rgb(79, 199, 255);
+}
+/* Code for Firefox */
+::-moz-selection { 
+  color: rgb(255, 255, 255);
+  background: rgb(79, 199, 255);
+}
+
+.subimg {
+  width:200px !important;
+  height:160px !important;
+}
+
+@media only screen and (max-width: 992px) {
+ .subimg {
+  width:160px !important;
+  height:110px !important;
+}
+}
+@media only screen and (max-width: 575px) {
+ .subimg {
+  width:360px !important;
+  height:290px !important;
+}
+}
+@media only screen and (max-width: 388px) {
+ .subimg {
+  width:240px !important;
+  height:170px !important;
+}
+}
+@media only screen and (max-width: 767px) {
+  .topic {
+    visibility: hidden;
+  }
+}
+@media only screen and (min-width: 767px) {
+  .topicmob {
+    visibility: hidden;
+  }
+}
+
+
+  </style>
+  <div class="modal fade" id="topicsmodal" tabindex="-1" aria-labelledby="TopicModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Topics</h5>
+          <button type="button" id='close_panel' onclick="close_panel()" class="close" data-dismiss="modal" aria-label="Close" style="color: red;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <div><div class="llyv" data-id="XVmq8iHxhVc"></div><h5>Topic title<br><br></h5></div> -->
+          {% if vcount == 0 %}
+          <p>Sorry, No videos avaliable for this chapter</p>
+          {% endif %}
+      
+          {% if  cf %}
+                              {% for i in video_list %}
+                              <div onclick="change('{{i}}'); close_panel()"><img src="https://img.youtube.com/vi/{{i}}/mqdefault.jpg"  alt="..."><h5 id="{{i}}"></h5></div><br><br>
+                                
+                              {% endfor %}
+                             
+                              {% else %}
+                                           
+                              {% for key,value in video_list.items %}
+                              <div onclick="change(varsize = '{{key}}'); close_panel()"><div class="llyv" data-id="{{key}}"></div><h5>{{value}}<br><br></h5></div>
+      
+                              {% endfor %}        
+                              
+                              {% endif %}
+      
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="notesmodal" tabindex="-1" aria-labelledby="NotesModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Notes</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: red;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <!-- first chapter notes -->
+            {% if fristChptrNotes %}
+            
+            {% for item in fristChptrNotes %}
+            <div id="note{{item.chapter}}">
+                <a class="btn btn-primary btn-block"  href='/reader/{{item.id}}' role="button" >Chapter {{item.chapter}} Notes Wriiten by {{item.name}}</a>
+                
+              </div>
+            {% endfor %}
+            {% else %}
+
+              <p>Sorry , No notes available</p>
+
+            {% endif %}
+<!-- end of first chapter notes -->
+            {% for key,value in allChptrNts.items %}
+           
+            <div id="note{{key}}">
+             
+              {% for item in value %}
+              <a class="btn btn-primary btn-block"  href='/reader/{{item.id}}' role="button" >Chapter {{item.chapter}} Notes Wriiten by {{item.name}}</a>
+               {% endfor %}
+            </div>
+            {% endfor %}
+        </div></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <body>
+      <!-- navbar-->
+      <nav class="navbar navbar-expand-xl navbar-light bg-light shadow-sm p-2 mb-5 bg-white rounded fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="index.html" target="_blank"> <img src="/static/comnty/Classfly.svg" alt="" width="55" height="55" class="d-inline-block align-center" class="navlogo">
+       &nbsp;Classfly Community</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16">
+                  <path d="M3 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2z"/>
+                  <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2zM1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                </svg> &nbsp;Library
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M1 2.828v9.923c.918-.35 2.107-.692 3.287-.81 1.094-.111 2.278-.039 3.213.492V2.687c-.654-.689-1.782-.886-3.112-.752-1.234.124-2.503.523-3.388.893zm7.5-.141v9.746c.935-.53 2.12-.603 3.213-.493 1.18.12 2.37.461 3.287.811V2.828c-.885-.37-2.154-.769-3.388-.893-1.33-.134-2.458.063-3.112.752zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
+                </svg>&nbsp;Books</a>
+                <a class="dropdown-item" href="index.html#videos"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-btn-fill" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm4.79 3.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"/>
+                </svg>&nbsp;Videos</a>
+               <!-- <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>-->
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About&nbsp;
+                <span class="sr-only">(current)</span></a>
+            </li>
+         
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing&nbsp;</a>
+            </li>
+            
+            <li class="nav-item">
+              <a class="nav-link" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-outbound" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511zM11 .5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V1.707l-4.146 4.147a.5.5 0 0 1-.708-.708L14.293 1H11.5a.5.5 0 0 1-.5-.5z"/>
+              </svg>&nbsp;Contact Us</a>
+            </li>
+            
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search for your favorite books.." aria-label="Search">
+            <a href="#" button class="btn btn-outline-secondary my-2 my-sm-0" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+              <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+            </svg>&nbsp;Search</a>
+          </form>&nbsp;&nbsp;
+          <div class="custom-control custom-switch nav-item">
+            <input type="checkbox" class="custom-control-input" id="darkSwitch">
+            <label class="custom-control-label" for="darkSwitch" style="color:black">Dark Mode</label>
+          </div>
+        </div>
+      </div>
+      </nav> 
+  
+<br>
+<br>
+
+
+
+<div class="container"><br><br>
+  <center><h2 id="videos">{{subject}}</h2></center>
+<br>
+<div id='huj' class="row">
+<div class="col-md-8 col-lg-8 col-xl-9 col-sm-12">
+  <!--enter the video id in data-id="" to add videos-->
+
+  {% if cf %}
+  <div id='frist'>
+    <div class="llyv" data-id="{{first_video}}" id="ytVideo"  name="{{first_video | default:'f6aGTY0CgZs' }}"></div>
+    <h5 id="first_title" >ClassFly Community<br><br></h5>
+  </div>
+  {% else %}
+  <div id='frist'>
+      <div class="llyv" data-id="{{first_video.0}}" id="ytVideo"  name="{{first_video.0 | default:'f6aGTY0CgZs' }}" ></div>
+      <h5 id='first_title'>{{first_video.1}}<br><br></h5>
+    </div>
+  {% endif %}
+
+
+  <!-- <div id='frist'>
+  <div class="llyv" data-id="f6aGTY0CgZs" id="ytVideo" name="f6aGTY0CgZs">
+    <div class="llyv-play-btn"></div>
+    <img src="https://img.youtube.com/vi/f6aGTY0CgZs/hqdefault.jpg">
+    </div>
+    <h5 id="first_title"></h5>
+  </div> -->
+
+
+
+  <center><div class="responsive">
+
+     
+      <!-- <button class="button_class" onclick="chng_window(sub='{{subject}}',id='{{key}}')">Chapter {{key}}  ({{value}} videos)</button> -->
+     
+      <!-- current chapter notes -->
+      <!-- <button class="button_class" onClick='showDialog({{cchpt}})'> Chapter {{cchpt}} Notes</button> -->
+      <div class="dropdown">
+          <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Chapter-{{cchpt}}
+          </a>
+        
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="#" onclick="open_notes('{{cchpt}}')" data-toggle="modal" data-target="#notesmodal">Notes</a>
+          </div><br><br><br><br><br>
+        </div>
+      
+      <!-- end of current chapter notesfirst  -->
+      {% for key,value in chptrs_videos.items %}
+  <div class="dropdown">
+      <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       Chapter-{{key}}
+      </a>
+    
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <a class="dropdown-item" onclick="chng_window(sub='{{subject}}',id='{{key}}')" href="#">Videos</a>
+        <a class="dropdown-item" href="#" onclick="open_notes('{{key}}')"data-toggle="modal" data-target="#notesmodal">Notes</a>
+      </div><br><br><br><br><br>
+    </div>
+    {% endfor %}
+
+    </div></center> <center class="topicmob"><button type="button" class="btn btn-success" data-toggle="modal" data-target="#topicsmodal">
+   Topics
+    </button></center><br><h2>Subjects</h2>
+    <div class="row">
+    <div class="col-md-4 col-lg-4 col-xl-3 col-sm-6">
+      <center> <img src="network.png" class="card-img-top img-fluid subimg" alt="..."><h5><a href="#" class="badge badge-primary">Subject title</a></h5><br></center>
+    </div>
+    <div class="col-md-4 col-lg-4 col-xl-3 col-sm-6">
+        <center> <img src="network.png" class="card-img-top img-fluid subimg" alt="..."><h5><a href="#" class="badge badge-primary">Subject title</a></h5><br></center>
+      </div>
+      <div class="col-md-4 col-lg-4 col-xl-3 col-sm-6">
+        <center> <img src="network.png" class="card-img-top img-fluid subimg" alt="..."><h5><a href="#" class="badge badge-primary">Subject title</a></h5><br></center>
+      </div>
+      <div class="col-md-4 col-lg-4 col-xl-3 col-sm-6">
+        <center> <img src="network.png" class="card-img-top img-fluid subimg" alt="..."><h5><a href="#" class="badge badge-primary">Subject title</a></h5><br></center>
+      </div>
+
+      <div class="col-md-4 col-lg-4 col-xl-3 col-sm-6">
+        <center> <img src="network.png" class="card-img-top img-fluid subimg" alt="..."><h5><a href="#" class="badge badge-primary">Subject title</a></h5><br></center>
+      </div>
+      <div class="col-md-4 col-lg-4 col-xl-3 col-sm-6">
+        <center> <img src="network.png" class="card-img-top img-fluid subimg" alt="..."><h5><a href="#" class="badge badge-primary">Subject title</a></h5><br></center>
+      </div>
+      <div class="col-md-4 col-lg-4 col-xl-3 col-sm-6">
+        <center> <img src="network.png" class="card-img-top img-fluid subimg" alt="..."><h5><a href="#" class="badge badge-primary">Subject title</a></h5><br></center>
+      </div>
+      <div class="col-md-4 col-lg-4 col-xl-3 col-sm-6">
+        <center> <img src="network.png" class="card-img-top img-fluid subimg" alt="..."><h5><a href="#" class="badge badge-primary">Subject title</a></h5><br></center>
+      </div>
+     
+     
+                  
+               
+  </div>
+  
+
+</div>
+<br><br>
+
+<div class="col-md-4 col-lg-4 col-xl-3 col-sm-6 topic">
+    {% if vcount == 0 %}
+    <p>Sorry, No videos avaliable for this chapter</p>
+    {% endif %}
+
+    {% if  cf %}
+                        {% for i in video_list %}
+                      <div onclick="change('{{i}}')"><img src="https://img.youtube.com/vi/{{i}}/mqdefault.jpg"  alt="..."><h5 id="o{{ i }}">ClassFly Community</h5> <p id="ime{{i}}" style="color:red" ></p><br><br></div>
+                          
+                        {% endfor %}
+                       
+                        {% else %}
+                                     
+                        {% for key,value in video_list.items %}
+                        <div onclick="change(varsize = '{{key}}')"><div class="llyv" data-id="{{key}}"></div><h5>{{value}}<br><br></h5><p id="ime{{i}}" style="color:red" ></p></div>
+
+                        {% endfor %}        
+                        
+                        {% endif %}
+
+  <!-- <div><div class="llyv" data-id="XVmq8iHxhVc"></div><h5>Topic title<br><br></h5></div>
+  <div><div class="llyv" data-id="XVmq8iHxhVc"></div><h5>Topic Title<br><br></h5></div>
+  <div><div class="llyv" data-id="XVmq8iHxhVc"></div><h5>Topic title<br><br></h5></div>
+  <div><div class="llyv" data-id="XVmq8iHxhVc"></div><h5>Topic Title<br><br></h5></div>
+  <div><div class="llyv" data-id="XVmq8iHxhVc"></div><h5>Topic Title<br><br></h5></div> -->
+</div><br><br>
+<br><br>
+</div></div><br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Footer -->
+<footer class="page-footer font-small py-3 sticky-buttom" style="background-color:rgb(39, 69, 153)">
+
+  <!-- Footer Elements -->
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-6 d-flex justify-content-center">
+        <!-- Copyright -->
+        <div class="footer-copyright text-center bg-transparent" style="color: white;">© 2020 Copyright:
+          <a href="https://www.classfly.in/" target="_blank" style="color: rgb(172, 252, 255);"> Classfly.in</a>
+        </div>
+        <!-- Copyright -->
+      </div>
+      <div class="col-md-6 d-flex justify-content-center">
+        <ul class="list-unstyled d-flex mb-0">
+          <li>
+          	<a class="mr-3" role="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-facebook" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+            </svg></a>
+          </li>
+          <li>
+          	<a class="mr-3" role="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-twitter" viewBox="0 0 16 16">
+              <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+            </svg></a>
+          </li>
+          <li>
+          	<a class="mr-3" role="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-instagram" viewBox="0 0 16 16">
+              <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+            </svg></a>
+          </li>
+          <li>
+          	<a class="" role="button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-youtube" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.122C.002 7.343.01 6.6.064 5.78l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+            </svg></i></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <!-- Footer Elements -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+    
+
+      
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+      <script src="{% static 'comnty/js/dark-mode-switch.min.js' %}"></script>
+      <script src="{% static 'comnty/src/llyv.js' %}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ 
+      <script src="{% static 'jsv/player.js' %}"></script>
+      
+
+
+
+      <script>
+        if (screen && screen.width > 900) {
+        document.write('<script type="text/javascript" src="{% static 'comnty/src/llyv.js' %}"><\/script>');
+        }
+        </script>
+        
+        <script>
+        if (screen && screen.width < 900) {
+        document.write('<script type="text/javascript" src="{% static 'comnty/src/llyvmob.js' %}"><\/script>');
+        }
+        </script>
+
+
+
+
+
+
+
+      <script type="text/javascript">
+    
+    
+ 
+    
+    </script>
+      <script type="text/javascript" src="{% static 'comnty/slick/slick.min.js' %}"></script>
+
+  <script type="text/javascript">
+
+
+  //to load all the titles from the videos id
+  $(document).ready(function(){
+  
+  if ("{{cf}}" == 'True')
+  {
+  get("{{video_list}}");
+  // console.log("{{video_list}}");
+  }
+});
+
+
+    $(document).ready(function(){
+        $('.responsive').slick({
+  dots: true,
+  infinite: false,
+  speed: 300,
+  slidesToShow: 5,
+  slidesToScroll: 4,
+  responsive: [
+    {
+      breakpoint: 1200,
+      settings: {
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        infinite: true,
+        dots: true
+      }
+    },
+    {
+      breakpoint: 992,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 2
+      }
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1
+      }
+    },
+    {
+      breakpoint: 330,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+
+  ]
+});
+    });
+  </script>
+      
+      <script>
+        AOS.init();
+      </script>
+
+  </body>
+</html>

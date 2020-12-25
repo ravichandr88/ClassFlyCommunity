@@ -34,7 +34,7 @@ class Department(models.Model):
     domain = models.ForeignKey(EducationDomain,on_delete=models.CASCADE,related_name='departments',default=DEFAULTUSER)
 
     def __str__(self):
-        return "Name {} Domain {}".format(self.name,self.domain.name)
+        return "ID {} Name {} Domain {}".format(self.id,self.name,self.domain.name)
 
 class Subject(models.Model):
 

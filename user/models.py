@@ -9,6 +9,7 @@ class Phonenumber(models.Model):
 
     def __str__(self):
         return "user {}  phone {}".format(self.user.username,self.phone_number)
+
 class VideoUpload(models.Model):
     title = models.CharField(max_length=200)
     video_link = models.CharField(max_length=1000)
@@ -17,7 +18,7 @@ class VideoUpload(models.Model):
     dept_head = models.CharField(max_length=100)
 
     def __str__(self):
-        return "Title {}  Description {} VideoLink {} description {}".format(self.title,self.video_link,self.descripion,self.thumbnail_link,self.dept_head)
+        return "Title {}   VideoLink {} Description {} Thumbnail {} Departhad {}".format(self.title,self.video_link,self.descripion,self.thumbnail_link,self.dept_head)
 
 
 
@@ -26,3 +27,11 @@ class Email(models.Model):
 
     def __str__(self):
         return "Email: {}".format(self.gmail)
+
+class OTP(models.Model):
+    user = models.OneToOneField(User,related_name='user_otp',on_delete=models.CASCADE)
+    otp = models.CharField(null=False,max_length=4)
+    count = models.IntegerField(default=0)
+
+    def __str__(self):
+        return "user {} count {} otp {}".format(self.user.username,self.count,self.otp)

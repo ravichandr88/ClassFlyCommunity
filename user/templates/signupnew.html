@@ -1,0 +1,398 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CF Registration</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- LINEARICONS -->
+        <link rel="stylesheet" href="fonts/linearicons/style.css">
+        
+        <!-- STYLE CSS -->
+        <link rel="stylesheet" href="css/style.css">
+          <link href="{% static 'sign/style.css' %}" rel="stylesheet">
+        <link href="{% static 'fonts/style.css' %}" rel="stylesheet">
+
+
+
+          <!-- script code starts -->
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <script>
+
+        $(document).ready(function(){
+    //    $('#phase1').hide();
+       $('#phase3').hide();
+       $('#phase2').hide();
+       $('#finalsubmit1').hide();
+       $('#finalsubmit2').hide();
+       $('#resendalert').hide()
+       
+        });
+        
+
+        $(document).ready(function(){
+            //hide the submit button
+            $('#finalsubmit').hide()
+            if("{{otp}}")
+            {
+                $('#phase1').hide();
+                $('#phase1_1').hide();
+                $('phase3').hide();
+                $('#phase2').show();
+            }
+            else if("{{phone}}")
+            {
+                $('#phase1').hide();
+                $('#phase1_1').hide();
+                $('phase2').hide();
+                $('#phase3').show();
+            }
+         
+           
+        });
+
+    // function to switch from otp to phoneNumber form
+    function phone_number()
+    {
+        $('#phase1').hide();
+        $('#phase2').hide();
+        $('#phase3').show();
+    }
+
+    var usrnm='lnlknlknlk';
+    var psswd='lknlknlknlk';
+    var access_token = ''
+
+   
+    
+    function submitm()
+    {
+        var data = {};
+        usrnm = document.forms[0][0].value;
+        psswd = document.forms[0][2].value;
+        document.forms[0].valid
+        console.log(document.forms[0].length)
+        for(var x = 0;x < document.forms[0].length; x++ )
+        {
+            data[document.forms[0][x].name] = document.forms[0][x].value
+        }
+        
+        if(document.forms[0].checkValidity())
+        {
+        console.log(data)
+        $('#finalsubmit').show();
+        $('#finalsubmit').click();
+        }
+        // signup(data)
+     
+    
+
+    }
+
+// <!-- 
+//     function signup(data)
+//     {
+//         //preparing error diviosn
+//         $('#error').html('');
+
+
+//         $.ajax({
+//     url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/users',
+//     type: 'post',
+//     data:JSON.stringify(data),
+//     headers: {
+//         "Authorization" : "Basic a21qdWZ4aHVqOTExOjY4MjY3ZWQ5NmVmOTQ4M2VhYjE1OWVkMjdlN2U0ODgz",
+//   "Content-Type": "application/vnd.kii.RegistrationRequest+json"
+//     },
+    
+//     success: function (data) {
+//         //success of signup
+//         login();
+//         console.info(data);
+       
+
+//     }
+// }).fail(
+//     function(jqXHR, textStatus, errorThrown) {
+
+//           console.log(JSON.parse(jqXHR.responseText).message);
+//           $('#error').html(JSON.parse(jqXHR.responseText).message);
+
+        
+//      })
+//     }
+
+//  -->
+
+     //REST for login after signup
+     function login(){
+
+         console.log('very good');
+         
+     $.ajax({
+    url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/oauth2/token',
+    type: 'post',
+    data:JSON.stringify({"grant_type": "password",
+        "username": usrnm,
+        "password": psswd}),
+    headers: {
+        "Authorization" : "Basic a21qdWZ4aHVqOTExOjY4MjY3ZWQ5NmVmOTQ4M2VhYjE1OWVkMjdlN2U0ODgz",
+  "Content-Type": "application/json"
+    },
+    
+    success: function (data) {
+        console.info(data['access_token']);
+        access_token = data['access_token']
+        $('#phase1').hide();
+        $('#phase1_1').hide();
+        $('#phase2').show();
+    }
+}).fail(
+    function(jqXHR, textStatus, errorThrown) {
+
+          console.log(JSON.parse(jqXHR.responseText).message);
+        
+     })
+       }
+
+
+
+// rest api to verify otp
+       function verifyotp(){
+        if(document.forms[1].checkValidity())
+        {
+            $('#finalsubmit1').show();
+           $('#finalsubmit1').click();
+        }
+
+        return;
+
+        var otp = document.getElementById('otp').value;
+        console.log(otp)
+        
+console.log('very good');
+
+$.ajax({
+url: 'https://api-jp.kii.com/api/apps/kmjufxhuj911/users/me/phone-number/verify',
+type: 'post',
+data:JSON.stringify({ "verificationCode": otp}),
+headers: {
+"Authorization" : "Bearer "+access_token,
+"Content-Type": "application/vnd.kii.AddressVerificationRequest+json"
+},
+
+success: function (data) {
+    console.info(data);
+    // $('#finalsubmit').show();
+    // $('#finalsubmit').click();
+}
+}).fail(
+function(jqXHR, textStatus, errorThrown) {
+
+ console.log(JSON.parse(jqXHR.responseText).message);
+ $('#error').html(JSON.parse(jqXHR.responseText).message)
+
+});
+}
+
+
+
+//resend otp
+function resendOTP()
+{
+
+$('#resendalert').show();
+$('#resendbutton').hide();
+// timeit();   //call the timer
+
+
+$.ajax({
+url: '/resend',
+type: 'get',
+data:{'username':"{{request.session.username}}"},
+success: function (data) {
+console.info(data);
+
+}
+}).fail(
+function(jqXHR, textStatus, errorThrown) {
+
+ console.log(JSON.parse(jqXHR.responseText).message);
+
+})
+
+//end of resen otp function
+}
+
+
+//change phone number function
+function change_number()
+{
+    if(document.forms[2].checkValidity())
+    {
+        $('#finalsubmit2').show();
+        $('#finalsubmit2').click();
+        
+    }
+}
+
+
+
+    </script>
+
+   
+    </head>
+
+    <body>
+
+        <div class="wrapper">
+            <div class="inner">
+                
+                <div id="phase1">
+                <form name="myForm" id="jun" action="/signup" method="POST">
+                    <img src="{% static 'images/classfly.jpg' %}"/>
+                    <h3></h3>
+                    <div class="form-holder">
+                        <span class="lnr lnr-user"></span>
+                        <input type="text" name="loginName" class="form-control" placeholder="Username" value="{{loginName}}">
+                    </div>
+                    <div class="form-holder">
+                        <span class="lnr lnr-user"></span>
+                        <input type="text" class="form-control" name="displayName"  placeholder="Full Name" value="{{displayName}}">
+                    </div>
+                    
+                    <div class="form-holder">
+                        <span class="lnr lnr-lock"></span>
+                        <input type="password" name="password"  class="form-control" placeholder="Password" value="{{password}}">
+                    </div>
+
+                    <div class="form-holder">
+                            <span class="lnr lnr-phone-handset"></span>
+                            <input type="text" name="phoneNumber"  minlength="10" maxlength="10" class="form-control" placeholder="Phone Number 10 digits" value="{{phoneNumber}}">
+                        </div>
+
+                    <div class="form-holder">
+                            <!-- <span class="lnr lnr-menu"></span> -->
+                        
+                    </div>
+                    <p id='error' style="color: red">{{error}}</p>
+
+                    <input type="submit" id="finalsubmit" value='Save' name='Save' >
+                    
+                    <br>
+                    <a  style="color:#00b3ff" href="login"><u> Already have an account? Login</a> </u>
+                </form>
+                </div>
+                   <!-- //button for sms signup -->
+                   <button onclick="submitm()" id="phase1_1"><span>Register</span>
+                    </button>
+                
+
+                    <!-- automatic login button for testing -->
+                    
+                    <!-- <button onclick="login()">login-testing</button> -->
+
+
+
+                    <!-- form to submit OTP -->
+                    <div id="phase2">
+                    <form name="myForm" id="jun" action="/signup" method="POST">
+                        <img src="{% static 'images/classfly.jpg' %}"/>
+                        <br>
+                        <h4>OTP sent to +91 {{phoneNumber}}</h4>
+                        <div class="form-holder">
+                                <span class="lnr lnr-lock"></span>
+                                <input type="text"  class="form-control" required maxlength="4" minlength="4" name='otp' id = 'otp' placeholder="SMS OTP">
+                                <p  style="color: red">{{error}}</p>
+                        </div>
+                        <input type="submit" id="finalsubmit1" value='Save' name='Save' >
+                    
+                    </form>
+                    <br>
+                    <button onclick="verifyotp()">Verify OTP</button>
+                    <!-- <button onclick="get()">active</button> -->
+                    <button onclick="resendOTP()" id='resendbutton' >Resend OTP</button>
+                    
+                    <button id="resendalert"><p id="demo"></p></button>
+                    
+                    
+                    <button onclick="phone_number()">Change Phone Number</button>
+                    </div>
+
+                    
+                    <!-- form to submit OTP -->
+                    <div id="phase3">
+                            <form name="myForm" id="jun" action="/signup" method="POST">
+                                <img src="{% static 'images/classfly.jpg' %}"/>
+                                <br>
+                                <h4></h4>
+                                <div class="form-holder">
+                                        <span class="lnr lnr-lock"></span>
+                                        <input type="text"  class="form-control" minlength="10" maxlength="10" name='phoneNumber' id = 'otp' placeholder="Phone Number">
+                                        <p  style="color: red">{{error}}</p>
+                                </div>
+                                <input type="submit" id="finalsubmit2" value='Save' name='Save' >
+                            
+                            </form>
+                            <br>
+                            <button onclick="change_number()">Send OTP</button>
+
+                            </div>
+            </div>
+            
+        </div>
+        
+        <!-- <script src="js/jquery-3.3.1.min.js"></script> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+          <!-- <script src="{%static 'js/main.js' %}"></script> -->
+
+          
+
+          <script>
+              function timeit()
+          {
+          // Set the date we're counting down to
+
+          var countDownDate = new Date().getTime()+ 3*60000 ;
+          
+          // Update the count down every 1 second
+          var x = setInterval(function() {
+          
+            // Get today's date and time
+            var now = new Date().getTime();
+
+            // console.log('count'+countDownDate+ 'now' + now);
+              
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+              
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+              
+            // Output the result in an element with id="demo"
+            document.getElementById("demo").innerHTML =  " Please wait " +minutes + ":" + seconds + " to resend OTP ";
+              
+            // If the count down is over, write some text 
+            if (distance < 0) {
+                distance = 0;
+              clearInterval(x);
+             
+$('#resendalert').hide();
+$('#resendbutton').show();
+            }
+            // console.log(x);
+          }, 1000);
+
+          }
+         
+        //   timeit();
+          </script>
+          
+    </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

@@ -177,3 +177,6 @@ django_heroku.settings(locals())
 
 options = DATABASES['default'].get('OPTIONS', {})
 options.pop('sslmode', None)
+
+#save session for every request, session will not expires.
+SESSION_SAVE_EVERY_REQUEST = True

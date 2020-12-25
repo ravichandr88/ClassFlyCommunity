@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 
  
 urlpatterns = [
-		path('signup',views.signup,name='signup'),
+		# path('signup',views.signup,name='signup'),
     path('login',views.loginview,name='login'),
     path('password_reset',views.password_reset,name='password_reset'),
     path('video',views.videoupload),
@@ -23,11 +23,12 @@ urlpatterns = [
     path('angular',views.angular),
     path('python',views.python),
     path('home',views.home),
-    path('subscribe',views.subsignup),
+    path('signup',views.subsignup,name='signup'),
     path('example',views.example),
     path('logout',views.logout_request,name='logout'),
     path('register',views.webinar,name='register'),
     path('register_email',views.save_email,name='register_email'),
-    path('event',views.redirect_event)
+    path('event',views.redirect_event),
+    path('resend',views.resend_otp)
  
     ] 

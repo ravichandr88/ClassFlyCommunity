@@ -1,7 +1,7 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-<head>
+<head> 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% if title %}
@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="{% static 'cssv/fontawsom-all.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'cssv/style.css' %}"/>
       <link rel="stylesheet" href="{% static 'cssv/owl.carousel.css' %}"/>
-
+ 
 
       <script src="{% static 'jsv/player.js' %}"></script>
   <!-- popup code link --><script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
@@ -249,7 +249,7 @@ background-color: #f1f1f1;
               <div class="container">
                   <div class="row nav-row">
                       <div class="col-md-3 logo">
-                         <img src="/static/imagesv/classfly.jpg" alt="">
+                         <img src="/static/imagesv/classfly.jpg" alt=""> 
                       </div>
                       <div class="col-md-9 nav-col">
                         <nav class="navbar navbar-expand-lg navbar-light">
@@ -322,7 +322,7 @@ background-color: #f1f1f1;
 <p id='first_title'>ClassFly Community</p>
 {% else %}
 <p>{{first_video.1}}</p>
-{% endif %}
+{% endif %} 
   <!-- Page -->
 <br>
 <br>
@@ -401,7 +401,7 @@ background-color: #f1f1f1;
                         <div class="row no-margin video-title">
                             <h6><i class="fas fa-book"></i> Related Videos from <br> Chapter {{cchpt}}</h6>
                         </div>
-                        {% if vcount == 0%}
+                        {% if vcount == 0 %}
                         <p>Sorry, No videos avaliable for this chapter</p>
                         {% endif %}
 
@@ -409,7 +409,7 @@ background-color: #f1f1f1;
                         {% for i in video_list %}
                         <div class="contri-bghy" onclick="change(varsize = '{{i}}')"  >
                             <div class="image">
-                                <img id="img{{i}}" src="https://img.youtube.com/vi/{{i}}/hqdefault.jpg" alt="Black and White"  >
+                                <img id="img{{i}}" src="https://img.youtube.com/vi/{{i}}/maxresdefault.jpg" alt="Black and White"  >
                             </div>
                         </div>
                         <p id="im{{i}}" style="color:red" ></p>
