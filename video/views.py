@@ -51,7 +51,7 @@ def community(request,sub,chp=1):
     subjct_chptrs = subjct.subject_playlist.all().order_by('chapter')
     if (chp < 1) or (chp > len(subjct_chptrs)):
         return HttpResponse('Stop Playing')
-    
+
     chptrs = list(range(1,len(subjct_chptrs)+1))
     chptrs.remove(chp)
     # print(Subject.objects.get(id=sub).subject_noteslist.all().filter(chapter=1))
@@ -92,8 +92,23 @@ def community(request,sub,chp=1):
             notes = Subject.objects.get(id=sub).subject_bookslist.all().filter(chapter=i,active=True)
             if len(notes) > 0:
                 allChptrNts[i] = notes
-    print(fristChptrNotes)
-    return render(request, 'civil.html',{'title':'Community','video_list':video_list,'cf':subjct_chptrs[chp-1].cf,'chapters':chptrs,'chptrs_videos':chptrs_vcount,'vcount':len(video_list),'first_video':first_video,'cchpt':chp,'fristChptrNotes':fristChptrNotes,'allChptrNts':allChptrNts,'subject':subjct.name})
+    # print(fristChptrNotes)
+    engg = Department.objects.get(id=subjct.domain.id)
+    subj = engg.domain_subjects.all().values('name','imgurl','id')
+    print(subj)
+    return render(request, 'civil.html',{'title':'Community',
+                                        'video_list':video_list,
+                                        'cf':subjct_chptrs[chp-1].cf,
+                                        'chapters':chptrs,
+                                        'chptrs_videos':chptrs_vcount,
+                                        'vcount':len(video_list),
+                                        'first_video':first_video,
+                                        'cchpt':chp,
+                                        'fristChptrNotes':fristChptrNotes,
+                                        'allChptrNts':allChptrNts,
+                                        'subject':subjct.name,
+                                        'subjects':subj
+                                        })
 
 '''
 
@@ -109,12 +124,15 @@ def lib(request):
     # for i in depts.keys():
     #     #{'VTU': {'Mech' : [Subject Lists]}}
     #    depts[i] = {j.name: list(j.domain_subjects.all().values('name','imgurl','descp','id')) for j in depts[i]}
+       
     engg = Department.objects.get(id=1)
     subj = engg.domain_subjects.all().values('name','imgurl','id')
-
+    if request.method == 'POST':
+        subj = Subject.objects.filter(name__icontains=request.POST['search']).values('name','imgurl','id')
+        return render(request, 'community1.html',{'title':'Video Library','subjects':subj,'subject_title':'Results for "'+request.POST['search']+'"', 'pic':False})
     # print(depts)
 
-    return render(request, 'community1.html',{'title':'Video Library','subjects':subj})
+    return render(request, 'community1.html',{'title':'Video Library','subjects':subj,'subject_title':'Engineering First Year', 'pic':True})
 
 def default(request):
 	return render(request, 'default.html',{'title':'error'})
