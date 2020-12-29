@@ -352,18 +352,16 @@ html, body {
       <script src="{% static 'comnty/src/llyv.js' %}"></script>
 
 
-      <script>
-          $(document).ready(function () {
-              $(document).click(function (event) {
-                  var click = $(event.target);
-                  var _open = $(".navbar-collapse").hasClass("show");
-                  if (_open === true && !click.hasClass("navbar-toggler")) {
-                      $(".navbar-toggler").click();
-                  }
-              });
-          });
-               
-           </script>
+     <script>
+        // Close Navbar when clicked outside
+        $(window).on('click', function(event){
+            var clickOver = $(event.target)
+            if ($('.navbar .navbar-toggler').attr('aria-expanded') == 'true' && clickOver.closest('.navbar').length === 0) {
+                $('button[aria-expanded="true"]').click();
+            }
+        });
+             
+         </script>
 
 
       <script>

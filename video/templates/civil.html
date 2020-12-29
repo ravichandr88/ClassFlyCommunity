@@ -481,18 +481,15 @@ html, body {
     </script>
       <script type="text/javascript" src="{% static 'comnty/slick/slick.min.js' %}"></script>
       <script>
-          $(document).ready(function () {
-              $(document).click(function (event) {
-                  var click = $(event.target);
-                  var _open = $(".navbar-collapse").hasClass("show");
-                  if (_open === true && !click.hasClass("navbar-toggler")) {
-                      $(".navbar-toggler").click();
-                  }
-              });
-          });
-               
-           </script>
-          
+        // Close Navbar when clicked outside
+        $(window).on('click', function(event){
+            var clickOver = $(event.target)
+            if ($('.navbar .navbar-toggler').attr('aria-expanded') == 'true' && clickOver.closest('.navbar').length === 0) {
+                $('button[aria-expanded="true"]').click();
+            }
+        });
+             
+         </script>          
   <script type="text/javascript">
 
 
