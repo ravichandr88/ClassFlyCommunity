@@ -32,7 +32,7 @@ def videomaker_required(function):
         if VideoMaker.objects.filter(user=user).count() == 1:
             return function(request,  **kwargs)
         else:
-            m = VideoMaker(user=user,name=user.first_name,usn='GGGGGG',dept_head=VideoDeptHead.objects.get(user__username='ninjaa')).save()
+            m = VideoMaker(user=user,name=user.first_name,usn='GGGGGG',dept_head=VideoDeptHead.objects.get(user__username='bunny')).save()
             
             print(m)
             return function(request,  **kwargs)
