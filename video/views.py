@@ -98,7 +98,7 @@ def community(request,sub,chp=1):
     # print(fristChptrNotes)
     engg = Department.objects.get(id=subjct.domain.id)
     subj = engg.domain_subjects.all().values('name','imgurl','id')
-    print(subj)
+    # print(subj)
     return render(request, 'civil.html',{'title':'Community',
                                         'video_list':video_list,
                                         'cf':subjct_chptrs[chp-1].cf,
@@ -110,7 +110,8 @@ def community(request,sub,chp=1):
                                         'fristChptrNotes':fristChptrNotes,
                                         'allChptrNts':allChptrNts,
                                         'subject':subjct.name,
-                                        'subjects':subj
+                                        'subjects':subj,
+                                        'subId':sub
                                         })
 
 '''
