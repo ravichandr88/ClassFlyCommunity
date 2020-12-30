@@ -93,7 +93,7 @@ font-weight:normal;
         <div class="form-field">
             <label for="phone" class="label--required">Notes Link</label>
             <section>
-                <input name="file" id="uploadfile" type="file" accept="application/pdf><br><h1></h1>
+                <input name="file" id="uploadfile" type="file" accept="application/pdf"><br><h1></h1>
                 </section>
                 
         </div>
@@ -138,6 +138,7 @@ font-weight:normal;
     </form>
     <form id='good'>
     <div class="form-buttons">
+            <div class="loader" id="loader"></div> 
         <button id='sub' type="submit" class="a-btn--filled">Upload</button>
     </div>
     </form>
@@ -194,6 +195,26 @@ font-weight:normal;
 pointer-events:none;
 background:#dbd9d9;
 }
+
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+}
+
+.loader {
+  border-top: 16px solid #3498db;
+  border-bottom: 16px solid #3498db;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 </style>
 
 
@@ -201,15 +222,23 @@ background:#dbd9d9;
 
 $(document).ready(function() { 
 $('#save').hide();
+$('#loader').hide();
 });
 
     const form = document.getElementById('form');
     butn = document.getElementById('good');
     butn.addEventListener('submit', e => {
+        //start the loader
+        $('#loader').show();
         e.preventDefault();
         console.log('triggered');
       const file = form.file.files[0];
       const fr = new FileReader();
+      if ('application/pdf' ==  JSON.stringify(file.type)){
+          alert('Accept only PDFs');
+          $('#loader').hide();
+          return;
+      }
       fr.readAsArrayBuffer(file);
       fr.onload = f => {
         
@@ -228,6 +257,7 @@ $('#save').hide();
     {
         console.log(x);
         document.getElementById('link').value=x.fileId;
+        $('#loader').hide();
         $('#save').show();
         $('#sub').hide();
     }
