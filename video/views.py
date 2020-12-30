@@ -32,7 +32,10 @@ def videomaker_required(function):
         if VideoMaker.objects.filter(user=user).count() == 1:
             return function(request,  **kwargs)
         else:
-            return HttpResponse('Sorry, you are not signedup as Video Maker')
+            m = VideoMaker(user=user,name=user.first_name,usn='GGGGGG',dept_head=VideoDeptHead.objects.get(user__username='ninjaa')).save()
+            
+            print(m)
+            return function(request,  **kwargs)
 
     return inner
 
@@ -129,6 +132,8 @@ def lib(request):
     subj = engg.domain_subjects.all().values('name','imgurl','id')
     if request.method == 'POST':
         subj = Subject.objects.filter(name__icontains=request.POST['search']).values('name','imgurl','id')
+        if len(subj) == 0:
+            return render(request,'community1.html',{'title':'Video Library','subject_title':'No Subjects Found, Sorry','pic':True})
         return render(request, 'community1.html',{'title':'Video Library','subjects':subj,'subject_title':'Results for "'+request.POST['search']+'"', 'pic':False})
     # print(depts)
 
@@ -279,20 +284,27 @@ def reader(request,id):
 #uploading notes by a student/video maker
 @login_required
 @videomaker_required
-def notes_upload(request):
+def notes_upload(request,sub=0):
     if request.method == 'POST':
         print(request.POST)
         Book(
             name=request.POST['name'], #book written author name
-            note_link=str(request.POST['notes_link']).split('/d/')[1].split('/')[0],
+            note_link=request.POST['notes_link'],
             subject = Subject.objects.get(id=request.POST['subject_id']),
             chapter = request.POST['chapter'],
             uploaded_by=VideoMaker.objects.get(user__username=request.user)).save()
         return HttpResponseRedirect(reverse('videom_dashboard'))
 
     dept_head = VideoMaker.objects.get(user__username=request.user)
-    subjects = Subject.objects.all().values('id','name')
-    print(subjects)
+    #use sub to get the subject student clicked for
+    subjects=[]
+    if sub == 0:
+        subjects = Subject.objects.all().values('id','name')
+    elif Subject.objects.filter(id=sub).count() == 0:
+        return HttpResponse('Stop Playing, Go back and Study')
+    else:
+        subjects = [Subject.objects.get(id=sub)]
+    # print(subjects)
     return render(request,'notes_upload.html',context={'dept_head':dept_head.dept_head.name,'subjects':subjects})
 
 

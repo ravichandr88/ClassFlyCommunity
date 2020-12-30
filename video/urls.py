@@ -13,6 +13,7 @@ urlpatterns = [
 	path('community/v1',views.lib,name='home'),
 
 
+
 	path('communityhome',views.home,name='community'),
 	path('community/player/<int:sub>',views.community,name='player'),		#for mobile app
 	
@@ -38,6 +39,8 @@ urlpatterns = [
 	path('ap_rj_vd',views.approve_reject_video),
 	path('reader/<slug:id>',views.reader),	#page for all the pdf's display
 	path('notes_upload',views.notes_upload),#page to submit notes
+	path('notes_upload/<int:sub>',views.notes_upload),#page to submit notes
+	
 	path('notes_list',views.notes_uploaded_list),  #page to see all the submitted by the user
     path('notes_dept_dash',views.depthead_notes_dashboard), #dashboard for dept head to validate notes uplaoded by video makers
 	path('notes_dept_dash/<slug:page>',views.depthead_notes_dashboard), #dashboard for dept head to validate notes uplaoded by video makers
