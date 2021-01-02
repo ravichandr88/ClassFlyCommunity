@@ -22,6 +22,7 @@ from django.core import exceptions
 from .models import Email
 
 
+
 @csrf_exempt
 def loginview(request):
     if request.method == 'GET':

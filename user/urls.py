@@ -5,8 +5,11 @@ from django.conf import settings
 from . import views
 from django.contrib.auth.views import LogoutView
 from django.conf.urls.static import static
+from django.conf.urls import (
+  handler400, handler403, handler404, handler500)
 
- 
+# handler404 = views.error404
+
 urlpatterns = [
 		# path('signup',views.signup,name='signup'),
     path('login',views.loginview,name='login'),
