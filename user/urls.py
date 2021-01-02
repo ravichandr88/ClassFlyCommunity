@@ -20,6 +20,7 @@ urlpatterns = [
     path('java',views.java),
     path('web',views.web),
     path('ml',views.ml),
+    path('privacy',views.privacy),
     path('angular',views.angular),
     path('python',views.python),
     path('home',views.home),

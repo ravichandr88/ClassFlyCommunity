@@ -99,6 +99,9 @@ def sql(request):
 def eh(request):
     return render(request,'ClassFlyStatic/eh.html',{})
 
+def privacy(request):
+    return render(request,'privacy.htm',{})
+
 from .forms import VideoUploadForm
 def videoupload(request):
     if request.method == 'GET':
@@ -121,7 +124,7 @@ def subsignup(request):
         return render(request,'signupnew.html',context={})
     # print(request.POST)
     #if the user has given etails and not verified number
-    print(request.session.keys())
+    # print(request.session.keys())
     data={}
     if 'loginName' in request.POST.keys():    #when user submit his details
         data = request.POST.dict()
@@ -155,7 +158,7 @@ def subsignup(request):
         print("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
         resp = requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
           #generate otp for the user
-        print(resp.text)
+        # print(resp.text)
         return render(request,'signupnew.html',context={'otp':True,'phoneNumber':data['phoneNumber']})
     
     elif 'otp' in request.POST.keys():   # when otp is submittted
