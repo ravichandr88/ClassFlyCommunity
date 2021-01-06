@@ -45,7 +45,7 @@ def loginview(request):
         user = authenticate(request, username=user.username, password=data['password'])
     
         if user == None:
-            print(user)
+            # print(user)
             return HttpResponse('Incorrect Paaword , please try again<br><a href="/login" >Go Back</a>')
 
         #if everything is good
@@ -119,7 +119,12 @@ def videoupload(request):
 
 @csrf_exempt
 def subsignup(request):
-    if request.method == 'GET':
+    print(request.user)
+    if str(request.user) != 'AnonymousUser':
+        # login(request,User.objects.get(username=request.user))
+        return HttpResponseRedirect(reverse('home'))
+
+    if request.method == 'GET' :
         if 'username' in request.session.keys():
             request.session.pop('username') 
         return render(request,'signupnew.html',context={})
@@ -156,7 +161,7 @@ def subsignup(request):
         Phonenumber(user=user,phone_number=data['phoneNumber']).save()
         otp = str(randint(1234,9876))
         OTP(user=user,otp=otp).save()
-        print("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
+        # print("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
         resp = requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
           #generate otp for the user
         # print(resp.text)
@@ -166,13 +171,13 @@ def subsignup(request):
         print(request.POST)
         otp = request.POST['otp']   #otp entered by user
         # otp frm the table
-        t_otp = OTP.objects.get(user__username = request.session['username'])
-        if otp is t_otp:
+        t_otp = OTP.objects.get(user__username = request.session['username']).otp
+        if otp == t_otp:
             user = User.objects.get(username = request.session['username'])
         # if otp matches to the table ,success
             login(request,user)
 
-            return render(request,'lib.html',context={})
+            return render(request,'community1.html',context={})
 
         # if otp does not match the otp entered by the user
         #if failed otp

@@ -128,7 +128,7 @@ def lib(request):
     # for i in depts.keys():
     #     #{'VTU': {'Mech' : [Subject Lists]}}
     #    depts[i] = {j.name: list(j.domain_subjects.all().values('name','imgurl','descp','id')) for j in depts[i]}
-       
+        
     engg = Department.objects.get(id=1)
     subj = engg.domain_subjects.all().values('name','imgurl','id')
     if request.method == 'POST':

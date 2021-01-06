@@ -39,7 +39,9 @@ SECRET_KEY = 'dyuo!=9@xvo8*s+lf#t)xw6a7_dn%)wucex^0uccu#+9=u1b$^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'classflycommunity.herokuapp.com','localhost']
+COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
+
+ALLOWED_HOSTS = ['localhost','127.0.0.1' ,'classflycommunity.herokuapp.com','classfly.in']
 
 
 # Application definition

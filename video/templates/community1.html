@@ -92,7 +92,12 @@ html, body {
             <img src="/static/comnty/frontimg.png" width="512" height="512" class="img-fluid" alt="...">
           </div>
           <div class="col-md-6 col-lg-6 col-xl-6 col-sm-6" data-aos="fade-up"><br><br><br>
+            {% if not user.is_authenticated  %}
             <h2 style="color: #2e4faa;">Welcome to Classfly Community! </h2>
+            {% else %}
+           
+            <h2 style="color: #2e4faa;">Welcome {{request.user}} </h2>
+            {% endif %}
             <br>
             <h4 >Education to Students from students!</h4>
             <br>
