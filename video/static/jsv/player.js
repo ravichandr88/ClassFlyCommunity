@@ -35,27 +35,43 @@ function get(list)
 
 function call(str)
 {
-    $.ajax({
-        url: 'https://noembed.com/embed?url='+'https://www.youtube.com/watch?v=' + str,
-        crossDomain:true,
-        async:true, 
-        type: 'GET',
-        dataType : 'jsonp',
-        success: function(data){
+    let apiKey = 'AIzaSyCkWKAEdLX7FJ9SQ7DWtBSDW2S6TXbJBQw';
+    let url = 'https://www.googleapis.com/youtube/v3/videos?id=' + "n4Zb0Y4hXIA" + '&part=snippet&key=' + apiKey;
+    $.getJSON(url, function(data){
+        if (data && data.items && data.items[0]) {
+
+            // $(node).text(data.items[0].snippet.title);
             var myEle = document.getElementById('o'+str);
             if(myEle){
-                document.getElementById('o'+str).innerHTML=data.title;//'o' represents the title in the desktop videos list
+                document.getElementById('o'+str).innerHTML=data.items[0].snippet.title;//'o' represents the title in the desktop videos list
             }
+            else{
+                document.getElementById(str).innerHTML=data.items[0].snippet.title;
+            }
+            } else {
+            console.log('video not exists');
+        }
+    });
+
+    // $.ajax({
+    //     url: 'https://noembed.com/embed?url='+'https://www.youtube.com/watch?v=' + str,
+    //     crossDomain:true,
+    //     async:true, 
+    //     type: 'GET',
+    //     dataType : 'jsonp',
+    //     success: function(data){
+    //         var myEle = document.getElementById('o'+str);
+    //         if(myEle){
+    //             document.getElementById('o'+str).innerHTML=data.title;//'o' represents the title in the desktop videos list
+    //         }
            
-                // console.log(document.getElementById(str).innerHTML+data.title);
-                
-                document.getElementById(str).innerHTML=data.title;
-            // }
-           
-            // 
-            // document.getElementById(str).innerHTML=data.title;
-            // // console.log(str);
-      }});
+    //             document.getElementById(str).innerHTML=data.title;
+          
+    //   }});
+
+
+
+
 }
 
 function close_panel()
@@ -148,21 +164,35 @@ $(document).ready(function(){
     }
     // document.getElementByID()
     // console.log(document.getElementById('im'+old_id));
-
-    $.ajax({
-        url: 'https://noembed.com/embed?url='+'https://www.youtube.com/watch?v=' + old_id,
-        crossDomain:true,
-        async:true, 
-        type: 'GET',
-        dataType : 'jsonp',
-        success: function(data){
+ 
+    // $.ajax({
+    //     url: 'https://noembed.com/embed?url='+'https://www.youtube.com/watch?v=' + old_id,
+    //     crossDomain:true,
+    //     async:true, 
+    //     type: 'GET',
+    //     dataType : 'jsonp',
+    //     success: function(data){
             
-      document.getElementById('first_title').innerHTML =  data.title;
-        console.log(data.title);
-      }, 
-      error: function(XMLHttpRequest, textStatus, errorThrown) { 
-        document.getElementById('first_title').innerHTML =  'ClassFly Community';
-    }  
+    //   document.getElementById('first_title').innerHTML =  data.title;
+    //     console.log(data.title);
+    //   }, 
+    //   error: function(XMLHttpRequest, textStatus, errorThrown) { 
+    //     document.getElementById('first_title').innerHTML =  'ClassFly Community';
+    // }  
+    // });
+
+
+
+    let apiKey = 'AIzaSyCkWKAEdLX7FJ9SQ7DWtBSDW2S6TXbJBQw';
+    let url = 'https://www.googleapis.com/youtube/v3/videos?id=' + old_id + '&part=snippet&key=' + apiKey;
+    $.getJSON(url, function(data){
+        if (data && data.items && data.items[0]) {
+            console.log()
+            document.getElementById('first_title').innerHTML = data.items[0].snippet.title
+            // $(node).text();
+        } else {
+            document.getElementById('first_title').innerHTML =  'ClassFly Community';
+        }
     });
 
 });
