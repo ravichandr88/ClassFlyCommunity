@@ -1,0 +1,35 @@
+<!DOCTYPE html> 
+<html> 
+
+<head> 
+    <link rel="stylesheet" href="style.css"> 
+    
+    <link rel="stylesheet" href=" http://demo.w3tweaks.com/youtube_video/maincss.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        function getyoutubetitle(nodeID, videoID) {
+            let node = '#' + nodeID;
+            let apiKey = 'AIzaSyCkWKAEdLX7FJ9SQ7DWtBSDW2S6TXbJBQw';
+            let url = 'https://www.googleapis.com/youtube/v3/videos?id=' + "n4Zb0Y4hXIA" + '&part=snippet&key=' + apiKey;
+            $.getJSON(url, function(data){
+                if (data && data.items && data.items[0]) {
+                    $(node).text(data.items[0].snippet.title);
+                } else {
+                    console.log('video not exists');
+                }
+            });
+        }
+    </script>
+    
+    ...
+    
+    <script>
+        getyoutubetitle('videoTitle01','iClTTtecJhs');
+    </script>
+
+</head> 
+<body> 
+    <h1 id="videoTitle01"><h1>
+</body> 
+
+</html> 
