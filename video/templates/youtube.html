@@ -13,6 +13,7 @@
             let url = 'https://www.googleapis.com/youtube/v3/videos?id=' + "n4Zb0Y4hXIA" + '&part=snippet&key=' + apiKey;
             $.getJSON(url, function(data){
                 if (data && data.items && data.items[0]) {
+                    console.log()
                     $(node).text(data.items[0].snippet.title);
                 } else {
                     console.log('video not exists');

@@ -21,7 +21,8 @@ from django.core import exceptions
 
 from .models import Email
 
-
+import django.contrib.auth.password_validation as validators
+from django.core import exceptions
 
 @csrf_exempt
 def loginview(request):
@@ -135,7 +136,7 @@ def subsignup(request):
     if 'loginName' in request.POST.keys():    #when user submit his details
         data = request.POST.dict()
         #validation for user details
-        print(len(data['phoneNumber']))
+        # print(len(data['phoneNumber']))
         if User.objects.filter(username=data['loginName']).count() != 0:
             data['error'] = 'Username already exists'
             return render(request,'signupnew.html',context = data)
@@ -151,12 +152,25 @@ def subsignup(request):
                 return render(request,'signupnew.html',context = data)
             else:
                 Phonenumber.objects.get(phone_number=data['phoneNumber']).delete()
+        
+        #try validate password
+
+        try:
+            validators.validate_password(password='123Test')
+        except exceptions.ValidationError as e:
+            data['error'] = list(e.messages)[0]
+            return render(request,'signupnew.html',context = data)
+
             
         user = User(username = data['loginName'],
         first_name = data['displayName'],
         password = data['password'] )
         request.session['username'] = data['loginName'] #to remember the user has given details
         user.is_active = False
+
+        #Validate the password
+        
+        
         user.save()  
         Phonenumber(user=user,phone_number=data['phoneNumber']).save()
         otp = str(randint(1234,9876))
