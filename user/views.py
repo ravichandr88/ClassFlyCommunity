@@ -156,7 +156,7 @@ def subsignup(request):
         #try validate password
 
         try:
-            validators.validate_password(password='123Test')
+            validators.validate_password(password=data['password'])
         except exceptions.ValidationError as e:
             data['error'] = list(e.messages)[0]
             return render(request,'signupnew.html',context = data)
