@@ -49,6 +49,7 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1' ,'classflycommunity.herokuapp.com','cla
 INSTALLED_APPS = [
     'user',
     'video',
+    'exam',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,7 +77,7 @@ ROOT_URLCONF = 'ClassFlyComm.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -90,6 +91,10 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'
+}
 
 WSGI_APPLICATION = 'ClassFlyComm.wsgi.application'
 

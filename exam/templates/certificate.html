@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>ClassFly Online Exam</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-CuOF+2SnTUfTwSZjCXf01h7uYhfOBuxIhGKPbfEJ3+FqH/s6cIFN9bGr1HmAg4fQ" crossorigin="anonymous">
+      <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+      <script src="/plugins/jquery/js/jQuery-2.1.4.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+      
+
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+      <!-- CSS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
+
+<!-- Javascripts -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      
+
+<style>
+.image { 
+   position: relative; 
+   width: 100em; /* for IE 6 */
+   height: 70em;
+   margin-top: 5px;
+}
+
+h2 { 
+   position: absolute; 
+   top: 215px; 
+   /* left: 550px;  */
+   text-align: center;
+   text-align: center;
+      width:100%
+}
+
+#num { 
+   position: absolute; 
+   top: 475px; 
+   left: 330px; 
+      width:200px;
+} 
+h3{
+    text-align: center;
+}
+
+button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+</style>
+
+<script lang="javascript" type="text/javascript">
+
+    
+    
+    </script>
+    </head>
+<body style=" margin: 0; height: 100%; overflow: hidden">
+        <center>  <div class="image" >
+          <div id="div_id" style="margin-top:-10px;padding-top: 10px">
+                <center> <img src='http://localhost:8000/static/imagesv/certificate.png' width='1100' height="700"></center>
+        
+                <h2>{{name}}</h2>
+                <div id='num'>
+                <h3>{{cert_id}}</h3>
+        </div>
+        </div>
+        <button id="cmd">NewPDF</button>
+        </div>
+        
+          </div>
+          
+            </center> 
+          
+   <!-- <center> <img src='/static/imagesv/certificate.png'></center> -->
+</body>
+
+
+<script>
+    
+        $('#cm').click(function() {
+            $('img').attr('width','1300');
+      var options = {};
+      var pdf = new jsPDF('p', 'mm', ['1000','700']);
+      pdf.addHTML($("#content"), -24, -4, options, function() {
+    //   pdf.addHTML($("#content"), -8, 0, options, function() {
+        pdf.save('pageContent.pdf');
+        
+      $('img').attr('width','1100');
+      });
+    });
+
+
+
+
+    //html2doc
+    $('#cmd').click(function() {
+        var divHeight = $('#div_id').height();
+var divWidth = $('#div_id').width();
+var ratio = divHeight / divWidth;
+html2canvas(document.getElementById("div_id"), {
+     height: divHeight,
+     width: divWidth,
+     onrendered: function(canvas) {
+          var image = canvas.toDataURL("http://localhost:8000/static/imagesv/certificate.png",1.22);
+          var doc = new jsPDF('p', 'mm', ['1000','700']); // using defaults: orientation=portrait, unit=mm, size=A4
+        //   var width = doc.internal.pageSize.getWidth();   
+        var width = 1000;
+        var height = 800;
+        //   var height = doc.internal.pageSize.getHeight();
+        //   height = ratio * width;
+          doc.addImage(image, 'JPEG', -40, 0, 450, 250,'test','FAST');
+          doc.save('myPage.pdf'); //Download the rendered PDF.
+     }
+});
+});
+</script>
+</html>

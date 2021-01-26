@@ -163,8 +163,8 @@ def subsignup(request):
 
             
         user = User(username = data['loginName'],
-        first_name = data['displayName'],
-        password = data['password'] )
+        first_name = data['displayName'])
+        user.set_password(data['password'])
         request.session['username'] = data['loginName'] #to remember the user has given details
         user.is_active = False
 
