@@ -337,9 +337,9 @@ def redirect_event(request):
     return redirect('register')
 
 
-def session_renew(request,session):
+def session_renew(request,code):
     if request.method == 'GET':
-        session = Session.objects.get(session_key=request.session.session_key)
+        session = Session.objects.get(session_key=code)
         # print(session)
         session_data = session.get_decoded()
         # print(session_data)
