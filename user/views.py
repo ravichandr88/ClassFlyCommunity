@@ -346,7 +346,7 @@ def session_renew(request,code):
         uid = session_data.get('_auth_user_id')
         user = User.objects.get(id=uid)
         login(request,user)
-        return redirect('cfhome')
+        return redirect('library')
 
     return HttpResponse('Not good to continue')
 
