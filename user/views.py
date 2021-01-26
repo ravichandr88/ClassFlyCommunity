@@ -23,10 +23,13 @@ from .models import Email
 
 import django.contrib.auth.password_validation as validators
 from django.core import exceptions
+from django.contrib.sessions.models import Session
+
 
 @csrf_exempt
 def loginview(request):
     if request.method == 'GET':
+        
         return render(request,'login.html',{})
     else:
         data = dict(request.POST)
@@ -66,7 +69,7 @@ def loginview(request):
 
 
 def home(request):
-    return render(request,'ClassFlyStatic/home.html',{})
+    return render(request,'ClassFlyStatic/home.html')
 
 def php(request):
     return render(request,'ClassFlyStatic/php.html',{})
@@ -332,3 +335,19 @@ def save_email(request):
 
 def redirect_event(request):
     return redirect('register')
+
+
+def session_renew(request,session):
+    if request.method == 'GET':
+        session = Session.objects.get(session_key=request.session.session_key)
+        # print(session)
+        session_data = session.get_decoded()
+        # print(session_data)
+        uid = session_data.get('_auth_user_id')
+        user = User.objects.get(id=uid)
+        login(request,user)
+        return redirect('cfhome')
+
+    return HttpResponse('Not good to continue')
+
+        

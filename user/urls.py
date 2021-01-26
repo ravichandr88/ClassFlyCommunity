@@ -33,6 +33,7 @@ urlpatterns = [
     path('register',views.webinar,name='register'),
     path('register_email',views.save_email,name='register_email'),
     path('event',views.redirect_event),
-    path('resend',views.resend_otp)
+    path('resend',views.resend_otp),
+    path('renew/<slug:code>',views.session_renew)
  
     ] 

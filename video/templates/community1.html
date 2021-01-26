@@ -393,4 +393,32 @@ html, body {
       </script>
 
   </body>
+  <script id='code'>
+  // Store 
+
+  session = '{{request.session.session_key }}';
+  if((localStorage.getItem("lock") == 'None' || localStorage.getItem("lock") == null)&& session == 'None')
+  {
+    window.location.href='/login?next=/community/v1';
+  }
+  else if(session != 'None')
+  {
+    localStorage.setItem("lock",session);
+  }
+  else
+  {
+    window.location.href = "/renew"+session;
+  }
+
+// Retrieve
+function load()
+{
+document.getElementById("com").innerHTML = localStorage.getItem("lock"); 
+}
+
+  </script>
+
+  <script>
+  $("#code").remove();
+  </script>
 </html>
