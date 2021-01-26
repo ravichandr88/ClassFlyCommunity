@@ -407,7 +407,8 @@ html, body {
   }
   else
   {
-    window.location.href = "/renew"+session;
+    session = localStorage.getItem('lock');
+    window.location.href = "/renew/"+session;
   }
 
 // Retrieve
