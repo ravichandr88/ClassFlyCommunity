@@ -191,10 +191,12 @@ def subsignup(request):
         t_otp = OTP.objects.get(user__username = request.session['username']).otp
         if otp == t_otp:
             user = User.objects.get(username = request.session['username'])
+            user.is_active = True
+            user.save()
         # if otp matches to the table ,success
             login(request,user)
 
-            return render(request,'community1.html',context={})
+            return redirect('home')
 
         # if otp does not match the otp entered by the user
         #if failed otp

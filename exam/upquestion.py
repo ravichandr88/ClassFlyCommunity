@@ -13,9 +13,10 @@ df = read_excel(file_name, sheet_name = my_sheet)
 print(df.head()) # shows headers
 qst = []
 p=0
-url='http://localhost:8000/pathques'
+# url='http://localhost:8000/pathques'
+url = 'https://www.classfly.in/pathques'
 # url = 'https://www.google.co.in'
-exam_id = 2 #Exam subject id
+exam_id = 1 #Exam subject id
 
 for index, row in df.iterrows():
     if (row['question'] == '') or (row['a'] == '') or (row['b'] == '') or (row['c'] == '') or (row['d'] == '') or (row['answer'] == ''):
