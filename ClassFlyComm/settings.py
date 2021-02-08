@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     'user',
     'video',
     'exam',
+    'upload',
+    'prfsnl_auth',
+    'chat',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -70,9 +74,39 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
+    
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8000',
+#     'https://www.classfly.in',
+#     'https://classfly.in'
+# )
+
 ROOT_URLCONF = 'ClassFlyComm.urls'
+ASGI_APPLICATION = "ClassFlyComm.asgi.application"
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+
+CACHES = {
+    "default": {
+         "BACKEND": "redis_cache.RedisCache",
+         "LOCATION": os.environ.get('REDIS_URL'),
+    }
+}
 
 TEMPLATES = [
     {
@@ -189,3 +223,8 @@ options.pop('sslmode', None)
 
 #save session for every request, session will not expires.
 SESSION_SAVE_EVERY_REQUEST = True
+
+
+ACCESS_TOKEN_VIDEO = 'd17ad52c-a7cd-4d0f-baeb-096038163452'
+
+SECRET_KEY_VIDEO = 'oKSHDGrS3rdKPZ0QFCScAbJrJ/duZVaceyTVkIBFn7SgHb3e7H3qzADLIN3V+mQiG6qe99q/Q9B'

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Upload</title>
+     <!-- **DO THIS**: -->
+    <!--   Replace SDK_VERSION_NUMBER with the current SDK version number -->
+    <!-- <script src="https://sdk.amazonaws.com/js/aws-sdk-SDK_VERSION_NUMBER.js"></script> -->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.834.0.min.js"></script>
+    <!-- <script src="./s3_photoExample.js"></script> -->
+    
+  </head>
+  <body>
+    <h1>My Photo Albums App</h1>
+    <div id="app"></div>
+    <input type="file" id="photoupload">
+    <button onclick="uploadPhoto()">Upload</button>
+  </body>
+  <script>
+
+var albumBucketName = "project0videos";
+var bucketRegion = "ap-south-1";
+var IdentityPoolId = "ap-south-1:575267b8-9413-474a-92d9-3ec45f8fc85f";
+
+AWS.config.update({
+  region: bucketRegion,
+  credentials: new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: IdentityPoolId
+  })
+});
+
+var s3 = new AWS.S3({
+  apiVersion: "2006-03-01",
+  params: { Bucket: albumBucketName }
+});
+
+
+function uploadPhoto()
+{
+    addPhoto('IoT');
+}
+
+
+function addPhoto(albumName) {
+  var files = document.getElementById("photoupload").files;
+  if (!files.length) {
+    return alert("Please choose a file to upload first.");
+  }
+  var file = files[0];
+  var fileName = file.name;
+  var albumPhotosKey = encodeURIComponent(albumName) + "/";
+
+  var photoKey = albumPhotosKey + fileName;
+
+  // Use S3 ManagedUpload class as it supports multipart uploads
+  var upload = new AWS.S3.ManagedUpload({
+    params: {
+      Bucket: albumBucketName,
+      Key: photoKey,
+      Body: file
+    }
+  });
+
+  var promise = upload.promise();
+
+  promise.then(
+    function(data) {
+      alert("Successfully uploaded photo.");
+      viewAlbum(albumName);
+    },
+    function(err) {
+      return alert("There was an error uploading your photo: ", err.message);
+    }
+  );
+}
+
+
+//cerating an album code
+
+function createAlbum(albumName) {
+  albumName = albumName.trim();
+  if (!albumName) {
+    return alert("Album names must contain at least one non-space character.");
+  }
+  if (albumName.indexOf("/") !== -1) {
+    return alert("Album names cannot contain slashes.");
+  }
+  var albumKey = encodeURIComponent(albumName);
+  s3.headObject({ Key: albumKey }, function(err, data) {
+    if (!err) {
+      return alert("Album already exists.");
+    }
+    if (err.code !== "NotFound") {
+      return alert("There was an error creating your album: " + err.message);
+    }
+    s3.putObject({ Key: albumKey }, function(err, data) {
+      if (err) {
+        return alert("There was an error creating your album: " + err.message);
+      }
+      alert("Successfully created album.");
+      viewAlbum(albumName);
+    });
+  });
+}
+
+// createAlbum('IoT');
+
+  </script>
+<!-- <script>
+var myCredentials = new AWS.CognitoIdentityCredentials({IdentityPoolId:'ap-south-1:575267b8-9413-474a-92d9-3ec45f8fc85f'});
+var myConfig = new AWS.Config({
+  credentials: myCredentials, region: 'ap-south-1'
+});
+
+myConfig = new AWS.Config();
+myConfig.update({region: 'ap-south-1'});
+
+var AWS = require("aws-sdk");
+
+
+AWS.config.getCredentials(function(err) {
+  if (err) console.log(err.stack);
+  // credentials not loaded
+  else {
+    console.log("Access key:", AWS.config.credentials.accessKeyId);
+  }
+});
+
+
+s3 = new AWS.S3(s3.config);
+
+</script> -->
+</html>

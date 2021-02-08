@@ -8,6 +8,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
     path('', include('video.urls')),
-    path('',include('exam.urls'))
+    path('',include('exam.urls')),
+    path('',include('upload.urls')),
+    path('',include('prfsnl_auth.urls')),
+    path('chat/',include('chat.urls'))
 
 ]

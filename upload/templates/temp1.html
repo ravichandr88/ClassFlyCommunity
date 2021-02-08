@@ -1,0 +1,383 @@
+<html>
+<head>
+    <title>ClassFly</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/static/chunked-file-reader.js"></script>
+
+</head>
+<body>
+        <!-- <button id="getlink">UploadID</button> -->
+        <br>
+        <button id='split'>Split</button>
+        <input type="file" id="files"  />
+
+        <!-- <div id="videoSourceWrapper">
+           <video style="width: 100%;" controls>
+              <source id="videoSource"/>
+           </video>
+          <div id="uploadVideoProgressBar" style="height: 5px; width: 1%; background: #2781e9; margin-top: -5px;"></div>   
+        </div> -->
+<!-- <button onclick="load()">Load</button> -->
+        <p id='content'></p>
+
+</body>
+
+
+
+<script>
+function readBlob(startByte, endByte) {
+
+var files = document.getElementById('files').files;
+
+var file = files[0];
+var start = parseInt(startByte) || 0;
+var stop = parseInt(endByte) || file.size - 1;
+
+var fileReader = new FileReader();
+
+
+
+var blob = file.slice(start, stop + 1);
+fileReader.readAsBinaryString(blob);
+
+
+return new Promise((resolve, reject) => {
+    setTimeout(function() {
+    
+   
+fileReader .onloadend = function(evt) {
+  if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+  console.log('Started');
+  document.getElementById('content').innerHTML=(evt.target.result);
+    resolve(evt.target.result);
+}
+}    
+}, 5000);
+
+});
+
+
+}
+
+
+//fetch Prommise function
+function timeoutPromise(ms, promise) {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error("promise timeout"))
+    }, ms);
+  })
+}
+
+ 
+
+
+$('#split').click(async function(){
+    var files = document.getElementById('files').files;
+
+    var file = files[0];
+
+    var size = file.size;
+    var chunksize = 6000000;
+    var x = 0;
+    var blob;
+    while(x < size)
+    {   if((x+chunksize)<size){
+            console.log(x, x+chunksize);
+        }
+        else{
+            console.log(x,size,'end');
+        }
+        x+=chunksize;
+        
+    }
+});
+</script>
+
+<script>
+
+    
+// window.part = 1;
+// window.file_name;
+
+//  $(document).ready(function(){
+// 	$("#videoSourceWrapper").hide();
+// });
+
+
+// $('#uploadVideoFile').on('change',
+//     function() {
+//         var fileInput = document.getElementById("uploadVideoFile");
+//         console.log('Trying to upload the video file: %O', fileInput);
+
+//         if ('files' in fileInput) {
+//             if (fileInput.files.length === 0) {
+//                 alert("Select a file to upload");
+//             } else {
+//                 var $source = $('#videoSource');
+//                 $source[0].src = URL.createObjectURL(this.files[0]);
+//                 $source.parent()[0].load();
+//                 $("#videoSourceWrapper").show();
+//                 UploadVideo(fileInput.files[0]);
+//             }
+//         } else {
+//             console.log('No found "files" property');
+//         }
+//     }
+// );
+
+//  function UploadVideo(file) {
+//     var loaded = 0;
+//     var chunkSize = 500000;
+    
+//     var total = file.size;
+//     var filename =  file.name;
+//     window.file_name = file.name;
+//     var reader = new FileReader();
+//     var slice = file.slice(0, chunkSize);
+            
+//     // Reading a chunk to invoke the 'onload' event
+//     reader.readAsBinaryString(slice); 
+//     console.log('Started uploading file "' + file.name + '"');
+        
+//     reader.onload = function (e) {
+//        //Send the sliced chunk to the REST API
+//        get_upload_id(file.name).then(function(){
+//        get_url_part_url(uploadID,file.name,window.part).then(function(url) {
+
+//        var xhr = new XMLHttpRequest();
+//        xhr.open('PUT', url, true);
+//     xhr.setRequestHeader('Accept', 'application/octet-stream');
+//     xhr.onload = () => {
+//     if (xhr.status === 200) {
+//             loaded += chunkSize;
+//             window.part=window.part+1;
+//             var percentLoaded = Math.min((loaded / total) * 100, 100);
+//             console.log('Uploaded ' + Math.floor(percentLoaded) + '% of file "' + file.name + '"');
+            
+//             //Read the next chunk and call 'onload' event again
+//             if (loaded <= total) {
+//                 slice = file.slice(loaded, loaded + chunkSize);
+//                 reader.readAsBinaryString(slice);
+//         } else { 
+//             loaded = total;
+//             console.log('File "' + file.name + '" uploaded successfully!');
+//             }
+        
+//     }
+//     };
+//     xhr.onerror = (errorData) => {
+//     // error...
+//     (function (errorData) {
+//                     console.log(errorData);
+//                     alert("Video Upload Failed");
+//                 })
+//     };
+//     xhr.upload.onprogress = (event) => {
+//     if (event.lengthComputable) {
+//         var percent = Math.round((event.loaded / event.total) * 100)
+//         console.log(percent);
+//     }
+//     };
+//     console.log(file);
+//     xhr.send(file);
+//        });// end of get upload url for part number
+// });// end of get upload is
+       
+//     }
+// }
+
+
+// function get_url_part(uploadID,key,part_no)
+// {
+//     console.log(window.upload_id);
+//     $.ajax({
+//             type: "POST",
+//             url: "http://localhost:8000/url_multi",
+//             data: {
+//                 key:key,
+//                 part_no:part_no,
+//                 upload_id:uploadID
+//             },
+//             headers: {
+//                         'X-CSRFToken': '{{csrf_token}}'
+//                    },
+//             success: function (response) {
+//                 //service.php response
+//                 console.log('url called multi');
+//                 console.log(response.url);
+//                 // upload data
+//                 return response.url;
+//             }
+//         });
+
+// }
+
+
+
+// // to initiate the file upload get the uploadID
+//  function get_upload_id(file_name){
+//     $.ajax({
+//             type: "POST",
+//             url: "http://localhost:8000/initiate_upload",
+//             data: {
+//                  file_name:file_name
+//             },
+//             headers: {
+//                         'X-CSRFToken': '{{csrf_token}}'
+//                    },
+//             success: function (response) {
+//                 //service.php response
+//                 console.log(response);
+//                 return response.upload_id
+//             }
+//         });
+  
+// }
+
+
+
+// ///ajax call
+
+
+// // $.ajax({
+// //             url: url,
+// //             type: "PUT",
+// //             data: slice,
+// //             processData: false,
+// //             contentType: false,
+// //             error: (function (errorData) {
+// //                 console.log(errorData);
+// //                 alert("Video Upload Failed");
+// //             })
+// //         }).done(function (e){
+// //            loaded += chunkSize;
+// //            var percentLoaded = Math.min((loaded / total) * 100, 100);
+// //            console.log('Uploaded ' + Math.floor(percentLoaded) + '% of file "' + file.name + '"');
+        
+// //            //Read the next chunk and call 'onload' event again
+// //            if (loaded <= total) {
+// //              slice = file.slice(loaded, loaded + chunkSize);
+// //              reader.readAsBinaryString(slice);
+// //       } else { 
+// //          loaded = total;
+// //            console.log('File "' + file.name + '" uploaded successfully!');
+// //            }
+// //         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Step1: Get the url for the part
+// // Step2: Get the data for the part
+// // Step3: Put the data and url together
+// // Step4: On Success increment part number
+
+
+// </script>
+
+
+
+// <script> 
+//     const wait = ms => new Promise(resolve => setTimeout(resolve, ms)); 
+    
+//     function failureCallback(){ 
+//         console.log("This is failure callback"); 
+//     } 
+    
+//     wait(4*1000).then(() => { 
+//         console.log("waited for 4 seconds"); 
+//         throw new Error("error occurred"); 
+//     }).catch(() => { 
+//         failureCallback(); 
+//     }); 
+    
+//     wait(2*1000).then(() => console.log("waited for 2 seconds"));					 
+//     </script> 
+
+
+
+
+// <script> 
+//     //This function returns promise after 2 seconds 
+//     var first_function = function() { 
+//     console.log("Entered first function"); 
+//     return new Promise(resolve => { 
+//         setTimeout(function() { 
+//         resolve("\t\t This is first promise"); 
+//         console.log("Returned first promise"); 
+//         }, 2000); 
+//     }); 
+//     }; 
+//     //This function executes returns promise after 4 seconds 
+//     var second_function = function() { 
+//     console.log("Entered second function"); 
+//     return new Promise(resolve => { 
+//         setTimeout(function() { 
+//         resolve("\t\t This is second promise"); 
+//         console.log("Returned second promise"); 
+//         }, 4000); 
+//     }); 
+//     }; 
+    
+//     var async_function = async function() { 
+//     console.log('async function called'); 
+    
+//     const first_promise= await first_function(); 
+//     console.log("After awaiting for 2 seconds," + 
+//     "the promise returned from first function is:"); 
+//     console.log(first_promise); 
+    
+//     const second_promise= await second_function(); 
+//     console.log("After awaiting for 4 seconds, the" + 
+//     "promise returned from second function is:"); 
+//     console.log(second_promise); 
+//     } 
+    
+//     async_function();				 
+//     </script>					 
+    
+ </html>
+
+
+
+
+
+
+<!--
+// async function upload_part_data(data,url)
+// {
+//     var xhr = new XMLHttpRequest();
+//        xhr.open('PUT', url, true);
+//  xhr.setRequestHeader('Accept', 'application/octet-stream');
+//  xhr.onload = () => {
+//    if (xhr.status === 200) {
+//      // success!
+//      alert('success');
+     
+//    }
+//  };
+//  xhr.onerror = () => {
+//    // error...
+//  };
+//  xhr.upload.onprogress = (event) => {
+//   if (event.lengthComputable) {
+//     var percent = Math.round((event.loaded / event.total) * 100)
+//     console.log(percent);
+//   }
+// };
+// console.log(data);
+// if(data)
+//  xhr.send(data);
+
+// }
+-->

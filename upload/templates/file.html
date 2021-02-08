@@ -1,0 +1,455 @@
+<html>
+<head>
+    <title>ClassFly</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/static/tus.min.js"></script>
+</head>
+<body>
+
+    <button id="getlink">UploadID</button>
+<form>
+    <input type="file" id='upload' name="file_upload" >
+</form>
+<button id='test' onclick="parseFile()">Submit</button>
+<button id="link">Link</button>
+</body>
+<script>
+    $("#testvg").click(async function(){
+    var file = $('#upload')[0].files[0];
+  var chunkSize = 1024*100 ;
+  var fileSize = file.size;
+  var chunks = Math.ceil(file.size/chunkSize,chunkSize);
+  var chunk = 0;
+
+  console.log('file size..',fileSize);
+  console.log('chunks...',chunks);
+  var uploadID = '';
+// call upload ID
+    try { 
+    let res = await timeoutPromise(10*60*1000, fetch("/initiate_upload", {
+            method: 'POST',
+            body:  JSON.stringify({'file_name':file.name }),
+            headers:{
+                        'X-CSRFToken': '{{csrf_token}}',
+                        'Content-Type': 'application/json'
+                   }
+          }));
+  console.log('upload ID',res);
+  uploadID = res.upload_id;
+  } catch(error) {
+    // might be a timeout error
+  }
+upload_url = '';
+  while (chunk <= chunks) {
+      var offset = chunk*chunkSize;
+      console.log('current chunk..', chunk);
+      console.log('offset...', chunk*chunkSize);
+      console.log('file blob from offset...', offset)
+      console.log(file.slice(offset,offset+chunkSize));
+      data = await file.slice(offset,offset+chunkSize);
+      console.log(data);
+      //pre sigend upload url 
+  try { 
+    let res = await timeoutPromise(10*60*1000, fetch("/url_multi", {
+            method: 'POST',
+            body:  JSON.stringify({
+                'key':file.name,
+                'part_no':(chunk+1),
+                'upload_id':uploadID
+                }),
+            headers:{
+                        'X-CSRFToken': '{{csrf_token}}',
+                        'Content-Type': 'application/json'
+                   }
+          }));
+          upload_url = res.url;
+  console.log(res);
+  } catch(error) {
+    // might be a timeout error
+    console.log('error');
+  }
+  //upload data to s3
+
+    try { 
+    let res = await timeoutPromise(10*60*1000, fetch(upload_url, {
+            method: 'PUT',
+            body:data,
+            headers:{
+                'Accept': 'application/octet-stream'
+                   }
+          }));
+    }
+    catch(error){
+        console.log('Upload failed');
+    }
+      chunk++;
+  }
+});
+
+
+//complete function operations
+async function parseFile(){
+  var file = $('#upload')[0].files[0];
+    var chunkSize = 2000;
+    var fileSize = (file.size - 1);
+    var uploadID = '';
+    //get the upload ID for the file selected
+    try { 
+    let res = await timeoutPromise(10*60*1000, fetch("/initiate_upload", {
+            method: 'POST',
+            body:  JSON.stringify({'file_name':file.name }),
+            headers:{
+                        'X-CSRFToken': '{{csrf_token}}',
+                        'Content-Type': 'application/json'
+                   }
+          }));
+  console.log('upload ID',res);
+  uploadID = res.upload_id;
+  } catch(error) {
+    // might be a timeout error
+  }
+  // end of code to get upload id
+var part_no = 1;
+    var foo = async function(e){
+        data = e.target.result;
+        
+
+          try { 
+    let res = await timeoutPromise(10*60*1000, fetch("/url_multi", {
+            method: 'POST',
+            body:  JSON.stringify({
+                'key':file.name,
+                'part_no':part_no,
+                'upload_id':uploadID
+                }),
+            headers:{
+                        'X-CSRFToken': '{{csrf_token}}',
+                        'Content-Type': 'application/json'
+                   }
+          }));
+          upload_url = res.url;
+  console.log(res);
+  } catch(error) {
+    // might be a timeout error
+    console.log('error');
+  }
+  //upload data to s3
+
+    try { 
+    let res = await timeoutPromise(10*60*1000, fetch(upload_url, {
+            method: 'PUT',
+            body:data,
+            headers:{
+                'Accept': 'application/octet-stream'
+                   }
+          }));
+    }
+    catch(error){
+        console.log('Upload failed');
+    }
+        // console.log(e.target.result);
+        part_no = part_no+1;
+    };
+
+    for(var i =0; i < fileSize; i += chunkSize) {
+        (function( fil, start ) {
+            var reader = new FileReader();
+            var blob = fil.slice(start, chunkSize + start);
+            reader.onload = foo;
+            reader.readAsText(blob);
+            part_no=part_no+1;
+        })(file, i);
+    }
+}
+
+
+
+
+//fetch Prommise function
+function timeoutPromise(ms, promise) {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error("promise timeout"))
+    }, ms);
+    promise.then(
+      (res) => {
+        clearTimeout(timeoutId);
+        resolve(res.json());
+      },
+      (err) => {
+        clearTimeout(timeoutId);
+        reject(err);
+      }
+    );
+  })
+}
+
+    </script>
+
+<script>
+// function to get the upload id for the object
+$("#getlink").click(function(){
+    $.ajax({
+            type: "POST",
+            url: "http://localhost:8000/initiate_upload",
+            data: {
+                 file_name:'classfly.png'
+            },
+            headers: {
+                        'X-CSRFToken': '{{csrf_token}}'
+                   },
+            success: function (response) {
+                //service.php response
+                console.log(response);
+            }
+        });
+  
+});
+
+$("#link").click(function(){
+    // $.ajaxSetup({
+    //         beforeSend: function(xhr) {
+    //             xhr.setRequestHeader('Csrf-Token', '{{csrf_token}}');
+    //         }
+    //     });
+    $.ajax({
+            type: "POST",
+            url: "http://localhost:8000/initiate",
+            data: {
+                 json: JSON.stringify({'csrf_token':'mk' })
+            },
+            headers: {
+                        'X-CSRFToken': '{{csrf_token}}'
+                   },
+            success: function (response) {
+                //service.php response
+                console.log(response.good);
+            }
+        });
+});
+
+window.upload_id = "Ol2oo6xU.5UIQAJ5XLjCISlh55u6dGNotWg4ojOqJFVOc.a2uP4_K5UIAVXAFNRF7KhP2XM7hcnYnX01lm1n4MVvHFFUpSb4Id7HUZWgjxk0Ngepg0csHbzLx34jh05k";
+</script>
+
+
+<script>
+    // file streamer
+class FileStreamer {
+    constructor(file) {
+        this.file = file;
+        this.offset = 0;
+        this.defaultChunkSize = 10 * 1024; // bytes
+        this.rewind();
+    }
+    rewind() {
+        this.offset = 0;
+    }
+    isEndOfFile() {
+        return this.offset >= this.getFileSize();
+    }
+    readBlockAsText(length = this.defaultChunkSize) {
+        const fileReader = new FileReader();
+        console.log(this.offset + '---To---' + (this.offset + length));
+        const blob = this.file.slice(this.offset, this.offset + length);
+        return new Promise((resolve, reject) => {
+            fileReader.onloadend = (event) => {
+                const target = (event.target);
+                if (target.error == null) {
+                    const result = target.result;
+                    this.offset += result.length;
+                    this.testEndOfFile();
+                    resolve(result);
+                }
+                else {
+                    reject(target.error);
+                }
+            };
+            fileReader.readAsText(blob);
+        });
+    }
+    testEndOfFile() {
+        if (this.isEndOfFile()) {
+            console.log('Done reading file');
+        }
+    }
+    getFileSize() {
+        return this.file.size;
+    }
+}
+
+// code to read file using above class
+async function seefile()
+{
+  var aFile = document.getElementById("upload").files[0];
+const fileStreamer = new FileStreamer(aFile);
+var x = 1;
+while (!fileStreamer.isEndOfFile()) {
+  
+  x+=1;
+  //get presigned upload url for the part file upload
+  const data = await  fileStreamer.readBlockAsText();
+    // console.log('part:xxx' + x + data);
+     await first_function(data,x);
+
+  //get the part data
+  
+
+  //upload data to acquired url
+ 
+
+}
+
+}
+
+
+async function first_function(data,x)
+{   
+    await get_signed_url(x,data);
+}
+
+
+
+
+//get the pre signed url for part
+async function get_signed_url(part_no,data)
+{
+    key = 'classfly.png';
+    
+    $.ajax({
+            type: "POST",
+            url: "http://localhost:8000/url_multi",
+            data: {
+                key:key,
+                part_no:part_no,
+                upload_id:window.upload_id
+            },
+            headers: {
+                        'X-CSRFToken': '{{csrf_token}}'
+                   },
+            success: function (response) {
+                //service.php response
+                console.log('url called multi');
+                console.log(response.url);
+                // upload data
+                
+                 upload_part_data(data,response.url);
+                return response.url;
+            }
+        });
+
+}
+
+
+// function to upload data using pre signed url-FINAL STEP
+async function upload_part_data(data,url)
+{
+    var xhr = new XMLHttpRequest();
+       xhr.open('PUT', url, true);
+ xhr.setRequestHeader('Accept', 'application/octet-stream');
+ xhr.onload = () => {
+   if (xhr.status === 200) {
+     // success!
+     alert('success');
+     
+   }
+ };
+ xhr.onerror = () => {
+   // error...
+ };
+ xhr.upload.onprogress = (event) => {
+  if (event.lengthComputable) {
+    var percent = Math.round((event.loaded / event.total) * 100)
+    console.log(percent);
+  }
+};
+console.log(data);
+if(data)
+ xhr.send(data);
+
+}
+</script>
+<script>
+
+function fileChange(){
+    
+  var url;
+    var file = document.getElementById("upload").files[0];
+    var size = file.size
+    var name = file.name
+    url = "https://project0videos.s3.amazonaws.com/classfly2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS6UIIOP5B476WEOF%2F20210130%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20210130T101249Z&X-Amz-Expires=36000&X-Amz-SignedHeaders=host&X-Amz-Signature=75a2a55e741f529fdb160ea3f8cbefbd0fa612b16e64573794564bf838419cda"
+       //starting to upload  file 
+       var xhr = new XMLHttpRequest();
+       xhr.open('PUT', url, true);
+ xhr.setRequestHeader('Accept', 'application/octet-stream');
+ xhr.onload = () => {
+   if (xhr.status === 200) {
+     // success!
+     alert('success');
+     
+   }
+ };
+ xhr.onerror = () => {
+   // error...
+ };
+ xhr.upload.onprogress = (event) => {
+  if (event.lengthComputable) {
+    var percent = Math.round((event.loaded / event.total) * 100)
+    console.log(percent);
+  }
+};
+console.log(file);
+ xhr.send(file);
+
+       //end of upload file code
+      }
+// $(function(){
+// $('#submitUpload').on('click', function(){
+//     {
+//           url = "https://classfly.s3.amazonaws.com/classfly.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS6UIIOP5B476WEOF%2F20210128%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20210128T103059Z&X-Amz-Expires=36000&X-Amz-SignedHeaders=host&X-Amz-Signature=b791d42efd52cfdb09c30ecb1705d51de248adfb0faadf28a6cb6e093c2dc2f3"
+//        //starting to upload  file 
+//        var xhr = new XMLHttpRequest();
+//        xhr.open('PUT', url, true);
+//  xhr.setRequestHeader('Accept', 'application/octet-stream');
+//  xhr.onload = () => {
+//    if (xhr.status === 200) {
+//      // success!
+//      alert('success')
+//     //  this.imgURL=response['url'].split('?')[0]
+//    }
+//  };
+//  xhr.onerror = () => {
+//    // error...
+//  };
+//  xhr.upload.onprogress = (event) => {
+//   if (event.lengthComputable) {
+//     var percent = Math.round((event.loaded / event.total) * 100)
+//     console.log(percent);
+//   }
+// };
+
+//  xhr.send(file);
+//        //end of upload file code
+//       }
+
+//     var file = document.getElementById("upload").files[0];
+//     var form = new FormData();
+//     form.append("file", file);
+
+//     var settings = {
+//       "async": true,
+//       "crossDomain": true,
+//       "url": "https://classfly.s3.amazonaws.com/classfly.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAS6UIIOP5B476WEOF%2F20210128%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20210128T103059Z&X-Amz-Expires=36000&X-Amz-SignedHeaders=host&X-Amz-Signature=b791d42efd52cfdb09c30ecb1705d51de248adfb0faadf28a6cb6e093c2dc2f3",
+//       "method": "PUT",
+//       "processData": false,
+//       "mimeType": "multipart/form-data",
+//       "data": form,
+//       "headers":{'Accept':'application/octet-stream'}
+//     };
+
+//     $.ajax(settings).done(function (response) {
+//       console.log(response);
+//     });
+//   });
+// });
+</script>
+</html>

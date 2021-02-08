@@ -6,6 +6,7 @@ from . import views
 from django.contrib.auth.views import LogoutView
 
 
+
 urlpatterns = [
 	path('about',views.about,name='about-us'),
 	path('community.html',views.lib,name='home'),
