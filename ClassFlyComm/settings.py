@@ -111,7 +111,7 @@ CACHES = {
          "LOCATION": os.environ.get('REDIS_URL'),
          "OPTIONS": {
             "CONNECTION_POOL_KWARGS": {
-                "ssl_cert_reqs": False
+                "ssl_cert_reqs": True
             }
         }
     }
