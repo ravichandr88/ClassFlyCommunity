@@ -12,13 +12,15 @@
     {{ room_name|json_script:"room-name" }}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "wss";
+         // ws_scheme + '://'
+            // + window.location.host
+            // + '/ws/chat/'
+            // + roomName
+            // + '/'
         const chatSocket = new WebSocket(
-            ws_scheme + '://'
-            + window.location.host
-            + '/ws/chat/'
-            + roomName
-            + '/'
+            'wss://www.classfly.in/ws/chat/njnj/'
+
         );
 
         chatSocket.onmessage = function(e) {
