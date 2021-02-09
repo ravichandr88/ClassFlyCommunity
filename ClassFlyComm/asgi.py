@@ -12,7 +12,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ClassFlyComm.settings')
 django.setup()
 
 application = ProtocolTypeRouter({
-  "http": AsgiHandler(),
+  "https": AsgiHandler(),
   "websocket": AuthMiddlewareStack(
         URLRouter(
             routing.websocket_urlpatterns
