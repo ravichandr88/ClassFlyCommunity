@@ -19,7 +19,7 @@ import requests
 from django.contrib.auth.models import User
 # Create your views here.
  
-
+from .models import Contact_number
 
 
 def generate_presigned_url(bucket_name, object_key, expiry=600):
@@ -33,7 +33,7 @@ def generate_presigned_url(bucket_name, object_key, expiry=600):
                                                   Params={'Bucket': bucket_name,'Key': object_key},
                                                   ExpiresIn=expiry
                                                   )
-        print(response)
+        # print(response)
     except ClientError as e:
         print(e)
     return response
@@ -67,9 +67,12 @@ def fileupload(request):
 
 @csrf_exempt
 @api_view(['POST','GET'])
-def create_presigned_url(request):
-        print(request.data)
-        url = generate_presigned_url('project0videos','12.pdf')
+def create_presigned_url(request,filename):
+        # print(request.data)
+        count = Contact_number()
+        count.save()
+
+        url = generate_presigned_url('project0videos','contact'+str(count.id)+filename)
         return Response(data={'url':url})
 
 
@@ -81,8 +84,8 @@ def upload_raw(request):
 
 
 @csrf_exempt
-@api_view(['GET'])
-def initiate_upload(request,filename):
+@api_view(['POST','GET'])
+def initiate_upload(request):
         print('Inititate Upload 0000000000',request.data)
         s3 = boto3.client("s3",region_name="ap-south-1",
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
@@ -91,12 +94,12 @@ def initiate_upload(request,filename):
      
         response = s3.create_multipart_upload(
         Bucket='project0videos', 
-        Key=str(request.user)+filename,
+        Key=dict(request.data)['file_name'],
         Expires=3600
         )
         print(response)
 
-        return Response(data={'upload_url':response['UploadId']})
+        return Response(data={'upload_id':response['UploadId']})
 
 
 
