@@ -71,8 +71,11 @@ def create_presigned_url(request,filename):
         # print(request.data)
         count = Contact_number()
         count.save()
+        filename = 'contact'+str(count.id)+filename
+        count.filename = filename
+        count.save()
 
-        url = generate_presigned_url('project0videos','contact'+str(count.id)+filename)
+        url = generate_presigned_url('project0videos',filename)
         return Response(data={'url':url})
 
 
