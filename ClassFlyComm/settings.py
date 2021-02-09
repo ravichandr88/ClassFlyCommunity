@@ -37,7 +37,9 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = 'dyuo!=9@xvo8*s+lf#t)xw6a7_dn%)wucex^0uccu#+9=u1b$^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+DEBUG_PROPAGATE_EXCEPTIONS = True
 
 COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
 
@@ -211,8 +213,8 @@ STATICFILES_DIRS = [
 # The URL to use when referring to static files (where they will be served from)
 STATIC_URL = '/static/'
 
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
 
 # This should already be in your settings.py
@@ -228,3 +230,25 @@ SESSION_SAVE_EVERY_REQUEST = True
 ACCESS_TOKEN_VIDEO = 'd17ad52c-a7cd-4d0f-baeb-096038163452'
 
 SECRET_KEY_VIDEO = 'oKSHDGrS3rdKPZ0QFCScAbJrJ/duZVaceyTVkIBFn7SgHb3e7H3qzADLIN3V+mQiG6qe99q/Q9B'
+
+
+# #production preparation variables
+# SECURE_HSTS_SECONDS = 31536000
+
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# SECURE_BROWSER_XSS_FILTER = True
+
+# SECURE_SSL_REDIRECT = True
+
+# SESSION_COOKIE_SECURE = True
+
+# CSRF_COOKIE_SECURE = True
+
+# X_FRAME_OPTIONS = 'DENY'
+
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# SECURE_HSTS_PRELOAD = True
+
+
