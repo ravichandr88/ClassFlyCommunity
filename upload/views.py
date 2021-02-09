@@ -81,8 +81,8 @@ def upload_raw(request):
 
 
 @csrf_exempt
-@api_view(['POST','GET'])
-def initiate_upload(request):
+@api_view(['GET'])
+def initiate_upload(request,filename):
         print('Inititate Upload 0000000000',request.data)
         s3 = boto3.client("s3",region_name="ap-south-1",
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
@@ -91,12 +91,12 @@ def initiate_upload(request):
      
         response = s3.create_multipart_upload(
         Bucket='project0videos', 
-        Key=dict(request.data)['file_name'],
+        Key=str(request.user)+filename,
         Expires=3600
         )
         print(response)
 
-        return Response(data={'upload_id':response['UploadId']})
+        return Response(data={'upload_url':response['UploadId']})
 
 
 
