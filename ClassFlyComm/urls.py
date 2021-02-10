@@ -11,6 +11,6 @@ urlpatterns = [
     path('',include('exam.urls')),
     path('',include('upload.urls')),
     path('',include('prfsnl_auth.urls')),
-    path('chat/',include('chat.urls'))
+    path('',include('chatt.urls'))
 
 ]

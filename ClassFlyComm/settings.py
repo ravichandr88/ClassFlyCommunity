@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'exam',
     'upload',
     'prfsnl_auth',
-    'chat',
+    'chatt',
     'channels',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -90,8 +90,33 @@ CORS_ORIGIN_ALLOW_ALL = True
 # )
 
 ROOT_URLCONF = 'ClassFlyComm.urls'
-ASGI_APPLICATION = "ClassFlyComm.asgi.application"
+ASGI_APPLICATION = "ClassFlyComm.routing.application"
 
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ['REDIS_URL'],  # Here we have Redis DSN (for ex. redis://localhost:6379/1)
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "MAX_ENTRIES": 1000  # Increase max cache entries to 1k (from 300)
+        },
+    }
+}
+
+
+
+CELERY_BROKER_URL = os.environ['REDIS_URL']
+CELERY_RESULT_BACKEND = os.environ['REDIS_URL']
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [os.environ['REDIS_URL']],
+        },
+    },
+}
 
 # CHANNEL_LAYERS = {
     
@@ -111,30 +136,19 @@ ASGI_APPLICATION = "ClassFlyComm.asgi.application"
 #     },
 # }
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('redis://:pe8586157d58d6c7e8d69c9879829d808b16354b8a7a87dfd976a82125845a61b@ec2-108-128-33-61.eu-west-1.compute.amazonaws.com',15709)],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('redis://:pe8586157d58d6c7e8d69c9879829d808b16354b8a7a87dfd976a82125845a61b@ec2-108-128-33-61.eu-west-1.compute.amazonaws.com',15709)],
+#         },
+#     },
+# }
 
 
 
 # "rediss://:pe8586157d58d6c7e8d69c9879829d808b16354b8a7a87dfd976a82125845a61b@ec2-108-128-33-61.eu-west-1.compute.amazonaws.com:15710"
 
-CACHES = {
-    "default": {
-         "BACKEND": "redis_cache.RedisCache",
-         "LOCATION": '127.0.0.1:6379' ,
-         "OPTIONS": {
-            "CONNECTION_POOL_KWARGS": {
-                "ssl_cert_reqs": True
-            }
-        }
-    }
-}
 
 TEMPLATES = [
     {
