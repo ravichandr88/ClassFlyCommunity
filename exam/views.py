@@ -53,11 +53,11 @@ def exam(request,subj):
     #Condition to check whether user is registered for the exam
     if ExamUser.objects.filter(id=subj).count() == 0:
         return HttpResponse('Exam not found, Please contact support@classfly.in')
-    exam = ExamUser.objects.get(user=User.objects.get(username=request.user))
+    exam = ExamUser.objects.get(user=User.objects.get(username=request.user),id=subj)
     if exam.exam_over:
         return HttpResponse('Sorry, Invalid exam id for the USER')
     
-    #Gather the detials for the exam, PAHSE = 1
+    #Gather the detials for fthe exam, PAHSE = 1
        
     subject = ExamUser.objects.get(id=subj)
     total_ques = subject.subject.questions.all()[:50]
@@ -89,7 +89,7 @@ def question(request,qid):
     elif (qid < 1) or (qid > 50):
         return  HttpResponse('Sorry, Not a valid question number')
 
-    exam = ExamUser.objects.get(user=User.objects.get(username=request.user))
+    exam = ExamUser.objects.get(user=User.objects.get(username=request.user),id=subj)
     #start the exam timer if it is not stareted
     if exam.started is None:
         exam.started = timezone.now()
@@ -105,9 +105,11 @@ def question(request,qid):
 
     
     #return the question and options
+    # print(exam.subject.questions.all())
     question = exam.subject.questions.all()[qid]
     prev = qid-1
     next = qid+1
+    question.id = qid
     context = {'question':question,'prev':prev,'next':next,'exam':exam,'time':time_remaining}
     #Answer part, see if the user has already answered
     ans = Answer.objects.filter(user=exam,ques=qid)

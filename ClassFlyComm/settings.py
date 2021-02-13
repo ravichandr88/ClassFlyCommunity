@@ -47,7 +47,7 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1' ,'classflycommunity.herokuapp.com','cla
 
 
 # Application definition
-
+# https://itnext.io/heroku-chatbot-with-celery-websockets-and-redis-340fcd160f06
 INSTALLED_APPS = [
     'user',
     'video',
