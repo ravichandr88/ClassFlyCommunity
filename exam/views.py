@@ -106,7 +106,7 @@ def question(request,qid):
     
     #return the question and options
     # print(exam.subject.questions.all())
-    question = exam.subject.questions.all()[qid]
+    question = exam.subject.questions.all()[qid-1:qid]
     prev = qid-1
     next = qid+1
     question.id = qid
