@@ -187,7 +187,7 @@ def certificate(request,id):
         cert.save()
         cert = cert.cert_id 
     
-    return render(request, 'certificate.html',context={'name':exam.user.first_name,'cert_id':cert})
+    return render(request, 'certificate.html',context={'name':exam.user.first_name,'cert_id':cert,'subj_name':exam.subject.name})
 
 
 @csrf_exempt
