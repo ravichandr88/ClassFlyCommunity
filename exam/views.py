@@ -45,8 +45,10 @@ def get_random_string():
 
 @login_required
 def exam_home(request):
-    subjects = ExamUser.objects.filter(user=User.objects.get(username=request.user))
-    
+    if ExamUser.objects.filter(user=User.objects.get(username=request.user)).count() != 0:
+        subjects = ExamUser.objects.filter(user=User.objects.get(username=request.user))
+    else :
+        subjects = []
     return render(request, 'examhome.html', context={'subjects':subjects})
 
 # Exam writing page 
