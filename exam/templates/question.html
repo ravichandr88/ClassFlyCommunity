@@ -19,7 +19,7 @@ window.history.forward(1);
   <script>
     function submitn(ans)
     {
-      $.get("/answer/{{question.id}}/{{exam.id}}/"+ans, function(data, status){
+      $.get("/answer/{{actual_qid}}/{{exam.id}}/"+ans, function(data, status){
     // alert("Data: " + data + "\nStatus: " + status);
   });    
   }

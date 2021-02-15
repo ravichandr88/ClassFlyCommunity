@@ -105,23 +105,25 @@ def question(request,qid):
     
     #If exam has started, check the time remaining
     time_remaining = (exam.started + datetime.timedelta(minutes=int(exam.subject.count*1.5))) -  timezone.now()  
-    
+    # print(time_remaining)
     if timezone.now() > (exam.started + datetime.timedelta(minutes=int(exam.subject.count*1.5))):
-        return HttpResponse(" Exam time is  over <a href='/result'> <button > Result </button></a> {} started  {} current now  {} NOW".format(exam.started,exam.started + datetime.timedelta(minutes=int(exam.subject.count*1.5)),timezone.now()))
+        return HttpResponse(" Exam time is  over <a href='/result'> <button > Result </button></a> ")
     
     time_remaining = str(time_remaining).split(':')
-    time_remaining = (int(time_remaining[1])*60) +int(float(time_remaining[2]))
-
+    # print(time_remaining)
+    time_remaining = int(time_remaining[0])*3600 +  int(time_remaining[1])*60 + int(float(time_remaining[2]))
+    # print(time_remaining)
     
     #return the question and options
     # print(exam.subject.questions.all())
     question = exam.subject.questions.all()[qid-1:qid][0]
     prev = qid-1
     next = qid+1
+    actual_qid = question.id
     question.id = qid
-    context = {'question':question,'prev':prev,'next':next,'exam':exam,'time':time_remaining}
+    context = {'question':question,'prev':prev,'next':next,'exam':exam,'time':time_remaining,'actual_qid':actual_qid}
     #Answer part, see if the user has already answered
-    ans = Answer.objects.filter(user=exam,ques=qid)
+    ans = Answer.objects.filter(user=exam,ques=actual_qid)
     if len(ans) != 0:
         ans = ans[0].ansr
     context[ans]='checked'
@@ -133,17 +135,26 @@ def result(request,subj=0):
         subj = request.session['subj_id']
     if ExamUser.objects.filter(id=subj).count() == 0:
         return  HttpResponse('Sorry, you are not registered for this subject')
-    exam = ExamUser.objects.get(id=subj)
+    exam = ExamUser.objects.get(id=subj) 
     exam.exam_over = True
     exam.save()
 
-    if Certificate.objects.filter(exam_user=exam).count() != 0:
-        cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
-
-        Certificate(exam_user=exam,cert_id=cert,type=1).save()
-
+    
     #right answers
-    r_ans = len([i for i in exam.answers.all() if len(Question.objects.filter(subject=exam.subject,id=i.id,correct_ans=i.ansr)) != 0])
+    r_ans = len([i for i in exam.answers.all()[:exam.subject.count] if len(Question.objects.filter(subject=exam.subject,id=i.ques,correct_ans=i.ansr)) != 0])
+    # j = 0../
+    # for i in exam.answers.all()[:exam.subject.count]:
+    #     #get questions from table using answer table id and answer values
+    #     if Question.objects.filter(id=i.ques,correct_ans=i.ansr).count() == 1:
+    #         j+=1
+    #     question = Question.objects.get(id=i.ques)
+    #     print(question.question)
+    #     print(question.correct_ans)
+    #     # question = Question.objects.get(id=i.ques) 
+    #     print(i.ansr)
+    # print(j)
+
+
     w_ans = exam.subject.count-r_ans
     context = {
         'subject_name':exam.subject.name,
@@ -152,6 +163,10 @@ def result(request,subj=0):
         'score':round((r_ans/exam.subject.count)*100),
         'exam': exam
     }
+    # if Certificate.objects.filter(exam_user=exam).count() != 0:
+    #     cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
+
+    #     Certificate(exam_user=exam,cert_id=cert,type=1).save()
 
     return render(request,'result.html',context=context) 
 
@@ -177,7 +192,6 @@ def certificate(request):
 @csrf_exempt
 @api_view(['GET'])
 def answer(request,qid,exuid,ans):
-    print(qid)
     exuser = ExamUser.objects.filter(id=exuid)[0]
     ansr = Answer.objects.filter(user=exuser,ques=qid)
     if len(ansr)==0:
