@@ -178,16 +178,20 @@ def certificate(request,id):
     if ExamUser.objects.filter(id=subj).count() == 0:
         return  HttpResponse('Sorry, User is not registered for this subject')
     exam = ExamUser.objects.get(id=subj)
-    cert = 'CFEH'+ str(exam.subject.id) + '000' + str(exam.id)
-
-    if (Certificate.objects.filter(exam_user=exam).count() != 0) and (exam.exam_over) and ():
+    date = ''
+    if (Certificate.objects.filter(exam_user=exam).count() == 0) and (exam.exam_over) :
         # cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
 
         cert = Certificate(exam_user=exam,cert_id=cert,type=1)
         cert.save()
-        cert = cert.cert_id 
+        date = cert.created_on.date()
+       
+    else:
+        cert = Certificate.objects.get(exam_user=exam)
+        date = cert.created_on.date()
+        
     
-    return render(request, 'certificate.html',context={'name':exam.user.first_name,'cert_id':cert,'subj_name':exam.subject.name})
+    return render(request, 'certificate.html',context={'name':exam.user.first_name,'cert_id':cert.cert_id ,'subj_name':exam.subject.name,'date':date})
 
 
 @csrf_exempt
