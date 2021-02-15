@@ -142,18 +142,7 @@ def result(request,subj=0):
     
     #right answers
     r_ans = len([i for i in exam.answers.all()[:exam.subject.count] if len(Question.objects.filter(subject=exam.subject,id=i.ques,correct_ans=i.ansr)) != 0])
-    # j = 0../
-    # for i in exam.answers.all()[:exam.subject.count]:
-    #     #get questions from table using answer table id and answer values
-    #     if Question.objects.filter(id=i.ques,correct_ans=i.ansr).count() == 1:
-    #         j+=1
-    #     question = Question.objects.get(id=i.ques)
-    #     print(question.question)
-    #     print(question.correct_ans)
-    #     # question = Question.objects.get(id=i.ques) 
-    #     print(i.ansr)
-    # print(j)
-
+    
 
     w_ans = exam.subject.count-r_ans
     context = {
@@ -163,21 +152,31 @@ def result(request,subj=0):
         'score':round((r_ans/exam.subject.count)*100),
         'exam': exam
     }
-    # if Certificate.objects.filter(exam_user=exam).count() != 0:
-    #     cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
+    s = 'qwertyuiop'
+    id_str = ''.join([s[int(j)] for j in str(subj) ])
+    print(id_str)
+    if (round((r_ans/exam.subject.count)*100) >= 50) and (Certificate.objects.filter(exam_user=exam).count() == 0):
+        cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
 
-    #     Certificate(exam_user=exam,cert_id=cert,type=1).save()
+        Certificate(exam_user=exam,cert_id=cert,type=1).save()
+        
+        # id_int = int(''.join([str(s.index(j)) for j in id]))
 
+    context['cert_id']=id_str
     return render(request,'result.html',context=context) 
 
 #certificate 
-@login_required
-def certificate(request):
-    subj = request.session['subj_id']
+# @login_required
+def certificate(request,id):
+
+    s = 'qwertyuiop'
+    # g = ''.join([s[int(j)] for j in i ])
+    id_int = int(''.join([str(s.index(j)) for j in id]))
+    subj = id_int
     if ExamUser.objects.filter(id=subj).count() == 0:
-        return  HttpResponse('Sorry, you are not registered for this subject')
+        return  HttpResponse('Sorry, User is not registered for this subject')
     exam = ExamUser.objects.get(id=subj)
-    cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
+    cert = 'CFEH'+ str(exam.subject.id) + '000' + str(exam.id)
 
     if (Certificate.objects.filter(exam_user=exam).count() != 0) and (exam.exam_over) and ():
         # cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)

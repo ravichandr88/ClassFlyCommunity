@@ -13,6 +13,7 @@ path('result',views.result,name='result'),                 #result page after th
 path('result/<int:subj>',views.result,name='result'), 
 path('question/<int:qid>',views.question),  #question to answer
 path('answer/<int:qid>/<int:exuid>/<slug:ans>',views.answer),
-path('certificate',views.certificate), 
-path('budget',views.budget)
+path('certificate/<str:id>',views.certificate), 
+path('budget',views.budget),
+
 ]
