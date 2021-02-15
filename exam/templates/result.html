@@ -89,23 +89,29 @@ window.history.forward(1);
                      <div class="panel">
                      <center><h1 class="title" style="color:black">Result of {{subject_name}} Exam</h1><center><br /><table class="table table-striped title1" style="font-size:20px;font-weight:1000;">
                      
-                        <tr style="color:black"><td>Total Questions</td><td> 50 </td></tr>
+                        <tr style="color:black"><td>Total Questions</td><td> {{exam.subject.count}} </td></tr>
                            <tr style="color:#35d400"><td>Right Answers&nbsp;<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-check2" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                            <path fill-rule="evenodd" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
                          </svg></td><td>{{right_answers}}</td></tr> 
                      	  <tr style="color:red"><td>Wrong Answers&nbsp;<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                           <path fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                         </svg></td><td>{{wrong_answers}}</td></tr>
-                     	   <tr style="color:#990000"><td>Overall Score&nbsp;<span class="glyphicon glyphicon-stats" aria-hidden="true"></span></td><td>{{score}}</td></tr>
+                     	   <tr style="color:#990000"><td>Overall Score&nbsp;<span class="glyphicon glyphicon-stats" aria-hidden="true"></span></td><td>{{score}}%</td></tr>
                          <tr style="color:red"><td>&nbsp;<span class="glyphicon glyphicon-star" aria-hidden="true"></span></td>
-                          
+                          {% if score > 49   %}
+                          {% if exam.subject.count == 50 %}
                           <td> 
-                          <a  href="/certificate" class="btn btn-success" target="_blank"> Download Certificate </b></a>
+                          <a  href="/certificate" class="btn btn-success" target="_blank"> View Certificate </b></a>
                           </td>
- 
+                          {% endif %}
+                          
+                          {% endif %}
                           </tr> 
                         </table>
-                      <p>Passing percentage is 50%</p></div>
+                      <p>Passing percentage is 50%</p>
+                    <br>
+                    <a href='/examhome' class='btn btn-success' >Exam Home Page</a>
+                  </div>
                         <!-- <div class="panel title">
                      <table class="table table-bordered border-dark">
                      <tr style="color:blue"><td><b>S.N.</b></td><td><b>Quiz</b></td><td><b>Question Solved</b></td><td><b>Right</b></td><td><b>Wrong<b></td><td><b>Score</b></td>

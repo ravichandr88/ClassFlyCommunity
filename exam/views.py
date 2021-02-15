@@ -2,10 +2,12 @@ from django.shortcuts import render,HttpResponse
 from django.contrib.auth.models import User
 from user.models import Phonenumber
 from rest_framework.decorators import api_view
+from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from .validation import user_validation
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 import random
 import string
 import requests
@@ -60,7 +62,7 @@ def exam(request,subj):
     #Gather the detials for fthe exam, PAHSE = 1
        
     subject = ExamUser.objects.get(id=subj)
-    total_ques = subject.subject.questions.all()[:50]
+    total_ques = subject.subject.questions.all()[:subject.subject.count]
     total = len(total_ques)
     time = int(total*1.5)       #variable to show the time for completing exam
     phase = 0   #the phase to keep html division active
@@ -72,6 +74,7 @@ def exam(request,subj):
 
 
 @login_required
+@cache_control(no_cache=True, must_revalidate=True)
 def question(request,qid):
     #Check if whether the subject is present or not
     # print(not('subj_id'  in request.session.keys()))
@@ -86,19 +89,25 @@ def question(request,qid):
         return  HttpResponse('Sorry, You are not registered for this exam')
     elif ExamUser.objects.filter(id=subj).count() == 0:
         return  HttpResponse('Sorry, you are not registered for this subject')
-    elif (qid < 1) or (qid > 50):
+    elif (qid < 1) or (qid > ExamUser.objects.get(id=subj).subject.count):  
         return  HttpResponse('Sorry, Not a valid question number')
 
     exam = ExamUser.objects.get(user=User.objects.get(username=request.user),id=subj)
+    
+    #Check if exam over or not
+    if exam.exam_over:
+        return redirect('result')
+    
     #start the exam timer if it is not stareted
     if exam.started is None:
         exam.started = timezone.now()
         exam.save()
     
     #If exam has started, check the time remaining
-    time_remaining = (exam.started + datetime.timedelta(minutes=75)) -  timezone.now()  
-    if timezone.now() > (exam.started + datetime.timedelta(minutes=75)):
-        return HttpResponse(" Exam time is  over <a href='/result'> <button > Result </button></a>")
+    time_remaining = (exam.started + datetime.timedelta(minutes=int(exam.subject.count*1.5))) -  timezone.now()  
+    
+    if timezone.now() > (exam.started + datetime.timedelta(minutes=int(exam.subject.count*1.5))):
+        return HttpResponse(" Exam time is  over <a href='/result'> <button > Result </button></a> {} started  {} current now  {} NOW".format(exam.started,exam.started + datetime.timedelta(minutes=int(exam.subject.count*1.5)),timezone.now()))
     
     time_remaining = str(time_remaining).split(':')
     time_remaining = (int(time_remaining[1])*60) +int(float(time_remaining[2]))
@@ -119,12 +128,15 @@ def question(request,qid):
     return render(request,'question.html',context=context)
 
 @login_required
-def result(request):
-    subj = request.session['subj_id']
+def result(request,subj=0):
+    if subj == 0:
+        subj = request.session['subj_id']
     if ExamUser.objects.filter(id=subj).count() == 0:
         return  HttpResponse('Sorry, you are not registered for this subject')
     exam = ExamUser.objects.get(id=subj)
     exam.exam_over = True
+    exam.save()
+
     if Certificate.objects.filter(exam_user=exam).count() != 0:
         cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
 
@@ -132,12 +144,13 @@ def result(request):
 
     #right answers
     r_ans = len([i for i in exam.answers.all() if len(Question.objects.filter(subject=exam.subject,id=i.id,correct_ans=i.ansr)) != 0])
-    w_ans = 50-r_ans
+    w_ans = exam.subject.count-r_ans
     context = {
         'subject_name':exam.subject.name,
         'right_answers':r_ans,
         'wrong_answers':w_ans,
-        'score':r_ans*2,
+        'score':round((r_ans/exam.subject.count)*100),
+        'exam': exam
     }
 
     return render(request,'result.html',context=context) 
@@ -151,7 +164,7 @@ def certificate(request):
     exam = ExamUser.objects.get(id=subj)
     cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
 
-    if (Certificate.objects.filter(exam_user=exam).count() != 0) and (exam.exam_over):
+    if (Certificate.objects.filter(exam_user=exam).count() != 0) and (exam.exam_over) and ():
         # cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
 
         cert = Certificate(exam_user=exam,cert_id=cert,type=1)

@@ -65,7 +65,7 @@ var b = document.forms["form"]["cpassword"].value;if (a!=b){alert("Passwords mus
 
     <div class="col-md-6 col-lg-6 col-xl-6 col-sm-6">
     <p class="text-center lh-base fs-3" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"> <br><br> Welcome, Which test <br> you want to practice today? </p><br>
-    <center><a href="#subject" type="button" class="btn btn-success">Select Subject</a></center><div>
+    <!-- <center><a href="#subject" type="button" class="btn btn-success">Select Subject</a></center><div> -->
    
 
  <br><br>
@@ -110,9 +110,12 @@ var b = document.forms["form"]["cpassword"].value;if (a!=b){alert("Passwords mus
       {% for subject in subjects %}
  
     <div class="col-md-6 col-lg-4 col-xl-3 col-sm-6"> <center> <img src="{{subject.subject.img}}" class="img-fluid" width="250" height="250"> <br><p class="fs-4" id="">{{subject.subject.name}}</p>
-    {% if not subject.exam_over %}
+    {% if  not subject.exam_over %}
       <a href="/exam/{{subject.id}}" type="button" class="btn btn-primary" style="width:70%;" >Take  Test</a>
-     {% endif %}
+     
+      {% else %}
+      <a href="/result/{{subject.id}}" type="button" class="btn btn-primary" style="width:70%;" >Result</a>
+      {% endif %}
       <br><br><br></center> </div>
     {% endfor %}
     <!-- <div class="col-md-6 col-lg-4 col-xl-3 col-sm-6"><center> <img src="py.png" class="img-fluid" width="250" height="250"> <br><p class="fs-4" id="">Python</p><a href="" type="button" class="btn btn-primary disabled" style="width:70%;">Take Practice test</a><br><br><br></center> </div>
@@ -128,7 +131,7 @@ var b = document.forms["form"]["cpassword"].value;if (a!=b){alert("Passwords mus
 
 <div class="container-fluid">
 <center>
-<p class="fs-6">&copy; <a href="https://ethicalbyte.in/" class="link-success">Ethical Byte</a></p>
+<p class="fs-6">&copy; <a href="https://www.classfly.in/" class="link-success">ClassFly</a></p>
 
 
 

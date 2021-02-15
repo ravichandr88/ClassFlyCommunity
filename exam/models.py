@@ -8,10 +8,11 @@ class ExamSubject(models.Model):
     img  = models.URLField(default='https://www.classfly.in/static/4.png')
     toc  = models.URLField(default='')       #table of content for subjects
     sn   = models.URLField(default='')      #Subject notes for the subject
+    count = models.IntegerField(default=0)
 
 
     def __str__(self):
-        return "Name {} url {}".format(self.name,self.img)
+        return "Name {} url {} qes_count {}".format(self.name,self.img,self.count)
 
 #Row for user registered to the specific subject for exam
 class ExamUser(models.Model):
