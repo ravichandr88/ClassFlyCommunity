@@ -220,7 +220,7 @@ def register(request):
     }
     """ 
     phone_number = int(request.data['phone_number'].split('.')[0] if request.data['phone_number'].split('.')[0] != 'nan'  else 0)
-    user_validation(request.data['phone_number'],request.data['email'])
+    user_validation(phone_number,request.data['email'])
     password = get_random_string()
     
     user = User(
