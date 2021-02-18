@@ -218,8 +218,8 @@ def register(request):
     'name':
     'exam_id':
     }
-    """
-    print(request.data)
+    """ 
+    phone_number = int(request.data['phone_number'].split('.')[0] if request.data['phone_number'].split('.')[0] != 'nan'  else 0)
     user_validation(request.data['phone_number'],request.data['email'])
     password = get_random_string()
     
@@ -234,7 +234,7 @@ def register(request):
             return Response(data={'message':error},status=400)
     user.set_password(password)
     user.save() 
-    Phonenumber(user=user,phone_number=request.data['phone_number']).save()
+    Phonenumber(user=user,phone_number=int(phone_number)).save()
     ExamUser(user=user,subject=ExamSubject.objects.get(id=request.data['exam_id'])).save()
     requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+password:{}%2CLogin+with+this+password.".format(request.data['phone_number'],password))
 
@@ -242,6 +242,20 @@ def register(request):
 
     return Response(data={'status':True},status=200)
 
+@login_required
+def regsiter_individually(request,id,exid):
+    if request.method == 'GET':
+        if User.objects.filter(id=id).count() == 0:
+            return HttpResponse('No user found')
+        elif ExamSubject.objects.filter(id=exid).count() == 0:
+            return HttpResponse('No Subject found')
+        else:
+            user = User.objects.get(id=id)
+            exam = ExamSubject.objects.get(id=exid)
+            ExamUser(user=user,subject=exam).save()
+            return HttpResponse('Successfully Added {} to {}'.format(user.username,exam.name))
+    else:
+        return HttpResponse('Wrong Method used')
 
 #Saves the questions from the computer
 @csrf_exempt

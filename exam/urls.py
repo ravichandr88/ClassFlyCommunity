@@ -15,5 +15,6 @@ path('question/<int:qid>',views.question),  #question to answer
 path('answer/<int:qid>/<int:exuid>/<slug:ans>',views.answer),
 path('certificate/<str:id>',views.certificate), 
 path('budget',views.budget),
+path('pathway/solo/<int:id>/<int:exid>',views.regsiter_individually)
 
 ]
