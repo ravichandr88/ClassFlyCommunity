@@ -219,7 +219,7 @@ def register(request):
     'exam_id':
     }
     """ 
-    phone_number = int(request.data['phone_number'].split('.')[0] if request.data['phone_number'].split('.')[0] != 'nan'  else 0)
+    phone_number = str(int(request.data['phone_number'].split('.')[0] if request.data['phone_number'].split('.')[0] != 'nan'  else 0))
     user_validation(phone_number,request.data['email'])
     password = get_random_string()
     
@@ -236,7 +236,7 @@ def register(request):
     user.save() 
     Phonenumber(user=user,phone_number=int(phone_number)).save()
     ExamUser(user=user,subject=ExamSubject.objects.get(id=request.data['exam_id'])).save()
-    requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+password:{}%2CLogin+with+this+password.".format(phone_number,password))
+    # requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+password:{}%2CLogin+with+this+password.".format(phone_number,password))
 
 
 
