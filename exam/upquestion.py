@@ -24,7 +24,7 @@ for index, row in df.iterrows():
         continue
     data={'question':row['question'],'answer_a':row['a'],'answer_b':row['b'],'answer_c':row['c'],'answer_d':row['d'],'correct_ans':str(row['answer']).lower(),'exam_sub_id':exam_id}
     resp = requests.post(url,data)
-
+    print('Uploaded',index,row['question'])
     #  print([ row['name'],row['email'],row['phone']])
     if str(resp.status_code) != '200':
         print(resp.json())
@@ -33,7 +33,7 @@ for index, row in df.iterrows():
         
 # print(df.iloc[1:,:])
 df = df.iloc[1:,:]
-print(df)
+# print(df)
 
 
 df.to_excel("response.xlsx")

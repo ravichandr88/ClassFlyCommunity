@@ -157,7 +157,7 @@ def result(request,subj=0):
     s = 'qwertyuiop'
     id_str = ''.join([s[int(j)] for j in str(subj) ])
     print(id_str)
-    if (round((r_ans/exam.subject.count)*100) >= 50) and (Certificate.objects.filter(exam_user=exam).count() == 0):
+    if (round((r_ans/exam.subject.count)*100) >= 70) and (Certificate.objects.filter(exam_user=exam).count() == 0):
         cert = 'CF'+ str(exam.subject.id) + '000' + str(exam.id)
 
         Certificate(exam_user=exam,cert_id=cert,type=1).save()
