@@ -25,6 +25,8 @@ import django.contrib.auth.password_validation as validators
 from django.core import exceptions
 from django.contrib.sessions.models import Session
 
+# def robots(request):
+#     return HttpResponse()
 
 @csrf_exempt
 def loginview(request):
