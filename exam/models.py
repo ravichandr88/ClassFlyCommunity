@@ -30,10 +30,10 @@ class ExamUser(models.Model):
 class Question(models.Model):
     subject = models.ForeignKey(ExamSubject,on_delete=models.CASCADE,related_name='questions')
     question = models.CharField(max_length=500)
-    answer_a = models.CharField(max_length=100)
-    answer_b = models.CharField(max_length=100)
-    answer_c = models.CharField(max_length=100)
-    answer_d = models.CharField(max_length=100)
+    answer_a = models.CharField(max_length=300)
+    answer_b = models.CharField(max_length=300)
+    answer_c = models.CharField(max_length=300)
+    answer_d = models.CharField(max_length=300)
     correct_ans = models.CharField(max_length=1)
 
     def __str__(self):
