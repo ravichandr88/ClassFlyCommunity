@@ -38,6 +38,7 @@ urlpatterns = [
     path('event',views.redirect_event),
     path('resend',views.resend_otp),
     path('renew/<slug:code>',views.session_renew),
+    path('home_pro',views.pro_home),
     # path('robots.txt',)
     url(r'^robots.txt', lambda x: HttpResponse("User-Agent: *\nDisallow:", content_type="text/plain"), name="robots_file"),
  

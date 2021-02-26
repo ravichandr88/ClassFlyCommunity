@@ -354,4 +354,10 @@ def session_renew(request,code):
 
     return HttpResponse('Not good to continue')
 
+
+
+#professional home page
+def pro_home(request):
+    return render(request,'homepage_pro.html',context={})
+
         
