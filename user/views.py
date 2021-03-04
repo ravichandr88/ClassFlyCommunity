@@ -125,7 +125,7 @@ def videoupload(request):
 
 @csrf_exempt
 def subsignup(request):
-    print(request.user)
+    # print(request.user)
     if str(request.user) != 'AnonymousUser':
         # login(request,User.objects.get(username=request.user))
         return HttpResponseRedirect(reverse('home'))
@@ -165,6 +165,7 @@ def subsignup(request):
         except exceptions.ValidationError as e:
             data['error'] = list(e.messages)[0]
             return render(request,'signupnew.html',context = data)
+
 
             
         user = User(username = data['loginName'],
@@ -360,4 +361,3 @@ def session_renew(request,code):
 def pro_home(request):
     return render(request,'homepage_pro.html',context={})
 
-        

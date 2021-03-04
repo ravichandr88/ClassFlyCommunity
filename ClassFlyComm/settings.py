@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'video',
     'exam',
     'upload',
-    'prfsnl_auth',
+    'pro',
     'chatt',
     'channels',
     'django.contrib.admin',
@@ -173,6 +173,7 @@ REST_FRAMEWORK = {
 }
 
 WSGI_APPLICATION = 'ClassFlyComm.wsgi.application'
+
 
 
 # Database
