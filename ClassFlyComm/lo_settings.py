@@ -298,7 +298,7 @@ BROKER_URL = 'django://'
 
 # CELEry LOCAL
 CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379' 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -306,3 +306,4 @@ CELERY_IGNORE_RESULT = False # this is less important
 CELERY_TRACK_STARTED = True
 
 FORKED_BY_MULTIPROCESSING=1
+# celeryd: celery -A ClassFlyComm worker --pool=solo -l info
