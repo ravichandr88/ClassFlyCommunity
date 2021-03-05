@@ -307,3 +307,4 @@ CELERY_TRACK_STARTED = True
 
 FORKED_BY_MULTIPROCESSING=1
 # celeryd: celery -A ClassFlyComm worker --pool=solo -l info
+# worker: REMAP_SIGTERM=SIGQUIT celery worker --app ClassFlyComm.celery.app --loglevel info
