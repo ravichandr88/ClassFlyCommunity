@@ -1,31 +1,76 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect,HttpResponse
 from django import forms
 from django.http.request import QueryDict, MultiValueDict
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate,logout
+import django.contrib.auth.password_validation as validators
+from django.core import exceptions
+
+
+from django.http.response import JsonResponse
 
 from rest_framework.response import Response
 from django.forms.utils import ErrorList
 import re
+from random import randint
 # Create your views here.
-
-from .forms import SignupForm
-from .sample_tasks import create_task
+from django.contrib.auth.models import User
+from .forms import SignupForm, SMSotpForm, LoginForm, ResetPasswordForm, PasswordResetForm
+from .sample_tasks import get_call, send_otp
+from django.core.exceptions import ValidationError 
 
 from rest_framework.decorators import api_view
 
-#Function to validate Phone Number
+#models for sending otp
+from user.models import Phonenumber,OTP
+
+# function header to check whether username stored in request object or not
+def session(function):
+    # @wraps(function)
+    def inner(request, *args, **kwargs):
+            # print(request.session.keys())
+            if 'username' in request.session.keys(): 
+                # print(request.session)
+                return function(request, *args,  **kwargs)
+            elif request.user:
+                return redirect('pro_home')
+            else:
+                return redirect('login_new')
+
+    return inner
+
 
 
 
 def signup(request):
+     #IF the user is already logged in 
+    if request.user == 'AnonymousUser':
+        # print(request.user)
+        return redirect('pro_home')
+
+
     if request.method == 'POST':
-        data = request.POST.dict()
         form = SignupForm(request.POST)
         #Validate Phone Number
 
         if form.is_valid():
-            return render(request,'signupcopy.html', context={'form':form})
+            user = form.save()
+            user.is_active = False
+            user.save()
+            
+            #save username in request object
+            request.session['username'] = user.username
+
+            #prepare otp for the user confirmation
+            otp = str(randint(1234,9876)) 
+            otp = OTP(user=user,otp=otp)
+            otp.save()
+            send_otp.delay(user.username,otp.otp)
+
+            return redirect('otp_verify')
         else: 
+            #IF error contains 'username' message, replace it with 'phone number'
             errors = form._errors.setdefault("username", ErrorList())
             error_message = str(errors.as_text())
             errors.clear()
@@ -34,12 +79,153 @@ def signup(request):
             return render(request,'signupcopy.html', context={'form':form})
     return render(request, "signupcopy.html", context={'form':SignupForm()})
 
+
+@session
+def otp_verify_view(request):
+    if request.method == 'POST':
+        form = SMSotpForm(request.POST)
+        # print(request.session['username'])
+        if form.is_valid():
+            #Code to activate normal user account activation
+        
+            user = User.objects.get(username=request.session['username'])
+            try:
+                otp = form.cleaned_data['otp']
+                otp = OTP.objects.get(user=user,otp=otp)
+                print('Started')
+                #Check the reason for OTP
+                if request.session['reason'] == 'signup':
+                    #After Successfull OTP validation Login the user
+                    user.is_active = True   #activate user account
+                    user.save()
+                    login(request,user)
+                    return redirect('pro_home')
+                elif request.session['reason'] == 'reset_password':
+                    return redirect('password_reset_pro') 
+                
+            except:
+                errors = form._errors.setdefault("otp", ErrorList())
+                errors.clear()
+                error_message = str('OTP did not match')
+                errors.append(u"" + error_message)
+                return render(request,'signupcopy.html', context={'form':form})
+
+           
+                
+    otp_form = SMSotpForm()
+    return render(request,'signupcopy.html', context={'form':otp_form})
+
+@session
+def resend_otp(request):
+    
+    user = User.objects.get(username = request.session['username'])
+    if OTP.objects.filter(user = user).count() != 0:
+        otp = OTP.objects.get(user = user)
+    else:
+        otp = str(randint(1234,9876)) 
+        otp = OTP(user=user,otp=otp)
+        otp.save()
+    
+    otp.count+=1
+    otp.save()
+
+    #check if the user has remianing otps
+    if otp.count > 25:
+        return JsonResponse({'message':'Sorry'},status=500)
+        
+    send_otp.delay(user.username,otp.otp)
+    return JsonResponse({'message':'Sent Successfully'},status=200)
+
+
+
+def login_view(request): 
+    #IF the user is already logged in 
+    if request.user == 'AnonymousUser':
+        return redirect('pro_home')
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(request, username=form.cleaned_data['phone_number'], password=form.cleaned_data['password'])
+            
+
+            if user == None:
+                form.add_error('password','Incorrect password')
+                return render(request,'signupcopy.html',context={'form':form})
+            
+            #Login the User
+            login(request,user)
+            return redirect('pro_home')  
+
+        else:
+            #If usre account is not activated, reirect to OTP page
+            if form.redirect:
+                return redirect('otp_verify')
+            return render(request,'signupcopy.html',context={'form':form})
+
+    form = LoginForm()
+    return render(request,'signupcopy.html',context={'form':form})
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('pro_home')
+
+import requests
+def forgot_password(request):
+
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username = form.cleaned_data['phone_number'])
+
+            if OTP.objects.filter(user = user).count() != 0:
+                otp = OTP.objects.get(user = user)
+                otp.delete()
+            otp = str(randint(1234,9876)) 
+            otp = OTP(user=user,otp=1234)
+            otp.save()
+            send_otp.delay(form.cleaned_data['phone_number'],otp.otp)
+            # requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(form.cleaned_data['phone_number'],otp.otp))
+   
+
+            #remind our app that he is aloowed to access OTP page
+            request.session['username'] = form.cleaned_data['phone_number']
+            request.session['reason'] = 'reset_password'
+            return redirect('otp_verify')
+        else:
+            return render(request, 'signupcopy.html',context={'form':form})
+
+    form = ResetPasswordForm()
+    return render(request, 'signupcopy.html',context={'form':form})
+    
+
+def password_reset(request):
+    if request.method == 'POST':
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            try:
+                user = User.objects.get(username = request.session['username'])
+                validators.validate_password(password=form.cleaned_data['password'], user=user)
+                user.set_password(form.cleaned_data['password'])
+                user.save()
+                return redirect('login_new')
+            except exceptions.ValidationError as e:
+                error = list(e.messages)[0]
+                form.add_error('password',error)
+                return render(request, 'signupcopy.html',context={'form':form})
+        else:
+            return render(request, 'signupcopy.html',context={'form':form})
+
+    form = PasswordResetForm()
+    return render(request, 'signupcopy.html',context={'form':form})
+
+
 def searchpage(request):
     # working model   
     return render(request,'search_page.html')
 
-def login(request):
-    return render(request,'prologin.html')
 
 def homepage(request):
     return render(request,'homepage.html')
@@ -55,8 +241,7 @@ def project_detail(request):
 @api_view(['GET','POST'])
 def run_task(request):
     print(request.POST)
-   
     task_type = 1
-    task = create_task.delay(int(task_type))
-    return Response(data={"task_id": task.id}, status=202)
+    task = get_call.delay(int(task_type))
+    return Response(data={'task_id':task.id}, status=202)
     # return Response(data={'caught':'No'})

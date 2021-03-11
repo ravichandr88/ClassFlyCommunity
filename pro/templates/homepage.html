@@ -42,8 +42,8 @@
   <div id="topbar" class="d-none d-lg-flex align-items-center fixed-top">
     <div class="container d-flex">
       <div class="contact-info me-auto">
-        <i class="icofont-envelope"></i> <a href="mailto:contact@example.com">contact@classfly.in</a>
-        <i class="icofont-phone"></i> +91 sample
+        <i class="icofont-envelope"></i> <a href="mailto:contact@example.com">support@classfly.in</a>
+        <i class="icofont-phone"></i> +91 8792233124
       </div>
       <div class="social-links">
         <a href="#" class="twitter"><i class="icofont-twitter"></i></a>
@@ -70,7 +70,13 @@
           <li><a href="#services">Services</a></li>
           <li><a href="#portfolio">Portfolio</a></li>
           <li><a href="#team">Team</a></li>
-          <li class="drop-down"><a href="">Drop Down</a>
+          {% if not user.is_authenticated  %}
+          <li><a href="/prosignup">Signup</a></li>
+          <li><a href="/prologin">Login</a></li>
+          {% else %}
+          <li><a href="/logout_pro">Logout</a></li>
+          {% endif %}
+          <!-- <li class="drop-down"><a href="">Drop Down</a>
             <ul>
               <li><a href="#">Drop Down 1</a></li>
               <li class="drop-down"><a href="#">Deep Drop Down</a>
@@ -86,7 +92,7 @@
               <li><a href="#">Drop Down 3</a></li>
               <li><a href="#">Drop Down 4</a></li>
             </ul>
-          </li>
+          </li> -->
           <li><a href="#contact">Contact</a></li>
 
         </ul>

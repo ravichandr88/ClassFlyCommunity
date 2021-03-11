@@ -41,7 +41,7 @@ def loginview(request):
 
         user = None
         if User.objects.filter(username=data['username']).count() == 0:
-            print(User.objects.filter(username=str(data['username'])),data)
+            # print(User.objects.filter(username=str(data['username'])),data)
             if Phonenumber.objects.filter(phone_number = data['username']).count() == 0:
                 return HttpResponse('Username or Phone number not found')
             user = Phonenumber.objects.get(phone_number=data['username']).user

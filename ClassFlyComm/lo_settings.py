@@ -37,7 +37,7 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = 'dyuo!=9@xvo8*s+lf#t)xw6a7_dn%)wucex^0uccu#+9=u1b$^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
 
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'pro',
     'chatt',
     'channels',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
