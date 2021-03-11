@@ -61,6 +61,7 @@ def signup(request):
             
             #save username in request object
             request.session['username'] = user.username
+            request.session['reason'] = 'signup'
 
             #prepare otp for the user confirmation
             otp = str(randint(1234,9876)) 
@@ -184,7 +185,7 @@ def forgot_password(request):
                 otp = OTP.objects.get(user = user)
                 otp.delete()
             otp = str(randint(1234,9876)) 
-            otp = OTP(user=user,otp=1234)
+            otp = OTP(user=user,otp=otp)
             otp.save()
             send_otp.delay(form.cleaned_data['phone_number'],otp.otp)
             # requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(form.cleaned_data['phone_number'],otp.otp))
