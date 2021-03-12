@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'upload',
     'pro',
     'chatt',
+    'internship',
     'channels',
     'crispy_forms',
     'django.contrib.admin',

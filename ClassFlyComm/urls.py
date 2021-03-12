@@ -12,5 +12,6 @@ urlpatterns = [
     path('',include('upload.urls')),
     path('',include('pro.urls')),
     path('',include('chatt.urls')),
+    path('',include('internship.urls'))
 
 ]

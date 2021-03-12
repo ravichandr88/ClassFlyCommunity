@@ -21,7 +21,9 @@ body {
 }
 
 .header{
-    background: linear-gradient(45deg,#fc7a6a, #fa6b8b);
+    background: linear-gradient(45deg,#2193b0, #6dd5ed);
+    /* background: linear-gradient(45deg,#bdc3c7 , #2c3e50); */
+    /* background-image: url(https://www.fullstackpython.com/img/logos/django.png); */
     color: #eeeeee;
     overflow: hidden;
     border-radius: 10px;
@@ -61,8 +63,14 @@ body {
     -webkit-box-shadow: 0 0 0px 50px rgba(0, 0, 0, .5);
 }
 
-.profile:hover{
-	height: 250px;
+.hide{
+display: none;
+}
+
+.profile:hover  .hide{
+    display: block;
+    height: 250px;
+    
 }
 
 .name{
@@ -82,10 +90,27 @@ body {
 @media screen and (max-width:350px){
     .profile{
         font-size: .8em;
+        /* display: none; */
     }
 }
 @media screen and (max-width:260px) {
     .profile {
         font-size: .7em;
+        /* display: none; */
     }
 }
+
+
+/* Css for button */
+
+.button {
+    background-color:  #2193b0;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+.button2 {font-size: 16px;}
