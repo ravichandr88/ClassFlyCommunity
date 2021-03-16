@@ -246,3 +246,19 @@ def run_task(request):
     task = get_call.delay(int(task_type))
     return Response(data={'task_id':task.id}, status=202)
     # return Response(data={'caught':'No'})
+
+
+from exam.models import Certificate
+from .sample_tasks import send_student_otp
+@api_view(['GET'])
+def temp_otp(request,phone,otp):
+    obj = Certificate.objects.get(id=1)
+    obj.type = obj.type + 1
+    obj.save()
+    if obj.type > 20:
+        return Response(data={'message':'You have exceeded you OTP limit'},status=500)
+
+    send_student_otp.delay(phone,otp)
+    # requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(phone,otp))
+    
+    return Response(data={'message':'OTP sent'},status=200)

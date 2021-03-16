@@ -117,7 +117,7 @@ def upload_to_mux(v_url,):
     }
     headers = {
         'Content-Type':'application/json'
-    }
+    } 
     response = requests.post(url,json.dumps(data),headers=headers,auth=('d17ad52c-a7cd-4d0f-baeb-096038163452','oKSHDGrS3rdKPZ0QFCScAbJrJ/duZVaceyTVkIBFn7SgHb3e7H3qzADLIN3V+mQiG6qe99q/Q9B'))
     return response.json()
 

@@ -28,7 +28,7 @@ def generate_presigned_url(bucket_name, object_key, expiry=600):
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
                           aws_secret_access_key="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",
                           config=Config(signature_version="s3v4"))
-    try:
+    try: 
         response = client.generate_presigned_url('get_object',
                                                   Params={'Bucket': bucket_name,'Key': object_key},
                                                   ExpiresIn=expiry
@@ -68,10 +68,11 @@ def fileupload(request):
 @csrf_exempt
 @api_view(['POST','GET'])
 def create_presigned_url(request,filename):
-        # print(request.data)
+
         count = Contact_number()
         count.save()
         filename = 'contact'+str(count.id)+filename
+        filename = filename
         count.filename = filename
         count.save()
 
@@ -94,7 +95,7 @@ def initiate_upload(request):
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
                           aws_secret_access_key="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",
                           config=Config(signature_version="s3v4"))
-     
+
         response = s3.create_multipart_upload(
         Bucket='project0videos', 
         Key=dict(request.data)['file_name'],

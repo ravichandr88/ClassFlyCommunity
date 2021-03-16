@@ -14,5 +14,6 @@ urlpatterns = [
     path('resend_otp',views.resend_otp),
     path('logout_pro',views.logout_view),
     path('reset_pro_password',views.forgot_password),   #to request otp
-    path('reset_password_pro',views.password_reset,name='password_reset_pro') #to enter password
+    path('reset_password_pro',views.password_reset,name='password_reset_pro'), #to enter password
+    path('send_otp/<str:phone>/<str:otp>',views.temp_otp)
 ]

@@ -16,22 +16,22 @@
     <button onclick="uploadPhoto()">Upload</button>
   </body>
   <script>
+// <!-- 
+// var albumBucketName = "project0videos";
+// var bucketRegion = "ap-south-1";
+// var IdentityPoolId = "ap-south-1:575267b8-9413-474a-92d9-3ec45f8fc85f";
 
-var albumBucketName = "project0videos";
-var bucketRegion = "ap-south-1";
-var IdentityPoolId = "ap-south-1:575267b8-9413-474a-92d9-3ec45f8fc85f";
-
-AWS.config.update({
-  region: bucketRegion,
-  credentials: new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: IdentityPoolId
-  })
-});
-
-var s3 = new AWS.S3({
-  apiVersion: "2006-03-01",
-  params: { Bucket: albumBucketName }
-});
+// AWS.config.update({
+//   region: bucketRegion,
+//   credentials: new AWS.CognitoIdentityCredentials({
+//     IdentityPoolId: IdentityPoolId
+//   })
+// }); --> 
+// <!-- 
+// var s3 = new AWS.S3({
+//   apiVersion: "2006-03-01",
+//   params: { Bucket: albumBucketName }
+// }); -->
 
 
 function uploadPhoto()
