@@ -1,13 +1,14 @@
 from django.urls import path
 from . import views
+from . import projects
 
 
 urlpatterns = [
-    path('search',views.searchpage),
+    path('search_now',views.searchpage),
     path('prologin',views.login_view,name='login_new'),
     path('prohome',views.homepage, name='pro_home'),
     path('profile',views.profile_card),
-    path('project',views.project_detail),
+    path('project_now',views.project_detail),
     path('prosignup',views.signup),
     path('task',views.run_task) ,
     path('otp_verify',views.otp_verify_view, name='otp_verify'),
@@ -15,5 +16,7 @@ urlpatterns = [
     path('logout_pro',views.logout_view),
     path('reset_pro_password',views.forgot_password),   #to request otp
     path('reset_password_pro',views.password_reset,name='password_reset_pro'), #to enter password
-    path('send_otp/<str:phone>/<str:otp>',views.temp_otp)
+    path('send_otp/<str:phone>/<str:otp>',views.temp_otp),   #temp url for stuednt door opening porject
+    path('search',projects.search),     #Dynamic search page for projects
+    path('project',projects.project_review)
 ]
