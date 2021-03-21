@@ -60,15 +60,15 @@ class VideoAsset(models.Model):
 class RegsiteredUser(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='project_registered')
     project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name='registered_users')
-    sign_key = models.CharField(max_length=300,null=False)
-    private_key = models.TextField(max_length=3000,null=False)
+    sign_key = models.CharField(max_length=300,default='null')#sign ID
+    private_key = models.TextField(max_length=3000,default='null')#sign key , very lengthy
     created_on = models.DateTimeField(auto_now=True)
     rating = models.IntegerField(default=0)
     feedback = models.TextField(max_length=3000,null=True)
 
 
     def __str__(self):
-        return "User {} created_on {} Project {} Rating {}".format(self.user.username, self.created_on, self.project.name, self.rating)
+        return "User {} created_on {} Project {} Rating {}".format(self.user.username, self.created_on, self.project.title, self.rating)
 
 
 

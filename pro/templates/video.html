@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>{{url}}</p>
+
+ <link href="https://vjs.zencdn.net/7.2.3/video-js.css" rel="stylesheet">
+ 
+ <video id='hls-example'  class="video-js vjs-default-skin" width="400" height="300" controls>
+    <!-- <source type="application/x-mpegURL" src="https://stream.mux.com/o6NfTUyXvdbIoZcDXvgKom02RIcEIU5MB01jjKEnv6OSM.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik41RERnVFdPTzE1clM1WkRRY0VYN0szN1NvTE9hY2IzY2JobXhlTU5nOFEifQ.eyJzdWIiOiJvNk5mVFV5WHZkYklvWmNEWHZnS29tMDJSSWNFSVU1TUIwMWpqS0VudjZPU00iLCJleHAiOjE2MTYxNjc5OTQsImF1ZCI6InYifQ.gxUGJqFSeul2bqcfbIUVnRHp59uSUjZ16EOwbDUMfPYvHsGyifgYBqteU4FhV9eJeDFXIp8fx0DulLlNdi6ntxCJtkr0fU79dyMw00YqwShxj98DUrilGF1W5GktUpqrC35ErNA1tCxyq_NV8H84mWlVKDq3I9WTRwb4e5D8p0XDO0yJTOlQSW-_UQkMJH4-9DDaNBokcUdMZAJaopJqOgYUGV6Vhz6OlxQ54-OqKPvbkGS62V5TI1ah80eoD_L9I4x4VSGvsRhg4fol7_XEmOoSh6YusBZJyv8hEy7fcbs05OuzRAq5qbj_XORpCWMH_4l83NoiouYIeY--CRF_0w"> -->
+        <source type="application/x-mpegURL" src="{{url}}">
+</video>
+
+
+
+<script src="https://vjs.zencdn.net/ie8/ie8-version/videojs-ie8.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.14.1/videojs-contrib-hls.js"></script>
+<script src="https://vjs.zencdn.net/7.2.3/video.js"></script>
+
+
+
+<script>
+var player = videojs('hls-example');
+player.play();
+</script>
+</body>
+
+</html>

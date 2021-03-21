@@ -22,7 +22,7 @@ from django.contrib.auth.models import User
 from .models import Contact_number
 
 
-def generate_presigned_url(bucket_name, object_key, expiry=600):
+def generate_presigned_url(bucket_name, object_key, expiry=3600):
 
     client = boto3.client("s3",region_name="ap-south-1",
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
@@ -71,7 +71,7 @@ def create_presigned_url(request,filename):
 
         count = Contact_number()
         count.save()
-        filename = 'contact'+str(count.id)+filename
+        # filename = 'contact'+str(count.id)+filename
         filename = filename
         count.filename = filename
         count.save()

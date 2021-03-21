@@ -18,5 +18,7 @@ urlpatterns = [
     path('reset_password_pro',views.password_reset,name='password_reset_pro'), #to enter password
     path('send_otp/<str:phone>/<str:otp>',views.temp_otp),   #temp url for stuednt door opening porject
     path('search',projects.search),     #Dynamic search page for projects
-    path('project',projects.project_review)
+    path('project',projects.project_review),
+    path('videoplayer/<int:video_id>',projects.videoplayer),
+    path('dashboard',projects.dashboard)
 ]
