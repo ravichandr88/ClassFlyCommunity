@@ -125,7 +125,10 @@ def videoplayer(request,video_id):
         'kid': signing_key_id
     }
 
-    json_web_token = jwt.encode(token, private_key, algorithm="RS256", headers=headers)
+    try:
+        json_web_token = jwt.encode(token, private_key, algorithm="RS256", headers=headers)
+    except:
+        json_web_token 
     json_web_token = json_web_token.decode("utf-8") 
     url = "https://stream.mux.com/{}.m3u8?token={}".format(playback_id,json_web_token)
 
