@@ -137,7 +137,7 @@ def videoplayer(request,video_id):
 
 
     
-    return render(request,'video.html',context={'url': url})
+    return render(request,'videoplayer.html',context={'url': url})
 
 
 
