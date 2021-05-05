@@ -46,5 +46,6 @@ urlpatterns = [
 	path('notes_list',views.notes_uploaded_list),  #page to see all the submitted by the user
     path('notes_dept_dash',views.depthead_notes_dashboard), #dashboard for dept head to validate notes uplaoded by video makers
 	path('notes_dept_dash/<slug:page>',views.depthead_notes_dashboard), #dashboard for dept head to validate notes uplaoded by video makers
-	path('ap_rj_vd_notes',views.approve_reject_notes)
+	path('ap_rj_vd_notes',views.approve_reject_notes),
+	path('videocall',views.videocall)
 	]

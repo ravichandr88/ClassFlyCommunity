@@ -364,3 +364,10 @@ def approve_reject_notes(request):
         notes.active = True
         notes.save()
         return Response(data={'code':200})
+
+
+
+
+#final video call work
+def videocall(request):
+    return render(request,'app.component.html')
