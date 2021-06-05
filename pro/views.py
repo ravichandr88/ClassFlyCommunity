@@ -74,7 +74,7 @@ def signup(request):
             #IF error contains 'username' message, replace it with 'phone number'
             errors = form._errors.setdefault("username", ErrorList())
             error_message = str(errors.as_text())
-            errors.clear()
+            errors.clear() 
             error_message = error_message.replace('username','phone number',1)
             errors.append(u"" + error_message)
             return render(request,'signupcopy.html', context={'form':form})

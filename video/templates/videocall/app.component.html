@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Video Call</title>
+    <!-- <script src="https://cdn.agora.io/sdk/release/AgoraRTCSDK-3.5.2.js"></script> -->
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.5.0.js"></script>
+    <link rel="stylesheet" href="app.component.v4.css">
+</head>
+<body>
+    <h1>
+        Video Call<br><small style="font-size: 14pt;">Powered by Agora.io</small>
+    </h1>
+    <button onclick="join()"> Join</button>
+    <button onclick="addVideoStream('remote-container')">video</button>
+    <h4>Local video</h4>
+    <div id="me"></div>
+    <h4>Remote video</h4>
+    <div id="remote-container">
+    </div>
+    <script src="app.component.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+<!-- {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Video Call</title>
+    <script src="//media.twiliocdn.com/sdk/js/video/releases/2.13.1/twilio-video.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'videocall/app.component.css'%}">
+</head>
+<body>
+    <h1>
+        Video Call<br><small style="font-size: 14pt;">Powered by Agora.io</small>
+    </h1>
+    <button onclick="join()"> Join</button>
+    <button onclick="addVideoStream('remote-container')">video</button>
+    <h4>Local video</h4>
+    <div id="me"></div>
+    <h4>Remote video</h4>
+    <div id="remote-container">
+    </div>
+    <script src="{% static 'videocall/app.component.js' %}"></script>
+</body>
+</html> -->
+
+

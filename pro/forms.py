@@ -47,7 +47,7 @@ class SignupForm( UserCreationForm , BootstrapModelForm):
     def clean(self):
         cleaned_data = super(UserCreationForm,self).clean()
         t = self.cleaned_data.get('username')
-        if not validate_not_mobile(t):
+        if not validate_not_mobile(t): 
             self.add_error('username', 'Not a valid phone number')
         return cleaned_data
     
