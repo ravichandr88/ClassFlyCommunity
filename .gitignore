@@ -1,4 +1,10 @@
 .env
 com/
 exam/register.py
-static/
+user/static/
+video/static/
+upload/static/
+pro/static/
+internship/static
+exam/static
+classfly/static
