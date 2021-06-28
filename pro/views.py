@@ -41,14 +41,21 @@ def session(function):
     return inner
 
 
+def startpage(request):
+    return render(request,'startpage.html',context={})
 
 
-def signup(request):
-     #IF the user is already logged in 
-    if request.user == 'AnonymousUser':
+
+def signup(request,type="student"):
+
+    print(request.user)
+    #IF the user is already logged in 
+    if request.user is 'AnonymousUser':
         # print(request.user)
         return redirect('pro_home')
 
+    # Signup candidate type of registration, -> student,proessional,company
+    request.type = type
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -100,7 +107,17 @@ def otp_verify_view(request):
                     user.is_active = True   #activate user account
                     user.save()
                     login(request,user)
-                    return redirect('pro_home')
+                    
+                    #after successful signup, redirect user based on type from request, -> student,professional,company
+                    if request.type == 'student':
+                        return redirect('student')
+                    
+                    elif request.type == 'professional':
+                        return redirect('professional')
+
+                    else:
+                        return redirect('company')
+
                 elif request.session['reason'] == 'reset_password':
                     return redirect('password_reset_pro') 
                 

@@ -13,5 +13,8 @@ urlpatterns = [
     path('url_multi',views.presigned_url_multipart),
     path('upload_raw',views.upload_raw),
     path('complete_upload',views.complete_upload),
-    path('signurl/<str:filename>',views.create_presigned_url) 
+    path('signurl/<str:filename>',views.classfly_create_presigned_url),
+    path('classfly/initiate_upload',views.classfly_initiate_upload),
+    path('classfly/url_multi',views.classfly_presigned_url_multipart), 
+    path('classfly/complete_upload',views.classfly_complete_upload)
 ]

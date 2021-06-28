@@ -1,0 +1,381 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login V1</title>
+	<meta charset="UTF-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="{% static 'login/images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'login/css/main.css' %}">
+<!--===============================================================================================-->
+
+<!-- Loading JQuery url  -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+	<!-- Card CSS project details  -->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	
+
+	 <link rel="stylesheet" type="text/css" href="{% static 'studentacc/style.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'studentacc/tagstyle.css' %}"/>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.2/croppie.js"></script>
+ 
+    
+
+    
+	<!-- Code to include js with respcet to form -->
+	<script src="{% static 'prosignup/script.js' %}"></script>	
+</head>
+<body>
+
+	
+		{{ form.media }}
+
+
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+                    <div class="login100-pic js-tilt" data-tilt>
+                            <img src="{% static 'login/images/img-01.png' %}" alt="IMG">
+                        </div> 
+        
+                        <form class="login100-form validate-form" method="POST" action=""  >
+                            <span class="login100-form-title">
+                                ClassFly Professional
+                            </span>
+
+
+                            
+                              <div class="col-md-4 text-center">
+                              <div id="upload-demo"></div>
+                              </div>
+
+                              
+                              <strong>Select image to crop:</strong>
+                              <input type="file" id="image" accept="image/*" >
+                              <button class="btn btn-success btn-block btn-upload-image" style="margin-top:2%; width:50%" type="button">Crop&Upload</button>
+                              
+                              <br>
+                              <br>
+
+                              
+                              <div id="preview-crop-image" style="background:#9d9d9d;width:300px;padding:50px 50px;height:300px;"></div>
+                             <br>
+                             <br>
+                             <br>
+                             
+                              <button  class="login100-form-btn" type="button">Continue</button>
+                              
+                            
+                            </form>
+                            
+                      
+                </div>
+                </div>
+
+                </body>
+
+
+                
+<script type="text/javascript">
+
+
+    var filename = '';
+
+    var resize = $('#upload-demo').croppie({
+        enableExif: true,
+        enableOrientation: true,    
+        viewport: { // Default { width: 100, height: 100, type: 'square' } 
+            width: 200,
+            height: 200,
+            type: 'circle' //square
+        },
+        boundary: {
+            width: 300,
+            height: 300
+        }
+    });
+    $('#image').on('change', function () { 
+      var reader = new FileReader();
+        reader.onload = function (e) {
+          resize.croppie('bind',{
+            url: e.target.result
+          }).then(function(){
+            console.log('jQuery bind complete');
+          });
+        }
+        reader.readAsDataURL(this.files[0]);
+        filename = this.files[0].name;
+    }); 
+    $('.btn-upload-image').on('click', function (ev) {
+      resize.croppie('result', {
+        type: 'canvas',
+        size: 'viewport'
+      }).then(function (img) {
+
+    	 const myFile = new File([img],filename , {
+            type: img.type,
+            });
+          update(myFile);
+
+      });
+    });
+    </script>
+
+
+<script>
+	
+		class FileStreamer {
+			constructor(file) {
+				this.file = file;
+				this.offset = 0;
+				this.defaultChunkSize = 6000000; // bytes
+				this.rewind();
+			}
+			rewind() {
+				this.offset = 0;
+			}
+			isEndOfFile() {
+				return this.offset >= this.getFileSize();
+			}
+		
+			readBlockAsText(m,n) {
+				length = m
+				const fileReader = new FileReader();
+				const blob = this.file.slice(m,n);
+				return new Promise((resolve, reject) => {
+					fileReader.onload = (event) => {
+						const target = (event.target);
+						if (target.error == null) {
+							const result = target.result;
+							// if (result.length > 6000000 && ((this.offset)/length) > (this.file.length/length))
+							// {
+							console.log('PartNo:',part_no);
+							console.log('file sliced',this.offset,'to', this.offset + length)
+							console.log('Reolved file length',result.length);
+							console.log('File length',this.file.size);
+							// }
+							// this.offset += result.length;
+							console.log('File length',(result.length/(1024*1024)),'mb');
+							this.testEndOfFile();
+							resolve(result);
+							// resolve('small');
+						}
+						else {
+							reject(target.error);
+						}
+					};
+					fileReader.readAsArrayBuffer(blob);
+				});
+			}
+			testEndOfFile() {
+				if (this.isEndOfFile()) {
+					console.log('Done reading file');
+				}
+			}
+			getFileSize() {
+				return this.file.size;
+			}
+		}
+		
+		
+		
+		async function  update(img){
+			console.log("Pressed");
+			var file = img;
+			var chunkSize = 1024*1024*5;
+			var fileSize = (file.size - 1);
+			var uploadID = '';
+		
+				//get the upload ID for the file selected
+				try { 
+			let res = await timeoutPromise(10*60*1000, fetch("/classfly/initiate_upload", {
+					method: 'POST',
+					body:  JSON.stringify({'file_name':'{{user.username}}'+file.name }),
+					headers:{
+								'X-CSRFToken':  '{{csrf_token}}',
+								'Content-Type': 'application/json'
+						   }
+				  }));
+		  uploadID = res.upload_id;
+		  } catch(error) {
+			// might be a timeout error
+			console.log('Error for file uploadID',error);
+		  }
+		
+		  part_no = 1;
+		  var data ;
+		  total_part = file.size/6000000;
+		  etag_list = {
+			  'Parts':[
+		
+			  ]
+		  };
+			const fileStreamer = new FileStreamer(file);
+		
+			// new code
+			// var files = document.getElementById('upload').files;
+		
+			var file = img;
+
+            console.log(file.name);
+			var size = file.size;
+			var chunksize = 6000000;
+			var x = 0;
+			while (x < size) {
+				//
+				try { 
+				let res = await timeoutPromise(10*60*1000, fetch("/classfly/url_multi", {
+						method: 'POST',
+						body:  JSON.stringify({
+							'key':'{{user.username}}'+file.name,
+							'part_no':part_no,
+							'upload_id':uploadID
+							}),
+						headers:{
+									'X-CSRFToken':  '{{csrf_token}}',
+									'Content-Type': 'application/json'
+							}
+					}));
+					upload_url = res.url;
+			console.log(res);
+			} catch(error) {
+				// might be a timeout error
+				console.log('error');
+				console.log(error);
+			}
+			//get data chunk from the file reader
+			console.log('Total part',total_part);
+			var data;
+			if((x+chunksize)<size){
+					console.log(x, x+chunksize);
+					 data = await fileStreamer.readBlockAsText(x, x+chunksize);
+				}
+				else{
+					console.log(x,size,'end');
+					 data = await fileStreamer.readBlockAsText(x,size);
+				}
+				x+=chunksize;// to prepare for next loop
+		
+			console.log('Data size',data.length);
+			console.log('Ad bytes',data.length < (5*1024*1024), part_no > total_part)
+			console.log('Part_no < total', part_no,total_part);
+		   
+			try {
+				console.log(upload_url); 
+				let res = await timeoutPromise(10*60*1000, fetch(upload_url, {
+						method: 'PUT',
+						body:data,
+						headers:{
+							'Accept': 'application/octet-stream'
+							}
+					}));
+					console.log(res);
+					etag_list.Parts.push({
+						"ETag":res,
+						"PartNumber":part_no
+					 } );
+				// console.log(res.headers);
+				}
+				catch(error){
+					console.log(error);
+				}
+			// console.log(res.headers);
+			//   console.log(data);
+			part_no = part_no + 1;
+			
+		}
+		
+		try { 
+			let res = await timeoutPromise(10*60*1000, fetch("/classfly/complete_upload", {
+					method: 'POST',
+					body:  JSON.stringify({
+						'username':'{{user.username}}',
+						'file_name':'{{user.username}}'+file.name,
+						'upload_id':uploadID,
+						'multi_part_etags':etag_list
+						}),
+					headers:{
+								'X-CSRFToken':  '{{csrf_token}}',
+								'Content-Type': 'application/json'
+						   }
+				  }));
+		  console.log(res);
+		  } catch(error) {
+			// might be a timeout error
+			console.log('Error for file uploadID',error);
+
+		  }
+		console.log(etag_list);
+
+		//code to download after uploading to DB
+		var url = "https://classfly.s3.ap-south-1.amazonaws.com/"+'{{user.username}}'+file.name;
+		
+		fetch(url)
+		.then(function(response) {
+			response.text().then(function(text) {
+			
+			html = '<img src="' + text + '" />';
+            $("#preview-crop-image").html(html);
+			
+			});
+		});
+		// window.location = '/';
+		}
+		
+		
+		
+		
+		//fetch Prommise function
+		function timeoutPromise(ms, promise) {
+		  return new Promise((resolve, reject) => {
+			const timeoutId = setTimeout(() => {
+			  reject(new Error("promise timeout"))
+			}, ms);
+			promise.then(
+			  (res) => {
+				clearTimeout(timeoutId);
+				var etag = res.headers.get('etag');
+		//         for(let entry of res.headers.entries()) {
+		//     console.log(entry);
+		//   }
+			   if (etag != null)
+				{
+				resolve(etag);
+				}
+				else{
+					resolve(res.json());
+				}
+			  },
+			  (err) => {
+				  console.log('Line 147',err);
+				clearTimeout(timeoutId);
+				reject(err);
+			  }
+			);
+		  })
+		}
+		
+		
+		
+		</script> 
+    
+                </html>

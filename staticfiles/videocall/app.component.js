@@ -50,7 +50,7 @@ function start(){
     // The value of role can be "host" or "audience".
     client.setClientRole("host");
 
-    var token =  "006e73019d92f714c95b9bc47ea63de404cIAB2JJGzHPfHrqEQ0/NfO7K0/gEUqZ7pGdO059jC9i54cp3mPXcAAAAAEAD4YHXYyW2fYAEAAQDMbZ9g";
+    var token =  "006e73019d92f714c95b9bc47ea63de404cIAC4GGM/0hHxZ/skDB7+wyiFoR/kXfMBsiugKPXcoH2+053mPXcAAAAAEACDSUn7iFTIYAEAAQCIVMhg";
 
 
 

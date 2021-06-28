@@ -31,9 +31,9 @@
   <link href="{% static 'assets/css/style.css'%}" rel="stylesheet">
                  
 <script>
-function move()
+function move(s)
 {
-  window.location.href='community'
+  window.location.href= s ;
 }
 </script>
 
@@ -129,7 +129,7 @@ function move()
           <div class="col-xl-8 col-lg-7 d-flex">
             <div class="icon-boxes d-flex flex-column justify-content-center">
               <div class="row">
-                <div class="col-xl-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100" onclick="move()">
+                <div class="col-xl-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100" onclick="move('community')">
                   <div class="icon-box mt-4 mt-xl-0">
                     <!-- <i class="bx bx-receipt"></i> -->
                     <img src="/static/4.jpg" alt="" width="100px" height="100px" >
@@ -144,12 +144,11 @@ function move()
                     <img src="/static/4.png" alt="" width="70px" height="70px" >
                     <br>
                     <br>
-                    
                     <h4>ClassFly<br> Trainings</h4>
                     <p>Over 500 Courses from one Platform ClassFly trainings with working professionals</p>
                   </div>
                 </div>
-                <div class="col-xl-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300">
+                <div class="col-xl-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="300" onclick="move('startpage')">
                   <div class="icon-box mt-4 mt-xl-0">
                     <img src="/static/3.png" alt="" width="70px" height="70px" >
                     <br>

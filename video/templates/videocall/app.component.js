@@ -39,24 +39,24 @@ function start(){
       codec: "vp8",
   });
   
-  client.init("1128f072e89c4034b413a8833804467d", function() {
+  client.init("e73019d92f714c95b9bc47ea63de404c", function() {
       console.log("client initialized");
   }, function(err) {
       console.log("client init failed ", err);
   });
 
-
+ 
 
     // The value of role can be "host" or "audience".
     client.setClientRole("host");
 
-    // var token =  "006d4cbfcd02b9f446185fe3a8784107a06IACCyE5cefxMCOpQdMjBgwXzMDHDoituRfAm42AsgWXzAJ3mPXcAAAAAEAB+PjEWSY6wYAEAAQBKjrBg";
-  var token = ""
+    var token = "006e73019d92f714c95b9bc47ea63de404cIAC4GGM/0hHxZ/skDB7+wyiFoR/kXfMBsiugKPXcoH2+053mPXcAAAAAEACDSUn7iFTIYAEAAQCIVMhg";
 
 
     // Join a channel
 client.join(token, "car", null, (uid)=>{
   // Create a local stream
+  console.log("Client joined");
 }, handleError);
   
 
@@ -70,6 +70,7 @@ localStream.init(()=>{
   // Play the local stream
   localStream.play("me");
   // Publish the local stream
+  console.log("Streamed");
   client.publish(localStream,handleError);
 }, handleError);
 

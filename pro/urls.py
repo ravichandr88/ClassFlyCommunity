@@ -4,13 +4,14 @@ from . import projects
 
 
 urlpatterns = [
+    path('startpage',views.startpage),
     path('search_now',views.searchpage),
     path('prologin',views.login_view,name='login_new'),
     path('prohome',views.homepage, name='pro_home'),
     path('profile',views.profile_card),
     path('project_now',views.project_detail),
-    path('prosignup',views.signup),
-    path('task',views.run_task) ,
+    path('prosignup/<str:type>',views.signup),
+    path('task',views.run_task),
     path('otp_verify',views.otp_verify_view, name='otp_verify'),
     path('resend_otp',views.resend_otp),
     path('logout_pro',views.logout_view),

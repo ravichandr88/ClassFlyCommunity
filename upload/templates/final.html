@@ -55,7 +55,7 @@ class FileStreamer {
                     reject(target.error);
                 }
             };
-            fileReader.readAsArrayBuffer(blob);
+            fileReader.readAsArrayBuffer(blob); 
         });
     }
     testEndOfFile() {
@@ -72,7 +72,9 @@ class FileStreamer {
 
 $('#upload_button').click(async function(){
     var file = $('#upload')[0].files[0];
+    console.log('{{user.username}}');
     var chunkSize = 1024*1024*5;
+
     var fileSize = (file.size - 1);
     var uploadID = '';
 
@@ -80,7 +82,9 @@ $('#upload_button').click(async function(){
         try { 
     let res = await timeoutPromise(10*60*1000, fetch("/initiate_upload", {
             method: 'POST',
-            body:  JSON.stringify({'file_name':file.name }),
+            body:  JSON.stringify({
+                'file_name':'{{user.get_username}}'+file.name
+            }),
             headers:{
                         'X-CSRFToken': '{{csrf_token}}',
                         'Content-Type': 'application/json'
@@ -116,7 +120,7 @@ $('#upload_button').click(async function(){
         let res = await timeoutPromise(10*60*1000, fetch("/url_multi", {
                 method: 'POST',
                 body:  JSON.stringify({
-                    'key':file.name,
+                    'key':'{{user.get_username}}'+file.name,
                     'part_no':part_no,
                     'upload_id':uploadID
                     }),
@@ -126,6 +130,7 @@ $('#upload_button').click(async function(){
                     }
             }));
             upload_url = res.url;
+            console.log(upload_url);
     console.log(res);
     } catch(error) {
         // might be a timeout error
@@ -177,7 +182,7 @@ try {
     let res = await timeoutPromise(10*60*1000, fetch("/complete_upload", {
             method: 'POST',
             body:  JSON.stringify({
-                'file_name':file.name,
+                'file_name':'{{user.get_username}}'+file.name,
                 'upload_id':uploadID,
                 'multi_part_etags':etag_list
                 }),
