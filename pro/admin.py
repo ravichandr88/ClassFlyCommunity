@@ -2,7 +2,9 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Trainer,RegsiteredUser,VideoAsset,Project, Skills, ProjectFlow
+from .models import Trainer,RegsiteredUser,VideoAsset,EmailOTP, Project, Skills, ProjectFlow
+
+admin.site.register(EmailOTP)
 
 admin.site.register(Trainer)
 

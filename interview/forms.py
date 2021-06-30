@@ -1,6 +1,6 @@
 from django import forms
 from .models import Experience,Professinal_Account_Details
-
+ 
 
 
 #Class to add Bootstrap for input fields in HTML
@@ -164,8 +164,9 @@ class ProIntervTime(BootstrapModelForm):
 
 class CompanyForm(BootstrapModelForm):
     company_name = forms.CharField(max_length = 100,required=True)
-    address = forms.CharField(required=True, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Company Address"}))    
+    address = forms.CharField(max_length = 500,required=True, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Company Address"}))    
     city = forms.CharField(max_length=50,required=True)
+    state = forms.CharField(max_length = 100, required=True)
     company_linkedin_url = forms.URLField() 
 
     class Meta:

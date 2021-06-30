@@ -54,6 +54,8 @@
 				<form class="login100-form validate-form" method="POST" action=""  >
 					<span class="login100-form-title">
 						ClassFly Professional
+						<br>
+						<p>{{message | safe}}</p>
 					</span>
 				
 					
@@ -95,8 +97,8 @@
 						
 					</div>
 					{% csrf_token %}	
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+					<div class="container-login100-form-btn" id="submit_button">
+						<button class="login100-form-btn" >
 							Submit  
 						</button>
 					</div>
@@ -136,6 +138,11 @@
 	</script>
 <!--===============================================================================================-->
 	<script src="{% static 'login/js/main.js'%}"></script>
+
+	<!-- code from professional waiitng to hide the submit button -->
+	<script>
+	{{js_code | safe}}
+	</script>
 
 
 <!-- <div class="card" style="width: 18rem;">

@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'pro',
     'chatt',
     'internship',
+    'interview',
     'channels',
     'crispy_forms',
     'django.contrib.admin',
@@ -66,7 +67,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'interview',
+    
 ]
 
 MIDDLEWARE = [
@@ -310,8 +311,22 @@ CELERY_IGNORE_RESULT = False # this is less important
 CELERY_TRACK_STARTED = True
 
 FORKED_BY_MULTIPROCESSING=1
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'classfly.in@gmail.com'
+EMAIL_HOST_PASSWORD = 'hfuzrqtspqwwefox'
+
+
+
+
+
 # celeryd: celery -A ClassFlyComm worker --pool=solo -l info
 # worker: REMAP_SIGTERM=SIGQUIT celery worker --app ClassFlyComm.celery.app --loglevel info
 
 # celeryd: celery -A ClassFlyComm.celery worker -E -B --loglevel=INFO
 # rediss://:pe8586157d58d6c7e8d69c9879829d808b16354b8a7a87dfd976a82125845a61b@ec2-108-128-33-61.eu-west-1.compute.amazonaws.com:15710
+
+

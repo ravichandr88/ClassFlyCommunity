@@ -35,3 +35,7 @@ class OTP(models.Model):
 
     def __str__(self):
         return "user {} count {} otp {}".format(self.user.username,self.count,self.otp)
+
+
+
+

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 #     place = models.CharField(max_length=100,null=False)
 
 DEFAULTUSER = 1
-
+ 
 
 class DeptHead(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name='user_depthead')

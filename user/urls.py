@@ -34,7 +34,7 @@ urlpatterns = [
     path('example',views.example),
     path('logout',views.logout_request,name='logout'),
     path('register',views.webinar,name='register'),
-    path('register_email',views.save_email,name='register_email'),
+    # path('register_email',views.save_email,name='register_email'),
     path('event',views.redirect_event),
     path('resend',views.resend_otp),
     path('renew/<slug:code>',views.session_renew),

@@ -308,3 +308,13 @@ CELERY_TRACK_STARTED = True
 FORKED_BY_MULTIPROCESSING=2
 
 # CELERY_RESULT_BACKEND = os.environ['REDIS_URL']
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'classfly.in@gmail.com'
+EMAIL_HOST_PASSWORD = 'hfuzrqtspqwwefox'
+

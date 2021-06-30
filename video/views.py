@@ -366,7 +366,7 @@ def approve_reject_notes(request):
         return Response(data={'code':200})
 
 
-
+ 
 
 from agora.src.RtcTokenBuilder import *
 import time
@@ -378,7 +378,7 @@ def videocall(request):
     appID = "e73019d92f714c95b9bc47ea63de404c"
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
     channelName = "car"
-    uid = random.randrange(1111111111,9999999999)
+    uid = random.randrange(11111111,99999999)
     userAccount = str(uid)
     expireTimeInSeconds = 3600
     currentTimestamp = int(time.time())

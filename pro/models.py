@@ -73,4 +73,18 @@ class RegsiteredUser(models.Model):
 
 
 
+class EmailOTP(models.Model):
+    user = models.OneToOneField(User, related_name='email_otp', on_delete=models.CASCADE)
+    otp = models.CharField(max_length=6,null=False)
+    count = models.IntegerField(default=1)
+    requested = models.BooleanField(default = True)
+ 
+
+    def  __str_(self):
+        return "User {} otp {} count {}".format(self.user.username, self.otp, self.count)
+
+
+
+
+
 

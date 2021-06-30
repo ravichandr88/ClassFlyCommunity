@@ -9,10 +9,15 @@ urlpatterns = [
     path('pro/exp',views.proexp),
     path('pro/meet',views.prof_initial_meet),
     path('pro/profile',views.profile_pic),
-    path('company',views.company_singup),
-    path('hraccount',views.hr_account_creation),
-    path('hridcard',views.hr_id_card),
+    path('pro/waiting',views.pro_waiting, name='pro_waiting'),
+    path('company',views.company_singup), 
+    path('hraccount',views.hr_account_creation, name ='hr_account_creation' ),
+    path('hridcard',views.hr_id_card, name='hr_id_card'),
     path('hrprofile',views.hr_profile_pic),
     path('pro/timetable',views.pro_timetable),
-    path('pro/bank', views.pro_bank)
+    path('pro/bank', views.pro_bank),
+    path('hr/dashboard',views.hr_dashboard),
+    path('pro/dashboard',views.prof_dashboard),
+    path('applicant/dashboard',views.applicant_dashboard)
+
 ]

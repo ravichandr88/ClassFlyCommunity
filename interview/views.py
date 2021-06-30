@@ -1,12 +1,13 @@
 from django.shortcuts import render,HttpResponse
 from .forms import StudentForm,ProfessionalForm,HRForm,ProfessionalBankForm,ProfTimeTableForm,Experienc,ProIntervTime,CompanyForm
 from django.contrib.auth.decorators import login_required
-from .models import Fresher, Experience,Professinal_Account_Details ,Prfessional,ProExperience, Professional_Meeting
+from .models import Fresher, HRaccount,Company,Experience,Professinal_Account_Details ,Prfessional,ProExperience, Professional_Meeting
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
 
 
+# Fresher Singup Page-3
 # Create your views here.
 @login_required
 def student(request):
@@ -20,6 +21,7 @@ def student(request):
     exp_work_1 
     exp_period_1 
     """
+    
     form = StudentForm()    #preparing an empty form
 
 
@@ -67,13 +69,26 @@ def student(request):
 				  </ul>"""
     return render(request,'form.html',context={'form':form, 'skills':skills})
 
+
+# Professional Page-6
+# Fresher Page-4
+
+@login_required
 def resumeview(request):
 
     # form = ResumeForm()
+  
+    next = '/pro/profile'
 
-    return render(request,'form.1.html',context={'content':"Resume",'type':type})
+    return render(request,'form.1.html',context={'content':"Resume", 'next' : next})
 
 
+
+# Function to signup the professional after verifying the sms and email otp
+# Professional Signup Page-3
+
+
+@login_required
 #function to professional signup
 def prosignup(request):
     
@@ -89,13 +104,14 @@ def prosignup(request):
 					  Enter skills seperated by comma.
 					</li>
 				  </ul>"""
-
+    form = ProfessionalForm()
+    
 
     if request.method == 'POST':
         prof = ProfessionalForm(request.POST)
 
         if prof.is_valid():
-          print(prof)
+          # print(prof)
           
           #prepare experience value
           exp = float( prof.cleaned_data['total_exp_year'] + '.' + prof.cleaned_data['total_exp_month'] )
@@ -128,8 +144,16 @@ def prosignup(request):
 
 
 
+# Professional Signup to acquire experience details of the professional
+# Professional Signup Page-5
+
+@login_required
 #function to professional signup
 def proexp(request):
+    
+    form = Experienc()
+
+
     if request.method == 'POST':
         data = request.POST.dict()
         keys = list(data.keys())[7:]
@@ -155,8 +179,7 @@ def proexp(request):
 
 
 
-    form = Experienc()
-
+    
     card = """
     <cdiv class="go" id="butn">
 						<h3>Company</h3>
@@ -179,13 +202,18 @@ def proexp(request):
 
 
 
+# Professional Page-8
+
 import datetime
 
+@login_required
 def prof_initial_meet(request):
-    if request.method == 'POST':
-        print(request.POST)
+    form = ProIntervTime()
 
-        print(datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']))
+    if request.method == 'POST':
+        # print(request.POST)..
+
+        # print(datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']))
         
         
         Professional_Meeting(
@@ -193,9 +221,12 @@ def prof_initial_meet(request):
           meet2 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']),
           meet3 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']),
           prof = Prfessional.objects.get(id=5)
-          ).save()
-        
-    form = ProIntervTime()
+        ).save()
+
+        return redirect('pro_waiting')
+
+
+
 
     card = """  <h5 style="text-align: center;"> 
     Please provide your free time to connect with our 
@@ -207,36 +238,109 @@ def prof_initial_meet(request):
     return render(request,'form.html',context={'form':form, 'card':card})
 
 
+# Professional Signup Page-7
+# Fresher Signup Page-5
 
+@login_required
 def profile_pic(request):
+    
+    next = ''
 
-    # return render(request,'indexpic.html',context={})
-    return render(request,'pic_crop.html', context={})
+    # variable to point to next page
+    if Prfessional.objects.filter(user__username = request.user).count() != 0:
 
+        next = '/pro/meet'
+    
+    if Fresher.objects.filter(user__username = request.user).count() !=  0:
+        next = '/applicant/dashboard'
+
+    return render(request,'pic_crop.html', context={'next' : next})
+
+
+# Company Account creation by HR or employee
+
+# HR Singup Page-3
+@login_required
 def company_singup(request):
-
-    # if request.method == 'POST':
-        
+    
     form = CompanyForm()
 
+    if request.method == 'POST':
+
+        form = CompanyForm(request.POST)
+
+        if form.is_valid():
+            print(form.cleaned_data)
+
+            Company(
+              created_by              = User.objects.get(username = request.user),
+              company_name            = form.cleaned_data['company_name'],
+              address                 = form.cleaned_data['address'],
+              city                    = form.cleaned_data['city'],
+              state                   = form.cleaned_data['state'],
+              company_linkedin_url    = form.cleaned_data['company_linkedin_url'],
+              ).save()
+
+
+            return redirect('hr_account_creation')
+
+
     return render(request,'form.html',context={'form':form})
 
 
+# Company account creatoin done , now addding self account as HR for the company
+# HR- account creatoin Page-4
+
+@login_required
 def hr_account_creation(request):
+    
     form = HRForm()
 
+    if request.method == 'POST':
+          form = HRForm(request.POST)
+
+          if form.is_valid():
+            HRaccount(
+              user             = User.objects.get(username = request.user),
+              designation      = form.cleaned_data['designation'],
+              linkedin_url     = form.cleaned_data['linkedin_url'],
+              office_email     = User.objects.get(username = request.user).email
+            ).save()
+
+            return redirect('hr_id_card')
+
     return render(request,'form.html',context={'form':form})
 
+
+# HR account creation Page-5
+
+@login_required
 def hr_id_card(request):
     
+    # value for the change in title of this page
     content = "ID Card"
     
-    return render(request,'form.1.html',context = {'content':content})
+    # variable to decide the next success url
+    next = '/hrprofile'
+    
+    return render(request,'form.1.html',context = {'content':content,'next': next})
 
+
+# HR account creation Page-6
+
+@login_required
 def hr_profile_pic(request):
-    # return render(request,'indexpic.html',context={})
-    return render(request,'pic_crop.html', context = {'content':'Profile Pic'})
 
+
+    next ='/hr/dashboard'
+
+    return render(request,'pic_crop.html', context = {'content':'Profile Pic of HR'})
+
+
+
+# Professional Page-12
+
+@login_required
 def pro_timetable(request):
     if request.method == 'POST':
         print(request.POST)
@@ -252,7 +356,14 @@ def pro_timetable(request):
     return render(request,'form.html',context={'form':form,'skills':skills})
 
 
+# Professioinal Page-11
+
+@login_required
 def pro_bank(request):
+    
+    form = ProfessionalBankForm()
+
+    
     if request.method == 'POST':
         form = ProfessionalBankForm(request.POST)
         if form.is_valid():
@@ -273,9 +384,46 @@ def pro_bank(request):
           
           pro.save()
         
-        else:
-            form = Professinal_Account_Details(form)
-            return render(request,'form.html',context={'form':form})
-    form = ProfessionalBankForm()
-
+    
     return render(request,'form.html',context={'form':form})
+
+
+# HR account Page-7
+
+@login_required
+def hr_dashboard(request):
+
+    return render(request,'hr_dashboard.html',context={})
+
+
+
+# Fresher Dashboard Page-6
+
+@login_required
+def applicant_dashboard(request):
+    return HttpResponse('Fresher Dashbaord')
+
+
+# Professional Page-9
+
+@login_required
+def pro_waiting(request):
+
+  js_code = '''
+  $(document).ready(function(){
+		console.log('ready');
+		$('#submit_button').hide();
+	})
+  '''
+  return render(request,'form.html',{'js_code':js_code,'message':'Will be waiting till your interview with Expert is done.'})
+
+
+# professional Page-13
+
+@login_required
+def prof_dashboard(request):
+  return HttpResponse('Professional Dashboard')
+
+
+
+

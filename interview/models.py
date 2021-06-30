@@ -30,7 +30,7 @@ class Experience(models.Model):
 
 
 class Prfessional(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE, related_name = 'proaccount')
+    user            = models.OneToOneField(User,on_delete=models.CASCADE, related_name = 'proaccount')
     company         = models.CharField(max_length=70, null=False)
     designation     = models.CharField(max_length=60, null=False)
     city            = models.CharField(max_length=60, null=False)
@@ -86,6 +86,7 @@ class Company(models.Model):
     city                    = models.CharField(max_length=50,null=False)
     company_linkedin_url    = models.URLField()
     created_on              = models.DateTimeField(auto_now=True)
+    state                   = models.CharField(max_length = 100, null =False)
     verified                = models.BooleanField(default = False)
 
     def __str__(self):
@@ -94,11 +95,12 @@ class Company(models.Model):
 
 class HRaccount(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE, related_name='hraccount')
-    designation      = models.CharField(max_length = 50,null=True)
+    designation      = models.CharField(max_length = 50,null=False)
     linkedin_url     = models.URLField() 
     created_on       = models.DateTimeField(auto_now=True)
     idcard           = models.URLField(default='')
     profilepic       = models.URLField(default='')
+    office_email     = models.EmailField(null=True)
 
 
 
@@ -121,12 +123,22 @@ class Expert(models.Model):
     def __str__(self):
         return "User {} Interviewed By {} company {} Experience {}".format(self.user.username,self.interviewed_by.username,self.company,self.experience)
 
-# class ProfessionalInterview(models.Model):
-#     expert = models.ForeignKey(Expert, on_delete = models.CASCADE, related_name='interviewed_by')
-#     prof   = models.OneToOneField(Prfessional, on_delete = models.CASCADE, related_name ='pro_interview')
-#     created_on = models.DateTimeField(auto_now=True)
-#     interview_url = models.URLField()
-#     topics = models.CharField(max_length = 200)
+
+# table to work on professoinal and Expert meeting details and result
+ 
+class ProfessionalInterview(models.Model):
+    expert = models.ForeignKey(Expert, on_delete = models.CASCADE, related_name='interviewed')
+    pro   = models.OneToOneField(Prfessional, on_delete = models.CASCADE, related_name ='pro_interview')
+    interview_on = models.DateTimeField()
+    interview_url = models.URLField()
+    topics = models.CharField(max_length = 300)
+    comments = models.CharField(max_length = 200)
+
+
+
+    def __str__(self):
+        return "Expert {} Pro {} InterviewURL {} Interview On {}  Topics {} Comments {}".format(self.expert.user.username, self.pro.user.username,self.interview_url,self.interview_on,self.topics,self.comments)
+
 
 
 class ProfessionalTimeTable(models.Model):

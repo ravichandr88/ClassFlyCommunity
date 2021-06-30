@@ -147,3 +147,24 @@ class PasswordResetForm(BootstrapModelForm):
         field = ['password','confirm_password']
         icons = {'phone_number':'fa fa-mobile'}
         place_holder = {'phone_number':'Enter phone number'}
+
+
+class EmailForm(BootstrapModelForm):
+    email = forms.EmailField(required = True)
+    
+    class Meta:
+        field = ['email','confirm_password']
+        icons = {'email':'fa fa-envelope'} 
+        place_holder = {'email':'Enter Email'}
+    
+
+class EmailOTPForm(BootstrapModelForm):
+    email_otp = forms.CharField(max_length=6)
+
+    class Meta:
+        field = ['email_otp',]
+        icons = {'email_otp':'fa fa-lock'} 
+        place_holder = {'email_otp':'Enter Email OTP'}
+    
+    class Media:
+        js = ('email/script.js',)

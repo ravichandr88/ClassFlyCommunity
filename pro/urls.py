@@ -13,6 +13,9 @@ urlpatterns = [
     path('prosignup/<str:type>',views.signup),
     path('task',views.run_task),
     path('otp_verify',views.otp_verify_view, name='otp_verify'),
+    path('email',views.email_function, name='emailpage'),
+    path('email/otp',views.email_otp, name='email_otp_verify'),
+    path('email/otp/resend',views.resend_email_otp),
     path('resend_otp',views.resend_otp),
     path('logout_pro',views.logout_view),
     path('reset_pro_password',views.forgot_password),   #to request otp

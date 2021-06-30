@@ -7,6 +7,13 @@ from django.contrib.auth import login, authenticate,logout
 import django.contrib.auth.password_validation as validators
 from django.core import exceptions
 
+from .models import  EmailOTP
+
+
+
+from exam.models import Certificate
+from .sample_tasks import send_student_otp,send_email_otp
+
 
 from django.http.response import JsonResponse
 
@@ -16,7 +23,7 @@ import re
 from random import randint
 # Create your views here.
 from django.contrib.auth.models import User
-from .forms import SignupForm, SMSotpForm, LoginForm, ResetPasswordForm, PasswordResetForm
+from .forms import SignupForm, SMSotpForm, LoginForm,EmailOTPForm,EmailForm, ResetPasswordForm, PasswordResetForm
 from .sample_tasks import get_call, send_otp
 from django.core.exceptions import ValidationError 
 
@@ -48,7 +55,7 @@ def startpage(request):
 
 def signup(request,type="student"):
 
-    print(request.user)
+    # print(request.user)
     #IF the user is already logged in 
     if request.user is 'AnonymousUser':
         # print(request.user)
@@ -108,16 +115,10 @@ def otp_verify_view(request):
                     user.save()
                     login(request,user)
                     
-                    #after successful signup, redirect user based on type from request, -> student,professional,company
-                    if request.type == 'student':
-                        return redirect('student')
-                    
-                    elif request.type == 'professional':
-                        return redirect('professional')
+                    return redirect('emailpage')
+                    # code that will redirect the users with respect to account type
 
-                    else:
-                        return redirect('company')
-
+                   
                 elif request.session['reason'] == 'reset_password':
                     return redirect('password_reset_pro') 
                 
@@ -132,6 +133,107 @@ def otp_verify_view(request):
                 
     otp_form = SMSotpForm()
     return render(request,'signupcopy.html', context={'form':otp_form})
+
+
+
+# Function to accept  Email from User
+@login_required
+def email_function(request):
+    form = EmailForm()
+    
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+
+        if form.is_valid():
+            # Createa otp for email and save it into DB
+        
+            # Send otp for this email
+            
+            #  otp generated will be saved into  odel and only then sent through email
+            otp = randint(111111,999999)
+
+            # User object for reference, and update the email
+            user = User.objects.get(username = request.user)
+            user.email = form.cleaned_data['email']
+            user.save()
+
+            
+
+            email_otp = EmailOTP(
+                user = user,
+                otp = otp
+            )
+
+
+            # If the user has already created email otp oject just override it
+            if EmailOTP.objects.filter(user__username = request.user).count() != 0:
+                email_otp = EmailOTP.objects.get(user__username = request.user)
+
+            
+            
+            email_otp.save()
+
+            send_email_otp(user, email_otp.otp)
+            return redirect('email_otp_verify')
+
+    return render(request,'signupcopy.html', context={'form':form})
+
+
+# Function to recive the email otp from user
+@login_required
+def email_otp(request):
+    # First check whether the user have requedsted for email otp
+    form  = EmailOTPForm()
+
+
+    # request.session['username'] = 'bunny'
+
+    if request.method == 'POST':
+        form = EmailOTPForm(request.POST)
+
+        if form.is_valid():
+            otp = form.cleaned_data['email_otp']
+            if EmailOTP.objects.filter(user__username = request.user,otp = otp).count() == 1:
+                # disbale the otp "requested" varibale in "EmailOTP" table 
+                    emailotp = EmailOTP.objects.get(user__username = request.user)
+
+                    emailotp.requedsted = False
+                #after successful signup, redirect user based on type from request, -> student,professional,company
+                    if request.type == 'student':
+                        return redirect('student')
+                    
+                    elif request.type == 'professional':
+                        return redirect('professional')
+
+                    else:
+                        return redirect('company')
+
+
+   
+
+    return render(request,'signupcopy.html', context={'form':form})
+
+
+# function to resend email otp through REST api
+@session
+def resend_email_otp(request,):
+
+    user = User.objects.get(username = request.session['username'])
+
+    # First check whether email otp has been requested or not
+    if EmailOTP.objects.filter(user__username = user.username).count() == 0:
+
+        return  JsonResponse({'message':'user has not found'},status=400)
+    
+    # Check whether user has approved for email otp request
+    email_otp = EmailOTP.objects.get(user__username = user.username)
+    
+    if email_otp.requested:
+        send_email_otp(User.objects.get(username = user.username),email_otp.otp)
+
+    return  JsonResponse({'message':'Successfully sent'},status=200)
+
+
 
 @session
 def resend_otp(request):
@@ -265,8 +367,6 @@ def run_task(request):
     # return Response(data={'caught':'No'})
 
 
-from exam.models import Certificate
-from .sample_tasks import send_student_otp
 @api_view(['GET'])
 def temp_otp(request,phone,otp):
     obj = Certificate.objects.get(id=1)
