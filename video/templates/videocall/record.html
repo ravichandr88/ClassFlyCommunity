@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Basic Video Call -- Agora</title>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  
   <!-- <link rel="stylesheet" href="../abootstrap.min.css"> -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="{% static 'videocall/index.css' %}">
@@ -76,7 +76,7 @@
   <!--
     Input fields so the user can securely join a Video Call channel.
   -->
-  <form id="join-form">
+  <!-- <form id="join-form">
     <div class="row join-info-group">
       <div class="col-sm">
         <p class="join-info-text">APP ID</p>
@@ -97,24 +97,24 @@
         <p class="join-info-text">User ID(optional)</p>
         <input id="uid" type="text" placeholder="Enter the user ID">
       </div>
-    </div>
+    </div>  -->
 
     <!--
       Join or leave a Video Call channel.
     -->
-    <div class="button-group">
+    <!-- <div class="button-group">
       <button id="join" type="submit" class="btn btn-primary btn-sm">Join</button>
       <button id="leave" type="button" class="btn btn-primary btn-sm" disabled>Leave</button>
     </div>
-  </form>
+  </form> -->
   <!--
     This local media splayer is enabled when the user has successfully joined a Video Call channel.
   -->
   <div class="row video-group">
-    <div class="col">
+    <!-- <div class="col">   
       <p id="local-player-name" class="player-name"></p>
       <div id="local-player" class="player"></div>
-    </div>
+    </div> -->
     <div class="w-100"></div>
     <div class="col">
       <div id="remote-playerlist"></div>
@@ -148,6 +148,6 @@ var option = {
 
 <!-- <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.5.0.js"></script> -->
 
-<script src="{% static 'videocall/basicVideoCall.js' %}"></script>
+<script src="{% static 'videocall/record.js' %}"></script>
 </body>
 </html>

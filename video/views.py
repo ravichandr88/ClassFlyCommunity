@@ -396,6 +396,26 @@ def videocall(request):
 
     return render(request,'videocall/index.html',context = data)
 
+
+def record(request):
+    appID = "e73019d92f714c95b9bc47ea63de404c"
+    appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
+    channelName = "car"
+    uid = random.randrange(11111111,99999999)
+    userAccount = str(uid)
+    expireTimeInSeconds = 3600
+    currentTimestamp = int(time.time())
+    privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
+
+
+    token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
+    data = {'token' : token,
+    'appid': appID,
+    'channel': channelName,
+    'uid': uid,
+    }
+    return render(request, 'videocall/record.html', context= data)
+
 # to test the audio recording for aws s3 agora recording
 def audio_testing(request):
     return render(request,'audio.html',context={})

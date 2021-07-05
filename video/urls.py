@@ -48,5 +48,6 @@ urlpatterns = [
 	path('notes_dept_dash/<slug:page>',views.depthead_notes_dashboard), #dashboard for dept head to validate notes uplaoded by video makers
 	path('ap_rj_vd_notes',views.approve_reject_notes),
 	path('videocall',views.videocall),
-	path('audiocall',views.audio_testing)
+	path('audiocall',views.audio_testing),
+	path('record', views.record),
 	]
