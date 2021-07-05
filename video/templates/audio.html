@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+<body>
+     
+        <div style="visibility:hidden">
+                <audio autoplay loop>
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+                </audio> 
+            </div>
+            
+
+<!-- <embed src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" AutoPlay loop hidden> -->
+
+<p>Click the buttons to play or pause the audio.</p>
+
+<button onclick="playAudio()" type="button">Play Audio</button>
+<button onclick="pauseAudio()" type="button">Pause Audio</button> 
+
+<script>
+    $(document).ready(function(){
+        console.log("Very good");
+
+// var x = document.getElementById("myAudio"); 
+ 
+//   x.play(); 
+});
+</script>
+
+</body>
+</html>

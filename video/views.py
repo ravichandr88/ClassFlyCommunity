@@ -395,3 +395,7 @@ def videocall(request):
 
 
     return render(request,'videocall/index.html',context = data)
+
+# to test the audio recording for aws s3 agora recording
+def audio_testing(request):
+    return render(request,'audio.html',context={})
