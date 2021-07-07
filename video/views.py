@@ -396,7 +396,7 @@ def videocall(request):
 
     return render(request,'videocall/index.html',context = data)
 
-
+# function to provide html page for recording
 def record(request):
     appID = "e73019d92f714c95b9bc47ea63de404c"
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
@@ -419,3 +419,7 @@ def record(request):
 # to test the audio recording for aws s3 agora recording
 def audio_testing(request):
     return render(request,'audio.html',context={})
+
+# to test the video playing from dacast
+def video_play(request):
+    return render(request,'dacast.html',context={})

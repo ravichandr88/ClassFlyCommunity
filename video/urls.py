@@ -50,4 +50,5 @@ urlpatterns = [
 	path('videocall',views.videocall),
 	path('audiocall',views.audio_testing),
 	path('record', views.record),
+	path('play',views.video_play)
 	]
