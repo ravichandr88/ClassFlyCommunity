@@ -13,6 +13,7 @@ urlpatterns = [
     path('',include('pro.urls')),
     path('',include('chatt.urls')),
     path('',include('internship.urls')),
-    path('',include('interview.urls'))
+    path('',include('interview.urls')),
+    path('',include('fresher.urls')),
 
 ]

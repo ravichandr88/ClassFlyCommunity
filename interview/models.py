@@ -13,7 +13,7 @@ class Fresher(models.Model):
     total_experience = models.FloatField()
     resume_url = models.URLField(null=True)
     skills = models.CharField(max_length=500,default='')    
-
+    profile_pic = models.URLField(default='')
 
     def __str__(self):
         return "User {} College {} Branch {} Exp {} url {}".format(self.user,self.college,self.branch,self.total_experience,self.resume_url)
@@ -74,7 +74,7 @@ class Professinal_Interview_Time(models.Model):
     meet = models.CharField(max_length = 3)
     time = models.TimeField()
     prof = models.ForeignKey(Prfessional, on_delete = models.CASCADE, related_name="prof_interview")
-    
+     
     def __str__(self):
         return "Meet {} Professional {}".format(self.meet, self.prof.user.username)
 
@@ -140,14 +140,16 @@ class ProfessionalInterview(models.Model):
         return "Expert {} Pro {} InterviewURL {} Interview On {}  Topics {} Comments {}".format(self.expert.user.username, self.pro.user.username,self.interview_url,self.interview_on,self.topics,self.comments)
 
 
+# class 
 
-class ProfessionalTimeTable(models.Model):
-    day = models.CharField(max_length = 10)
-    time= models.TimeField()
-    prof= models.ForeignKey(Prfessional, on_delete=models.CASCADE, related_name='prof_timings')
 
-    def __str__(self):
-        return "Day {} Time {} Prof {}".format(self.day, self.time, self.prof.user.username)
+# class ProfessionalTimeTable(models.Model):
+#     day = models.CharField(max_length = 10)
+#     time= models.TimeField()
+#     prof= models.ForeignKey(Prfessional, on_delete=models.CASCADE, related_name='prof_timings')
+
+#     def __str__(self):
+#         return "Day {} Time {} Prof {}".format(self.day, self.time, self.prof.user.username)
 
 
     

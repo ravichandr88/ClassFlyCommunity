@@ -164,17 +164,17 @@ def complete_upload(request):
 
         if Fresher.objects.filter(user__username = data['username']).count() != 0:
                 user = Fresher.objects.get(user__username = data['username'])
-                user.resume_url = data['file_name']
+                user.resume_url = 'https://project0videos.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
                 
         elif Prfessional.objects.filter(user__username = data['username']).count() != 0:
                 user = Prfessional.objects.get(user__username = data['username'])
-                user.resume_url = data['file_name']
+                user.resume_url = 'https://project0videos.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
 
         elif HRaccount.objects.filter(user__username = data['username']).count() != 0:
                 user = HRaccount.objects.get(user__username = data['username'])
-                user.idcard = data['file_name']
+                user.idcard = 'https://project0videos.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
 
         return Response(data={'code':200})
@@ -290,17 +290,17 @@ def classfly_complete_upload(request):
 
         if Fresher.objects.filter(user__username = data['username']).count() != 0:
                 user = Fresher.objects.get(user__username = data['username'])
-                user.profile_pic = data['file_name']
+                user.profile_pic = 'https://classfly.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
                 
         elif Prfessional.objects.filter(user__username = data['username']).count() != 0:
                 user = Prfessional.objects.get(user__username = data['username'])
-                user.profile_pic = data['file_name']
+                user.profile_pic = 'https://classfly.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
 
         elif HRaccount.objects.filter(user__username = data['username']).count() != 0:
                 user = HRaccount.objects.get(user__username = data['username'])
-                user.profilepic = data['file_name']
+                user.profilepic = 'https://classfly.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
 
         return Response(data={'code':200})

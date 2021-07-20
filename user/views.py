@@ -181,10 +181,10 @@ def subsignup(request):
         Phonenumber(user=user,phone_number=data['phoneNumber']).save()
         otp = str(randint(1234,9876))
         OTP(user=user,otp=otp).save()
-        # print("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
-        resp = requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
+        # print("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=26&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
+        resp = requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=26&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(data['phoneNumber'],otp))
           #generate otp for the user
-        # print(resp.text)
+        print(resp.text)
         return render(request,'signupnew.html',context={'otp':True,'phoneNumber':data['phoneNumber']})
     
     elif 'otp' in request.POST.keys():   # when otp is submittted
@@ -226,7 +226,7 @@ def subsignup(request):
         if otp.count > 25:
            return HttpResponse("You have used too many otp sms, Due to security reasons we are deactivating your account. Please contact +91 8972233124")
         
-        requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(phone_number.phone_number,otp.otp))
+        requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=26&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(phone_number.phone_number,otp.otp))
     
         return render(request,'signupnew.html',context={'otp':True})
         #change the phone number in the phone number table
@@ -245,7 +245,8 @@ def resend_otp(request):
     if otp.count > 25:
         return HttpResponse("You have used too many otp sms, Due to security reasons we are deactivating your account. Please contact +91 8972233124")
         
-    requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(phone_number.phone_number,otp.otp))
+    resp = requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=26&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(phone_number.phone_number,otp.otp))
+    print(resp.text)
     return Response(data={'sucess':True})
 
    

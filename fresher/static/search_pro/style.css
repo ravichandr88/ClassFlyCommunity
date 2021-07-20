@@ -1,0 +1,154 @@
+body, html {
+font-family: 'Assistant', sans-serif;
+overflow-x: hidden !important;
+}
+
+body {
+background: gray;
+}
+
+.grid{
+  width: 100%;
+  height: 100%;
+  padding-top: 30px;
+  padding-bottom: 120px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardcontainer{
+max-width: 290px;
+min-width: 200px;
+margin-left: auto;
+margin-right: auto;
+display: flex;
+flex-direction: column;
+flex-wrap: wrap;
+justify-content: center;
+align-content: center;
+background: white;
+padding: 30px;
+border-radius: 15px;
+border: 1px solid rgba(64, 64, 64, 0.70);
+box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+transition: all 0.4s ease-in-out;
+}
+
+@media screen and (max-width: 1160px) {
+  .cardcontainer{
+    margin: 20px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .cardcontainer{
+    margin: 20px;
+    padding: 40px;
+  }
+}
+
+.cardcontainer:hover{
+border: 1px solid rgba(255, 255, 255, 1);
+background: dodgerblue;
+color: white;
+transition: all 0.4s ease-in-out;
+box-shadow: rgba(0, 0, 0, 0.35) 0px 74px 75px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+transform: translateY(-15px);
+}
+
+.cardcontainer img {
+  width: 100%;
+  border-radius: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.40);
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 255, 255, 1);
+  filter: grayscale(100%);
+  transition: all 0.4s ease-in-out;
+}
+
+.cardcontainer:hover img{
+  filter: grayscale(0%);
+  border: 1px solid rgba(255, 255, 255, 0);
+  transition: all 0.4s ease-in-out;
+}
+
+.cardcontainer h1{
+  line-height: 50%;
+  font-size: 150%;
+}
+
+.bottomline{
+  display: flex;
+  flex-direction: row;
+  justify-content: between;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.links{
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.links::before {
+  content: "SHARE";
+  position: relative;
+  bottom: 30px;
+  left: 130px;
+  opacity: 0.4;
+}
+
+.cardcontainer svg{
+  padding-left: 10px;
+  transition: all 0.4s ease-in-out;
+  fill: dodgerblue;
+}
+
+.cardcontainer:hover svg{
+  color: white;
+  transition: all 0.4s ease-in-out;
+  fill: white;
+}
+
+.cardbutton{
+  background: dodgerblue;
+  color: white;
+box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+  text-decoration: none;
+  font-size: 14pt;
+  font-weight: 500;
+  padding: 8px 12px 8px 12px;
+  display: inline-block;
+  max-width: 100px;
+  text-align: center;
+  transition: all 0.4s ease-in-out;
+}
+
+.cardbutton:hover{
+  transform: translateY(-4px) scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.cardcontainer:hover .cardbutton{
+  background: white;
+  color: dodgerblue;
+  transition: all 0.4s ease-in-out;
+}
+
+.cardcontainer p{
+  position: relative;
+  bottom: 10px;
+  line-height: 130%;
+  font-size: 11pt;
+}
+
+.cardcontainer svg:hover{
+  transform: translateY(5px);
+  transition: all 0.3s ease-in-out;
+}

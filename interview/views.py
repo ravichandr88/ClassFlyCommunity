@@ -1,7 +1,7 @@
 from django.shortcuts import render,HttpResponse
 from .forms import StudentForm,ProfessionalForm,HRForm,ProfessionalBankForm,ProfTimeTableForm,Experienc,ProIntervTime,CompanyForm
 from django.contrib.auth.decorators import login_required
-from .models import Fresher, HRaccount,Company,Experience,Professinal_Account_Details ,Prfessional,ProExperience, Professional_Meeting
+from .models import Fresher, Professinal_Interview_Time, HRaccount,Company,Experience,Professinal_Account_Details ,Prfessional,ProExperience, Professional_Meeting
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
@@ -211,7 +211,7 @@ def prof_initial_meet(request):
     form = ProIntervTime()
 
     if request.method == 'POST':
-        # print(request.POST)..
+        print(request.POST['meet1_date'],request.POST['meet1_time'])
 
         # print(datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']))
         
@@ -340,13 +340,37 @@ def hr_profile_pic(request):
 
 # Professional Page-12
 
-@login_required
+@login_required 
 def pro_timetable(request):
     if request.method == 'POST':
-        print(request.POST)
-        # Professinal_Interview_Time()
+
+        # print(request.POST)
+        prof = Prfessional.objects.get(user__username = request.user)
+
+        print(prof)
+        prof.save()
+
+        data = dict( request.POST )
+        days = data['day']
+        times = data['time']
+
+        for i in range(len(days)):
+
+          if  times[i] != '':
+              Professinal_Interview_Time(
+              meet = days[i],
+              time = times[i],
+              prof = prof   ).save()
+
+        return redirect('banking')
+
+
+        # print(days,times)
+
+
     form = ProfTimeTableForm()
- 
+
+
     skills = """
     <button class="login100-form-btn" type="button" id="addd">
 							Add More 
@@ -372,18 +396,20 @@ def pro_bank(request):
 
           pro = Professinal_Account_Details()
 
-          if Professinal_Account_Details.objects.filter(pro = Prfessional.objects.get(user__username = request.user)) != 0:
+          if Professinal_Account_Details.objects.filter(pro = Prfessional.objects.get(user__username = request.user)).count() != 0:
               pro = Professinal_Account_Details.objects.get(pro = Prfessional.objects.get(user__username = request.user))
           
+
               
           pro.pro  = Prfessional.objects.get(user__username = request.user)
-          pro.ifsc =           form.cleaned_data['form']
+          pro.ifsc =           form.cleaned_data['ifsc']
           pro.account_number = form.cleaned_data['account_number']
           pro.name =           form.cleaned_data['name']
           pro.upi  =           form.cleaned_data['upi']
           
           pro.save()
-        
+
+          return redirect('pro_dashboard')
     
     return render(request,'form.html',context={'form':form})
 
@@ -392,7 +418,6 @@ def pro_bank(request):
 
 @login_required
 def hr_dashboard(request):
-
     return render(request,'hr_dashboard.html',context={})
 
 
@@ -404,25 +429,28 @@ def applicant_dashboard(request):
     return HttpResponse('Fresher Dashbaord')
 
 
-# Professional Page-9
-
-@login_required
-def pro_waiting(request):
-
-  js_code = '''
-  $(document).ready(function(){
-		console.log('ready');
-		$('#submit_button').hide();
-	})
-  '''
-  return render(request,'form.html',{'js_code':js_code,'message':'Will be waiting till your interview with Expert is done.'})
-
-
 # professional Page-13
 
 @login_required
 def prof_dashboard(request):
   return HttpResponse('Professional Dashboard')
+
+
+
+# Professional Page-9
+
+@login_required
+def pro_waiting(request):
+
+    js_code = '''
+    $(document).ready(function(){
+      console.log('ready');
+      $('#submit_button').hide();
+    })
+    '''
+    return render(request,'form.html',{'js_code':js_code,'message':'Will be waiting till your interview with Expert is done.'})
+
+
 
 
 

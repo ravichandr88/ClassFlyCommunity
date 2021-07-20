@@ -330,7 +330,7 @@
 		//code to download after uploading to DB
 		var url = "https://classfly.s3.ap-south-1.amazonaws.com/"+'{{user.username}}'+file.name;
 		
-		fetch(url)
+		fetch(url) 
 		.then(function(response) {
 			response.text().then(function(text) {
 			

@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>Very Good</title>
+    </head>
+    <body>
+        <p>Search for professional</p>
+        <input type="text" >
+        <button> Search</button>
+
+        {% for prof in  profs %}
+        <h4>Name: {{prof.user.first_name}}</h4>
+        <h3>Experience: {{prof.total_exp_year}}</h3>
+        <h3>Price : 1000.Rs</h3>
+        <h4>Skills : {{prof.skills}}</h4>
+        {% endfor %}
+    </body>
+</html>
