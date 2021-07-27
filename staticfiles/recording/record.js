@@ -10,7 +10,27 @@
  * @param {string} mode - The {@link https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/clientconfig.html#mode| streaming algorithm} used by Agora SDK.
  * @param  {string} codec - The {@link https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/clientconfig.html#codec| client codec} used by the browser.
  */
-var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+
+
+
+
+
+
+
+
+
+ 
+
+console.log('Alll done-----------------')
+
+
+
+$(document).ready(function (){
+
+    console.log('Very good');
+
+
+ var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
 /*
  * Clear the video and audio tracks used by `client` on initiation.
@@ -19,7 +39,6 @@ var localTracks = {
   videoTrack: null,
   audioTrack: null
 };
-
 
 console.log('******************************Pressed');
 console.log(option);
@@ -65,88 +84,105 @@ var remoteUsers = {};
   console.log(option);
 
   e.preventDefault();
-  $("#join").attr("disabled", true);
-  try {
-    // option.appid = $("#appid").val();
-    // option.token = $("#token").val();
-    // option.channel = $("#channel").val();
-    // option.uid = $("#uid").val();
 
    
+ }) ;
 
+//     await join(); 
+//     if(option.token) {
+//       $("#success-alert-with-token").css("display", "block");
+//     } else {
+//       $("#success-alert a").attr("href", `index.html?appid=${option.appid}&channel=${option.channel}&token=${option.token}`);
+//       $("#success-alert").css("display", "block");
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   } finally {
+//     $("#leave").attr("disabled", false);
+//   }
+// })
 
-    await join(); 
-    if(option.token) {
-      $("#success-alert-with-token").css("display", "block");
-    } else {
-      $("#success-alert a").attr("href", `index.html?appid=${option.appid}&channel=${option.channel}&token=${option.token}`);
-      $("#success-alert").css("display", "block");
-    }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    $("#leave").attr("disabled", false);
-  }
-})
-
-/*
- * Called when a user clicks Leave in order to exit a channel.
- */
-$("#leave").click(function (e) {
-  leave();
-})
+// /*
+//  * Called when a user clicks Leave in order to exit a channel.
+//  */
+// $("#leave").click(function (e) {
+//   leave();
+// })
 
 /*
  * Join a channel, then create local video and audio tracks and publish them to the channel.
  */
+
+console.log(client);
+
 async function join() {
+
+    console.log(" Joined a video stream ");
+
   // Add an event listener to play remote tracks when remote user publishes.
   client.on("user-published", handleUserPublished);
   client.on("user-unpublished", handleUserUnpublished);
 
-  // Join a channel and create local tracks. Best practice is to use Promise.all and run them concurrently.
-  [ option.uid, localTracks.audioTrack, localTracks.videoTrack ] = await Promise.all([
+    // Join a channel and create local tracks. Best practice is to use Promise.all and run them concurrently.
+      [ option.uid, localTracks.audioTrack, localTracks.videoTrack ] = await Promise.all([
     // Join the channel.
+
     client.join(option.appid, option.channel, option.token || null, option.uid || null),
+
     // Create tracks to the local microphone and camera.
-    AgoraRTC.createMicrophoneAudioTrack(),
-    AgoraRTC.createCameraVideoTrack()
-  ]);
+    // AgoraRTC.createMicrophoneAudioTrack(),
+    // AgoraRTC.createCameraVideoTrack()
+  
+]);
 
   // Play the local video track to the local browser and update the UI with the user ID.
+
   localTracks.videoTrack.play("local-player");
   $("#local-player-name").text(`localVideo(${option.uid})`);
 
   // Publish the local video and audio tracks to the channel.
-  await client.publish(Object.values(localTracks));
-  console.log("publish success");
+//   await client.publish(Object.values(localTracks));
+//   console.log("publish success");
+
+
 }
 
 /*
  * Stop all local and remote tracks then leave the channel.
  */
-async function leave() {
-  for (trackName in localTracks) {
-    var track = localTracks[trackName];
-    if(track) {
-      track.stop();
-      track.close();
-      localTracks[trackName] = undefined;
-    }
-  }
+
+// async function leave() {
+//   for (trackName in localTracks) {
+//     var track = localTracks[trackName];
+//     if(track) {
+//       track.stop();
+//       track.close();
+//       localTracks[trackName] = undefined;
+//     }
+//   }
 
   // Remove remote users and player views.
-  remoteUsers = {};
-  $("#remote-playerlist").html("");
+remoteUsers = {};
+$("#remote-playerlist").html("");
+
+
+(async function (){await join();
+})();
+ 
+
+  
+// client.on("user-published", handleUserPublished);
+// client.on("user-unpublished", handleUserUnpublished);
+
 
   // leave the channel
-  await client.leave();
+//   await client.leave();
 
-  $("#local-player-name").text("");
-  $("#join").attr("disabled", false);
-  $("#leave").attr("disabled", true);
-  console.log("client leaves channel success");
-}
+//   $("#local-player-name").text("");
+//   $("#join").attr("disabled", false);
+//   $("#leave").attr("disabled", true);
+//   console.log("client leaves channel success");
+// }
 
 
 /*
@@ -181,13 +217,14 @@ async function subscribe(user, mediaType) {
  * @param  {IAgoraRTCRemoteUser} user - The {@link  https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/iagorartcremoteuser.html| remote user} to add.
  * @param {trackMediaType - The {@link https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/itrack.html#trackmediatype | media type} to add.
  */
+
 function handleUserPublished(user, mediaType) {
+    console.log("verified");
+
   const id = user.uid;
   remoteUsers[id] = user;
   subscribe(user, mediaType);
 }
-
-
 
 /*
  * Remove the user specified from the channel in the local interface.
@@ -199,3 +236,37 @@ function handleUserUnpublished(user) {
   delete remoteUsers[id];
   $(`#player-wrapper-${id}`).remove();
 }
+ 
+
+});
+
+
+
+
+
+
+
+var h = 0;
+var interval = 1000;
+
+function doAjax()
+{
+  if (h  < 15)
+  {
+  h = h + 1
+  setTimeout(doAjax, interval);
+  document.getElementById('code').innerHTML = h + 'secs';
+  }
+  else 
+  {
+    console.log('closed')
+    window.close(); 
+    // open(location, '_self').close();
+  }
+
+}
+setTimeout(doAjax, interval);
+
+
+
+

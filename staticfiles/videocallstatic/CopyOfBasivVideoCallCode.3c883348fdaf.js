@@ -10,11 +10,19 @@
  * @param {string} mode - The {@link https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/clientconfig.html#mode| streaming algorithm} used by Agora SDK.
  * @param  {string} codec - The {@link https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/clientconfig.html#codec| client codec} used by the browser.
  */
-var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
+
+if (user == 'fresher') 
+{
+
+  console.log(user);
+
+var client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+ 
 /*
  * Clear the video and audio tracks used by `client` on initiation.
  */
+
 var localTracks = {
   videoTrack: null,
   audioTrack: null
@@ -61,16 +69,27 @@ var remoteUsers = {};
 
  $("#join-form").submit(async function (e) {
 
-  console.log('******************************Pressed');
   console.log(option);
 
   e.preventDefault();
-  $("#join").attr("disabled", true);
+ 
   try {
-    // option.appid = $("#appid").val();
-    // option.token = $("#token").val();
-    // option.channel = $("#channel").val();
-    // option.uid = $("#uid").val();
+
+    //call for server to inform connecting to call
+    const res = await fetch('/pro_joined/' + pro +'/' +meet)
+    .then(res => res.json());
+    if (res.message == 'joined')
+    {
+      console.log('Success',res.message);
+      $("#join").attr("disabled", true);
+    }
+    else{
+      // the code wont connect when person is rejected for some reason
+      console.log('failed',res.message);
+      return ;
+    }
+
+
 
    
 
@@ -198,4 +217,6 @@ function handleUserUnpublished(user) {
   const id = user.uid;
   delete remoteUsers[id];
   $(`#player-wrapper-${id}`).remove();
+}
+
 }
