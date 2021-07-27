@@ -85,7 +85,7 @@ def videocall(request):
     if ProFrehserMeeting.objects.filter(id=request.session['meeting']).count() == 0:
         raise Http404
 
-
+    print(request.session.get('meeting'))
     meeting = ProFrehserMeeting.objects.get(id=request.session['meeting'])
 
     
