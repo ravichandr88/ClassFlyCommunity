@@ -17,7 +17,7 @@ urlpatterns = [
     path('pro/timetable',views.pro_timetable),
     path('pro/bank', views.pro_bank, name = 'banking'),
     path('hr/dashboard',views.hr_dashboard),
-    path('pro/dashboard',views.prof_dashboard,name='pro_dashboard'),
+    # path('pro/dashboard',views.prof_dashboard,name='pro_dashboard'),
     path('applicant/dashboard',views.applicant_dashboard)
 
 ]

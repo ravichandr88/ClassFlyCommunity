@@ -158,13 +158,11 @@
           <div class="participants">
             <img id = 'prof{{meet.id}}' src="" alt="participant">
             <img id = 'self' src="" alt="participant">
-            <button class="add-participant" style="color: #ff942e;background: url('https://e1.pngegg.com/pngimages/929/197/png-clipart-button-ui-system-icons-facetime-video-call-icon-thumbnail.png'); background-size: contain; center">
-              <!-- <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
-                <path d="M12 5v14M5 12h14" />
-              </svg> -->
+            <button class="add-participant" style="color: #ff942e;background: url('https://www.iconpacks.net/icons/1/free-video-icon-818-thumb.png'); background-size: contain; center">
+             
             </button>
           </div>
-          <div class="days-left" id="{{meet.id}}" style="color: #ff942e ">
+          <div class="days-left" id="{{meet.id}}" style="color: #ff942e; cursor: pointer; ">
            
           </div>
         </div>
@@ -486,29 +484,62 @@
 
 
   <script>
+   
     '{% for i in meetings %}'
-     console.log('{{i.date_time.year}}','{{i.date_time.month}}','{{i.date_time.day}}');
+    //  console.log('{{i.date_time.year}}','{{i.date_time.month}}','{{i.date_time.day}}');
 
      var date =  JSJoda.LocalDate.of('{{i.date_time.year}}','{{i.date_time.month}}','{{i.date_time.day}}');
-     
+    //  console.log(date);
+
      var d_remain = days(date); // days remaining for meeting 
+
+    //  console.log(d_remain);
+
+     if (d_remain < 0){
+
+      //  console.log('Video');
+       document.getElementById('{{i.id}}').innerHTML = 'Video';
+     }
+
+  else if (d_remain > 0) {
+
       document.getElementById('{{i.id}}').innerHTML = d_remain + ' Days Left';
 
-     '{% endfor %}'
+      // document.getElementById('{{i.id}}').style.backgroundImage="url('https://www.seekpng.com/png/detail/363-3638943_video-call-icon-video-call-icon-png.png')";
+  }
+
+  else {
+   
+
+    // console.log( new Date('{{today.isoformat}}'),'noted',new Date('{{i.date_time.isoformat}}'));
+    document.getElementById('{{i.id}}').innerHTML = 'Join Meeting';
+    // console.log(JSJoda.LocalTime.parse('{{i.date_time.isoformat}}'.toString().slice(0, 19)).time,JSJoda.LocalTime.parse('{{today.isoformat}}'.toString().slice(0, 19)).time);
+         
+    var element = document.getElementById("{{i.id}}");
+    element.addEventListener("click", function(){
+        window.location = '/video_prepare/p_{{i.id}}_meeting';
+    });
+
+        
+        }
+
+    '{% endfor %}'
 
     function days(date2)
     {
-     
+      // console.log('{{today.year}}','{{today.month}}','{{today.day}}');
+      
     let date1 = JSJoda.LocalDate.of('{{today.year}}','{{today.month}}','{{today.day}}');
 
     let daysBetween = JSJoda.ChronoUnit.DAYS.between(date1, date2);
-    // console.log(date2,date1,daysBetween);
-    
+    // console.log(date2,date1,daysBetween);  
+     
     return daysBetween
-    
-}
+    }
 
-//code to get the image for circle img
+
+// <!-- 
+// // code to get the image for circle img
 // var url="https://classfly.s3.ap-south-1.amazonaws.com/bunnymedicine.JPG"
 
 // const res = await axios.get(url, {
@@ -517,10 +548,10 @@
 // const imgFile = new Blob([res.data]);
 // const imgUrl = URL.createObjectURL(imgFile);
 
+//  -->
 
 
-
-//image reteving code
+// image reteving code
 
 // $.get( "https://classfly.s3.ap-south-1.amazonaws.com/bunnymedicine.JPG", function( data ) {
 //   var text = data;
@@ -533,17 +564,17 @@ var storedText;
 
 '{% for i in meetings %}'
 
-var url = "{{i.prof.profile_pic}}";
+var url = "{{i.fresher.profile_pic}}";
 
 // console.log(url);
 
- fetch(url).then(function(response) {
+fetch(url).then(function(response) {
    response.text().then(function(text)
     {document.getElementById('prof{{i.id}}').src = text;});});
 
 '{% endfor %}'
 
-console.log(document.querySelectorAll('[id=self]'));
+// console.log(document.querySelectorAll('[id=self]'));
 
 
 fetch('{{self.profile_pic}}').then(function(response) {
@@ -558,6 +589,7 @@ fetch('{{self.profile_pic}}').then(function(response) {
       }
 
     });});
+
     </script>
 
 </body>

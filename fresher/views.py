@@ -42,18 +42,23 @@ def search_professional(request,query=''):
 
 
 def fresher_dash(request):
-    p = ProFrehserMeeting.objects.all()
+    p = ProFrehserMeeting.objects.filter(fresher__user__username = request.user)
 
     today = datetime.datetime.now()
     user = Fresher.objects.get(user__username = request.user)
-    return render(request,'dashboard/dist/index.html', context={'meetings':p,'today':today,'self':user})
+    return render(request,'dashboard/dist/dash_fresher.html', context={'meetings':p,'today':today,'self':user})
 
 
 
 
 def pro_dash(request):
     
-    return render(request,'dashboard/dist/index.html')
+    meetings = ProFrehserMeeting.objects.filter(prof__user__username = request.user)
+
+    user = Prfessional.objects.get(user__username = request.user)
+    today = datetime.datetime.now()
+    
+    return render(request,'dashboard/dist/dash_pro.html', context = {'meetings':meetings,'self':user,'today':today})
 
 
 

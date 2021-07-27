@@ -373,7 +373,10 @@ import time
 import random
 
 #final video call work
-def videocall(request):
+def videocall(request,id=''):
+
+    print(id.split('_')[0])
+    
 
     appID = "e73019d92f714c95b9bc47ea63de404c"
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"

@@ -10,6 +10,7 @@ class Phonenumber(models.Model):
     def __str__(self):
         return "user {}  phone {}".format(self.user.username,self.phone_number)
 
+
 class VideoUpload(models.Model):
     title = models.CharField(max_length=200)
     video_link = models.CharField(max_length=1000)

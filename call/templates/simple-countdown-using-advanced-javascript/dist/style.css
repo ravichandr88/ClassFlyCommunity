@@ -1,0 +1,136 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.page {
+  height: 100vh;
+  background-image: url("https://source.unsplash.com/1600x900/?nature, water");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.page .box {
+  height: 100vh;
+  display: grid;
+  place-content: center;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+.page .box .item {
+  display: grid;
+  place-content: center;
+  color: white;
+}
+.page .box .item h1 {
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: 100;
+  letter-spacing: 6px;
+  font-size: 2.2rem;
+}
+.page .box .item p {
+  margin: 0.5rem 1rem;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+.page .box .item .btn {
+  display: grid;
+  place-content: center;
+}
+.page .box .item button {
+  margin: 2em;
+  outline: none;
+  border: 2px solid white;
+  border-radius: 100px;
+  padding: 0.5rem 0;
+  background: none;
+  width: 160px;
+  color: white;
+  text-transform: uppercase;
+  font-family: sans-serif;
+  transition: 0.2s ease-in;
+  -webkit-user-select: none;
+}
+.page .box .item button a {
+  text-decoration: none;
+  color: #e0e0e0;
+  -webkit-user-select: none;
+}
+.page .box .item button:hover {
+  transform: translateY(-8%);
+}
+.page .box .item .timer {
+  display: flex;
+  place-content: center;
+  padding: 2rem;
+}
+.page .box .item .timer .count {
+  display: grid;
+  place-content: center;
+}
+.page .box .item .timer span {
+  display: grid;
+  place-content: center;
+  border: 2px solid white;
+  border-radius: 50%;
+  margin: 0 1em;
+  height: 80px;
+  width: 80px;
+  font-family: sans-serif;
+  font-weight: 100;
+  font-size: 1.4rem;
+}
+.page .box .item .timer p {
+  color: white;
+}
+
+@media screen and (max-width: 700px) {
+  .page {
+    min-height: 100%;
+    width: 100%;
+    overflow: hidden;
+    /* background-image: url("https://source.unsplash.com/random/900x1600/"); */
+    background-image: url("https://images.unsplash.com/photo-1625588837193-a4dba0e4d312");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .page .box {
+    display: flex;
+    place-content: center;
+  }
+  .page .box .item {
+    display: grid;
+    place-content: center;
+  }
+  .page .box .item h1 {
+    font-size: 1.8rem;
+  }
+  .page .box .item p {
+    font-size: 0.88rem;
+  }
+  .page .box .item button {
+    margin: 2em;
+  }
+  .page .box .item button:hover {
+    background-color: #50b1b67e;
+  }
+  .page .box .item .timer {
+    padding: 0;
+  }
+  .page .box .item .timer .count p {
+    font-size: 0.81rem;
+    margin: 0;
+  }
+  .page .box .item .timer .count span {
+    height: 50px;
+    width: 50px;
+    padding: 0;
+    margin: 0.5em 1em;
+    font-size: 1rem;
+  }
+}

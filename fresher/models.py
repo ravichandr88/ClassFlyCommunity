@@ -18,7 +18,7 @@ class ProFrehserMeeting(models.Model):
     actual interview done to students.
     
     '''
-
+ 
     prof         = models.ForeignKey(Prfessional, on_delete = models.CASCADE, related_name = 'interviews_done', null = False)
     fresher      = models.ForeignKey(Fresher, on_delete = models.CASCADE, related_name = 'fresher_interview', null = False)
     video_url    = models.URLField(null=True)
@@ -30,13 +30,48 @@ class ProFrehserMeeting(models.Model):
     price        = models.FloatField(null = False)
     mode         = models.CharField(max_length = 3)
     feedback     = models.TextField(max_length = 1000, default='')   #givn by profesnl about the student
-    passed       = models.BooleanField(default = False)
+    passed       = models.BooleanField(default = False)  #Whether student has passed the exams or not
     approved     = models.BooleanField(default = False) #Approved by Professional for meeting
 
 
     def __str__(self):
         
         return " Professional {} Fresher {} Meeting {}".format(self.prof.user.username, self.fresher.user.username,self.date_time)
+
+    def dict(self):
+        return {
+            'id'            : self.id,
+            'prof'          : self.prof.user.username,
+            'fresher'       : self.fresher.user.username,   
+            'video_url'     : self.video_url,
+            'date_time'     : self.date_time,
+            'skills'        : self.skills,
+            'paid'          : self.paid,
+            'channel_name'  : self.channel_name
+        }
+
+
+# video calling detailas table
+
+class Meeting(models.Model):   
+    meeting         = models.OneToOneField(ProFrehserMeeting, on_delete = models.CASCADE, related_name = 'meeting_details')
+    pro_joined      = models.BooleanField(default = False)
+    fre_joined      = models.BooleanField(default = False)
+    record_started  = models.BooleanField(default = False)
+    record_stopped  = models.BooleanField(default = False)
+    uploaded_vdo    = models.BooleanField(default = False)
+    resource_id     = models.CharField(max_length = 600,null = True)
+    sid             = models.CharField(max_length = 600,null = True)
+    vdo_id          = models.CharField(max_length = 200, null = True)
+    created_on      = models.DateTimeField(auto_now = True)
+    record_start_time = models.DateTimeField(null = True)
+    record_stop_time = models.DateTimeField(null=True)
+    
+
+    def __str__(self):
+        return "Record Started {} Record Stopped {} "
+
+
 
 
 

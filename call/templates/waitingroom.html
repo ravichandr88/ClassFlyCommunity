@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Simple countdown using advanced Javascript</title>
+  <link rel="stylesheet" href="{% static 'waitingroom/style.css' %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--   <link rel="stylesheet" href="css/style.css"> -->
+  <title>Countdown</title>
+</head>
+
+<body>
+  <div class="page">
+    <div class="box">
+      <div class="item">
+        <h1 id="expiredtext1">{{title | default:"Meeting Rooms Opens IN"}}</h1>
+        <p id="expiredtext3">“You can’t connect the dots looking forward; you can only connect them looking backwards. So you have to trust that the dots will somehow connect in your future.” <br> ― Steve Jobs</p>
+
+        <div class="btn">
+          <button id='join_button'><a id="expiredtext2" style = "cursor: pointer">Wait until meeting Time</a></button>
+        </div>
+        <div class="timer">
+          <div class="count">
+            <span id="days">00</span> <br>
+            <p>DAYS</p>
+          </div>
+          <div class="count">
+            <span id="hour">00</span> <br>
+            <p>HOUR</p>
+          </div>
+          <div class="count">
+            <span id="min">00</span> <br>
+            <p>MIN</p>
+          </div>
+          <div class="count">
+            <span id="sec">00</span> <br>
+            <p>SEC</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <script src="js/app.js"></script> -->
+</body>
+<!-- partial -->
+  <!-- <script  src="{% static 'waitingroom/script.js' %}"></script> -->
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+  let d = document.getElementById("days");
+let h = document.getElementById("hour");
+let m = document.getElementById("min");
+let s = document.getElementById("sec");
+
+// console.log(new Date("{{remain.isoformat}}") , new Date("{{now.isoformat}}"));
+
+let count =    new Date("{{remain.isoformat}}").getTime() ;
+
+// - new Date("{{now.isoformat}}").getTime();
+
+// console.log(count);
+
+window.sec = 0;
+
+let x = setInterval(function () {
+
+  
+  
+  // let now = new Date("{{now.isoformat}}").getTime() + window.sec;
+
+  let now =  new Date().getTime();
+
+  let D =    count - now;
+
+  // console.log(D,Math.round((D % (1000 * 60 * 60)) / (1000 * 60)));
+  // 3167289 
+
+  
+
+  let days = Math.round(D / (1000 * 60 * 60 * 24));
+  // let hour = Math.round((D % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  // let min = Math.round((D % (1000 * 60 * 60)) / (1000 * 60));
+  // let sec = Math.round((D % ( 1000 * 60)) % 60 );
+
+  let sec = Math.floor((D % (1000 * 60)) / 1000);
+  var min = Math.floor((D % (1000 * 60 * 60)) / (1000 * 60));
+  let hour = Math.floor((D % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  d.innerHTML = days;
+  h.innerHTML = hour;
+  m.innerHTML = min;
+  s.innerHTML = sec;
+
+  // console.log(days,hour,min,sec);
+
+  if (days < 10) {
+    d.innerHTML = "0" + days;
+  }
+  if (hour < 10) {
+    h.innerHTML = "0" + hour;
+  }
+  if (min < 10) {
+    m.innerHTML = "0" + min;
+  }
+  if (sec < 10) {
+    s.innerHTML = "0" + sec;
+  }
+  if (D < 0) {
+    // console.log('DOne counting');
+
+    clearInterval();
+
+    d.innerHTML = "---";
+    h.innerHTML = "---";
+    m.innerHTML = "---";
+    s.innerHTML = "---";
+
+    document.getElementById("expiredtext1").innerHTML = "{{title | default:'Join Meeting' }}";
+    
+    document.getElementById("expiredtext2").innerHTML = "Join";
+    
+    document.getElementById(
+      "expiredtext3"
+    ).innerHTML = `“Creativity is just connecting things.”<br>
+    ― Steve Jobs`;
+    
+
+    // code to play alarm when meeting room is ready to join
+    
+    var a = new Audio('http://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg');
+    a.play();
+      
+      //end of code to play url
+
+    {% if not waiting_room   %}
+    
+    var element = document.getElementById("expiredtext2");
+    element.addEventListener("click", function(){
+        window.location = '/videocall';
+    });
+
+    {% endif %}
+    
+
+    clearInterval(x);
+    
+  }
+}, 1000);
+
+
+//code for calling the server to check whether the professional have joined or not
+// <!-- Fresher has to wait untill professional has joined -->
+
+
+
+console.log('{{waiting}}');
+
+{% if waiting  %}
+
+{
+var interval = 20000;  // 1000 = 1 second, 3000 = 3 seconds
+
+function doAjax() {
+    $.ajax({
+            type: 'GET',
+            url: '/pro_joined/{{mid}}/{{fid}}', // to check whether profesionl have joinde or not
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function (data) {
+                    console.log(data)  ;
+                    if (data.message == 'joined')
+                    {
+                      // API call to get id for recording
+                      
+
+                      console.log('{{waiting}}');
+                      window.location = '/videocall';
+                      
+
+                    }
+                    else{
+                      var curn_url = window.location;
+ 
+                      document.getElementById("expiredtext2").innerHTML = "Will Connect Automatically";
+                      var element = document.getElementById("expiredtext2");
+                      
+                    }
+            },
+            complete: function (data) {
+                    // Schedule the next
+                    setTimeout(doAjax, interval);
+            }
+    });
+}
+
+setTimeout(doAjax,2000); //calling the function for the first time
+
+setTimeout(doAjax, interval);
+
+
+}
+{% endif %}
+
+</script>
+
+</body>
+</html>
