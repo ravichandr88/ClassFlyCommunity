@@ -216,7 +216,7 @@ def pro_joined(request,mid,fid):
     
     if meeting.pro_joined and not meeting.record_stopped :
         # Code to get agora record resource ID
-        pro_meeting = ProFrehserMeeting.objects.get(id=mid, fresher__id = id)
+        pro_meeting = ProFrehserMeeting.objects.get(id=mid, fresher__id = fid)
 
         # REST API for calling the resouceID for the recording
 
