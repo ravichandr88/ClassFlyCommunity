@@ -82,7 +82,10 @@ var remoteUsers = {};
  
   try {
 
+    console.log(uid,'P*******')
+
     //call for server to inform connecting to call
+
     const res = await fetch('/fre_join/' + uid  +'/' + meet)
     .then(res => res.json());
     if (res.message == 'joined')

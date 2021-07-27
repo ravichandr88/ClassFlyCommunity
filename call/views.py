@@ -85,17 +85,19 @@ def videocall(request):
     if ProFrehserMeeting.objects.filter(id=request.session['meeting']).count() == 0:
         raise Http404
 
-    print(request.session.get('meeting'))
+    # print(request.session.get('meeting'))
+
     meeting = ProFrehserMeeting.objects.get(id=request.session['meeting'])
 
     
-    if Prfessional.objects.filter(id =  meeting.prof.id).count() == 1:
+    if Prfessional.objects.filter(id =  meeting.prof.id).count() == 1 and request.session['category'] == 'p':
         user = 'prof'
 
 
-    elif Fresher.objects.filter(user__username = request.user).count() == 1:
+    elif Fresher.objects.filter(user__username = request.user).count() == 1 and request.session['category'] == 'f':
         user = 'fresher'
 
+    
 
     else:
         raise Http404
@@ -105,12 +107,13 @@ def videocall(request):
     # print(meeting.date_time - datetime.datetime.now())
     g = meeting.date_time
     g = g + timedelta( hours=2) 
-    print(g)
+    # print(g)
 
     # If the current time is greater than meeting start time and 
     # less than 2 hours of meeting start time, you can join
     if timezone.now() > meeting.date_time   and timezone.now() < g and not meeting.meeting_details.record_stopped:
-        print(timezone.now(), meeting.date_time )
+        # print(timezone.now(), meeting.date_time )
+        g = '0' # just for nothing
         
     # Else move to dashboard
     else:
@@ -148,17 +151,19 @@ def videocall(request):
     privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
 
     if user == 'prof':
-        uid = meeting.prof.id
+        uid = uid + meeting.prof.id
     else: 
-        uid = meeting.fresher.id
+        uid = uid + meeting.fresher.id
+
+    print(user)
 
     token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
 
     data = {'token' : token,
     'appid': appID,
     'channel': channelName,
-    'uid': uid,
-    'uid' : meeting.prof.id,
+    'meeting_uid': uid,
+    'uid' : meeting.prof.id if user == 'prof' else meeting.fresher.id,
     'meet': meeting,
     'status': meet_details,
     'user':user,
@@ -196,8 +201,8 @@ def connect_to_call_pro(request,pid,mid):
 
     
     # code to send SMS for the Fresher to inform Professional have joined the meeting
-    
-    requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=26&type=text&contacts={}&senderid=SOFTEC&msg=ClassFly+Interview+Meeting+has+been+started,+please+login+and+connect+to+meeting.".format(fresher.user.userphone.phone_number))
+    # please uncomment sms here
+    # requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=26&type=text&contacts={}&senderid=SOFTEC&msg=ClassFly+Interview+Meeting+has+been+started,+please+login+and+connect+to+meeting.".format(fresher.user.userphone.phone_number))
     
 
     return Response(data={'message':'joined'})
@@ -221,6 +226,7 @@ def pro_joined(request,mid,fid):
         # REST API for calling the resouceID for the recording
 
         resp = record_resource_id(pro_meeting)
+        print('got resource id',resp)
 
         if str(resp.status_code) != '200':
             return Response(data={'message':resp.json()['reason']})
@@ -237,11 +243,11 @@ def pro_joined(request,mid,fid):
 @csrf_exempt
 @api_view(['GET'])
 def connect_to_call_fresh(request, fid, mid):
-    
+    print("Start record")
        
-    if ProFrehserMeeting.objects.filter(id=mid, fresher__id = id).count() == 0:
+    if ProFrehserMeeting.objects.filter(id=mid).count() == 0:
         return Response(data={'message':'Not valid registration'}, status= 400)
-    pro_meeting = ProFrehserMeeting.objects.get(id=mid, fresher__id = id)
+    pro_meeting = ProFrehserMeeting.objects.get(id=mid, fresher__id = fid)
     meeting = pro_meeting.meeting_details
 
 
@@ -255,7 +261,7 @@ def connect_to_call_fresh(request, fid, mid):
         resp = start_record_api(pro_meeting)
 
         if str(resp.status_code) != '200':
-            meeting_error_email(meeting)
+            meeting_error_email(pro_meeting,resp)
             return Response(data={'message':resp.json()['reason']})
 
         meeting.sid = resp.json()['sid']
@@ -268,26 +274,26 @@ def connect_to_call_fresh(request, fid, mid):
         return Response(data={'message':'Not right time'}, status= 400)
 
 
-@csrf_exempt
-@api_view(['GET'])
-def start_record(request,fid,mid):
+# @csrf_exempt
+# @api_view(['GET'])
+# def start_record(request,fid,mid):
 
 
-    if ProFrehserMeeting.objects.filter(id = mid, fresher__id = fid).count() == 0 :
-        return Response(data={'message':'Not a Meeting and Fresher'}, status= 400)
+#     if ProFrehserMeeting.objects.filter(id = mid, fresher__id = fid).count() == 0 :
+#         return Response(data={'message':'Not a Meeting and Fresher'}, status= 400)
         
-    # Start recording 
-    meeting = meeting.objects.get(id = mid, fresher__id = fid)
+#     # Start recording 
+#     meeting = meeting.objects.get(id = mid, fresher__id = fid)
     
 
 
-    if str(res.status_code) != '200':
-
-        meeting_error_email(meeting,res)
+#     if str(res.status_code) != '200':
+#         print(res.json())    
+#         meeting_error_email(meeting,res)
         
-        return Response(data={'message':'Sorry, There was an error. We have contacted Admin'}, status= 400)
+#         return Response(data={'message':'Sorry, There was an error. We have contacted Admin'}, status= 400)
 
-    return Response(data={'message':'Recording Started'})
+#     return Response(data={'message':'Recording Started'})
 
 
 
@@ -376,7 +382,7 @@ def record_resource_id(pro_meeting):
 # Function to send email if any error before the meeting
 def meeting_error_email(meeting,message):
         subject = 'welcome to GFG world'
-        message = f'Could not record the meeting .' + meeting.dict() + str(message)
+        message = f'Could not record the meeting .' + str(meeting.dict()) + str(message)
         email_from = settings.EMAIL_HOST_USER
         recipient_list = ['ravichandrareddy88@gmail.com', ]
         send_mail( subject, message, email_from, recipient_list )
@@ -384,7 +390,7 @@ def meeting_error_email(meeting,message):
 
 def start_record_api(pro_meeting):
         
-    return 
+    # return 
 
     url = 'https://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/' + pro_meeting.meeting_details.resource_id + '/mode/web/start'
     
@@ -399,7 +405,8 @@ def start_record_api(pro_meeting):
                     "serviceName":"web_recorder_service",
                     "errorHandlePolicy": "error_abort",
                     "serviceParam": {  
-                        "url": "https://www.classfly.in/record/" + pro_meeting.fresher.id + '/' + pro_meeting.id,
+                        # "url": "https://www.classfly.in/record/" + pro_meeting.fresher.id + '/' + pro_meeting.id,
+                        "url": "https://www.classfly.in/record",
                         "audioProfile":0,
                         "videoWidth":1280,
                         "videoHeight":720,
@@ -436,6 +443,8 @@ def start_record_api(pro_meeting):
     }
 
     res = requests.post(url=url,data=json.dumps(data),headers=headers)
+
+    print(res)
 
     return res
 

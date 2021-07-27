@@ -153,7 +153,7 @@
 var option = {
   appid: '{{appid}}',
   channel: '{{channel}}',
-  uid: '{{uid}}',
+  uid: '{{meeting_uid}}',
   token: '{{token}}'
 };
 
@@ -177,12 +177,17 @@ var meet = '{{meet.id}}'  ;// id for meeting id
 <script src="https://download.agora.io/sdk/release/AgoraRTC_N.js"></script>
 
 <!-- <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.5.0.js"></script> -->
-{% if not pro  %}
+
+<script>
+  console.log('{{pro}}','Fresher');
+  </script>
+{% if pro  %}
+
+<script src="{% static 'videocallstatic/profcall.js' %}"></script>
+{% else %}
+
 <script src="{% static 'videocallstatic/freshercall.js' %}"></script>
 {% endif %}
-
-{% if pro %}
-<script src="{% static 'videocallstatic/profcall.js' %}"></script>
-{% endif %}
 </body>
+
 </html>
