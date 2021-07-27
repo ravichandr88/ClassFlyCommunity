@@ -13,7 +13,7 @@ urlpatterns = [
     path('videocall',views.videocall,name= 'videocall'),
 	path('audiocall',views.audio_testing),
 	path('record/<int:fid>/<int:mid>', views.record),
-	path('record', views.record)
+	path('record', views.record),
 	path('play',views.video_play),
 	path('pro_join/<int:pid>/<int:mid>',   views.connect_to_call_pro),
 	path('pro_joined/<int:mid>/<int:fid>', views.pro_joined),	# call to get into video rrom from waiting room
