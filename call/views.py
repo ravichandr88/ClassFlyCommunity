@@ -258,9 +258,13 @@ def connect_to_call_fresh(request, fid, mid):
             meeting_error_email(meeting)
             return Response(data={'message':resp.json()['reason']})
 
+        meeting.sid = resp.json()['sid']
+        meeting.save()
+
         return Response(data={'message':'joined'})
     
     else:
+
         return Response(data={'message':'Not right time'}, status= 400)
 
 
@@ -380,6 +384,8 @@ def meeting_error_email(meeting,message):
 
 def start_record_api(pro_meeting):
         
+    return 
+
     url = 'https://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/' + pro_meeting.meeting_details.resource_id + '/mode/web/start'
     
     data = {
@@ -397,7 +403,7 @@ def start_record_api(pro_meeting):
                         "audioProfile":0,
                         "videoWidth":1280,
                         "videoHeight":720,
-                        "maxRecordingHour":1,
+                        "maxRecordingHour":2,
                         "readyTimeout": 100
                 }
             }]
