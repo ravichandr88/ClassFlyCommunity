@@ -19,8 +19,10 @@ from django.views.decorators.csrf import csrf_exempt
 from video.models import DeptHead,Book,Playlist,Subject,VideoMaker,VideosMade,VideoId,VideoDeptHead,Subject,EducationDomain,Department
 from rest_framework.response import Response
 import json
+import boto3
+from botocore.client import Config
 
-from fresher.models import ProFrehserMeeting, Meeting
+from fresher.models import ProFrehserMeeting, Meeting, MeetingActive
 from interview.models import Prfessional, Fresher
 # from .models import 
 
@@ -30,12 +32,41 @@ from agora.src.RtcTokenBuilder import *
 import time
 import random
 
+DEBUG = True
 
 #  connect_to_call_fresh -> have External RESt API
 
+'''
+To connect to meeting,
+Professional has to connect from waiting room by clicking the "join" button.
+Fresher Meeting room will be chekcing server every 20 sec, to check whether professional has joined the meeting or not.
+Fresher will recieve SMS when professional joins the meeting.
+And if the fresher has been in waiting room, the page will automatically forward to the meeting room.
 
 
+Recording steps:
+When professional joins the meeting, the server will trigger the get resourceID api.
+When Professional call, the "Meeting" object will be updated for 'pro_joined'.
 
+When Fresher join the meeting room , the "Meeting" objects 'fre_joined' will be updated.
+When Fresher connect to call, recording api will be called and then join the call.
+
+Step 1: def video_prepare(request,id=''): -> called by both Fre, Pro.
+Step 2: def videocall(request): -> Pro will connect directly by button.
+Step 3: def pro_joined(request,mid,fid): -> called by Fresher from waiting room, and get recording resource id.
+Step 4: def videocall(request): -> Fresher will connect to this meeting room automatically
+Step 5: def connect_to_call_pro(request,pid,mid): -> Pro connecting to . Created MeetingActive object
+Step 6: def connect_to_call_fresh(request, fid, mid): -> Fresher to connect to call and start recording.
+Step 7: Disconnect Pro,
+Step 8: Disconnect Fresher.
+Step 9: Wait till the meeting recorded is saved  to s3
+Step 10: Upload s3 videos to vdocipher
+Step 11: Show the video once for the Fresher.
+
+
+'''
+
+# Waiting room
 def video_prepare(request,id=''):
     # The first part of id will be the category fresher 'f' or professional 'p'
     categ = id.split('_')[0]
@@ -89,6 +120,7 @@ def videocall(request):
 
     meeting = ProFrehserMeeting.objects.get(id=request.session['meeting'])
 
+
     
     if Prfessional.objects.filter(id =  meeting.prof.id).count() == 1 and request.session['category'] == 'p':
         user = 'prof'
@@ -104,19 +136,20 @@ def videocall(request):
     
     meet_details = meeting.meeting_details
 
-    # print(meeting.date_time - datetime.datetime.now())
-    g = meeting.date_time
-    g = g + timedelta( hours=2) 
-    # print(g)
 
+# Code to estimate the time with respect to skills
+    
+    
+    g = meeting.date_time
+    g = g + timedelta( minutes = 20 ) 
+
+    
+    
     # If the current time is greater than meeting start time and 
     # less than 2 hours of meeting start time, you can join
-    if timezone.now() > meeting.date_time   and timezone.now() < g and not meeting.meeting_details.record_stopped:
-        # print(timezone.now(), meeting.date_time )
-        g = '0' # just for nothing
-        
-    # Else move to dashboard
-    else:
+    
+    if not(timezone.now() > meeting.date_time   and timezone.now() < g and not meeting.meeting_details.record_stopped) :
+    
         if request.session['category'] == 'f':
            return redirect('f_dashboard')
            
@@ -145,32 +178,45 @@ def videocall(request):
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
     channelName = meeting.channel_name
     uid = random.randrange(11111111,99999999)
-    userAccount = str(uid)
     expireTimeInSeconds = 3600
     currentTimestamp = int(time.time())
     privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
 
     if user == 'prof':
         uid = uid + meeting.prof.id
+        
+        # Create MeetingActive table object
+        if MeetingActive.objects.filter(meeting = meeting).count() == 0:
+            MeetingActive(meeting = meeting).save()
+
     else: 
         uid = uid + meeting.fresher.id
+        print('line 193==',10000 * len(meeting.skills.split(',')) )
 
-    print(user)
+
+
+    # print(user)
 
     token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
 
-    data = {'token' : token,
-    'appid': appID,
-    'channel': channelName,
-    'meeting_uid': uid,
-    'uid' : meeting.prof.id if user == 'prof' else meeting.fresher.id,
-    'meet': meeting,
-    'status': meet_details,
-    'user':user,
-    'pro' : True if user == 'prof' else False
+    data = {
+    'token'         : token,
+    'appid'         : appID,
+    'channel'       : channelName,
+    'meeting_uid'   : uid,
+    'uid'           : meeting.prof.id if user == 'prof' else meeting.fresher.id,
+    'meet'          : meeting,
+    'status'        : meet_details,
+    'user'          : user,
+    'pro'           : True if user == 'prof' else False,    
+    'aid'           : 'p' if user == 'prof' else 'f',
+    'mid'           : meeting.meeting_status.id,
+    'pfmid'         : meeting.id,
+    #Code the auto connect the user, if disconnected for any reason 
+    'auto_connect'  : True if  timezone.now() < meeting.meeting_details.record_stop_time  else False 
     }
 
-
+    print('line 218===',data['auto_connect'])
 
     return render(request,'videocall/call.html',context = data)
 
@@ -186,14 +232,14 @@ def connect_to_call_pro(request,pid,mid):
 
     pro = Prfessional.objects.get(id = pid)
 
-    
+    profremeeting = ProFrehserMeeting.objects.get(id = mid, prof__id = pid)
 
     
     if ProFrehserMeeting.objects.filter(id = mid, prof__id = pid).count() == 0:
         return Response(data={'message':'Not valid Meeting'}, status=404)
 
     meeting = ProFrehserMeeting.objects.get(id = mid, prof__id = pid).meeting_details
-    fresher = ProFrehserMeeting.objects.get(id = mid, prof__id = pid).fresher
+    fresher = profremeeting.fresher
     # print(meeting) 
 
     meeting.pro_joined = True
@@ -226,7 +272,7 @@ def pro_joined(request,mid,fid):
         # REST API for calling the resouceID for the recording
 
         resp = record_resource_id(pro_meeting)
-        print('got resource id',resp)
+        print('line 274==','got resource id',resp)
 
         if str(resp.status_code) != '200':
             return Response(data={'message':resp.json()['reason']})
@@ -243,7 +289,7 @@ def pro_joined(request,mid,fid):
 @csrf_exempt
 @api_view(['GET'])
 def connect_to_call_fresh(request, fid, mid):
-    print("Start record")
+    print("line 291 ==, Start record")
        
     if ProFrehserMeeting.objects.filter(id=mid).count() == 0:
         return Response(data={'message':'Not valid registration'}, status= 400)
@@ -254,20 +300,37 @@ def connect_to_call_fresh(request, fid, mid):
     # End of code for the REST API resourceID code
     
     if meeting.pro_joined and not meeting.record_stopped:
+        
+        pro_meeting.meeting_details.record_start_time = timezone.now() 
+        pro_meeting.meeting_details.save()
 
-        meeting.fre_joined = True
-        meeting.save()
+        if not DEBUG:       #varible to activate and deactivate the code while testing
+            resp = start_record_api(pro_meeting)
 
-        resp = start_record_api(pro_meeting)
+            if str(resp.status_code) != '200':
+                meeting_error_email(pro_meeting,resp)
+                return Response(data={'message':resp.json()['reason']})
+            
+            # Before we start the meeting, save the record start time and fix the end time too.
+            
+            meeting.sid = resp.json()['sid']
+            meeting.record_started = True
+            meeting.fre_joined = True
+            meeting.save()
 
-        if str(resp.status_code) != '200':
-            meeting_error_email(pro_meeting,resp)
-            return Response(data={'message':resp.json()['reason']})
+            # Returning time in seconds for the js to count down
+            # print((g - meeting.date_time ).total_seconds())
 
-        meeting.sid = resp.json()['sid']
-        meeting.save()
+        skills_time = len(pro_meeting.skills.split(',')) + 1 #The last + 1 is for interaction apart from the topics
+        # record end time is addition of 10 * skills minutes and + 1 for other discussion.
 
-        return Response(data={'message':'joined'})
+        pro_meeting.meeting_details.record_stop_time = pro_meeting.meeting_details.record_start_time + timedelta( minutes = skills_time*10) # Each skill has given equal 10 minutes time for interview
+        pro_meeting.meeting_details.save()
+
+        time = int(((pro_meeting.meeting_details.record_start_time + timedelta( minutes = skills_time*10 ) ) - timezone.now()).total_seconds())
+        # print(skills_time, time) 
+        
+        return Response(data={'message':'joined','time':time}) 
     
     else:
 
@@ -304,9 +367,11 @@ def connect_to_call_fresh(request, fid, mid):
 # mid -> meeting ID(ProFrehserMeeting), fid -> Fresher id
 def record(request,fid=0,mid=0):
     
-    if ProFrehserMeeting.objects.filter(id=mid,fresher__id = fid).count() != 0:
-        
+    if ProFrehserMeeting.objects.filter(id=mid,fresher__id = fid).count() == 0:
+        # print(fid,mid)
         raise Http404
+
+    meeting = ProFrehserMeeting.objects.get(id=mid)
 
     
 
@@ -314,7 +379,7 @@ def record(request,fid=0,mid=0):
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
     channelName = "car"
     uid = random.randrange(11111111,99999999)
-    userAccount = str(uid)
+    # userAccount = str(uid)
     expireTimeInSeconds = 3600
     currentTimestamp = int(time.time())
     privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
@@ -326,10 +391,81 @@ def record(request,fid=0,mid=0):
             'token' : token,
             'appid': appID,
             'channel': channelName,
-            'uid': uid
+            'uid': uid,
+            'aid':  'r',
+            'mid':  meeting.meeting_status.id,  #MeetingActive table id
+            'pfmid': meeting.id #ProFreshMeeting id 
             }
     
     return render(request, 'videocall/record.html', context= data)
+
+
+
+# check whether the meeting is going on 
+@csrf_exempt
+@api_view(['GET'])
+def meeting_status(request,aid, mid, pfmid,t = 0): # aid (account id) -> Professional 'p', Fresher 'f' or recorder 'r' id, mid ->  MeetingActive id
+    
+    if MeetingActive.objects.filter(id = mid).count() == 0 or ProFrehserMeeting.objects.filter(id = pfmid).count() == 0:
+        
+        meeting_error_email( '' , '' , 'Recording Error Function No MeetingStatus Object found aid {} mid {} pfmid {}'.format(aid,mid,pfmid) )
+
+        return Response(data={'message':'Not available'}, status= 400)
+    
+    # First check whether the meeting was supposed to be stopped or not
+
+
+    meeting = MeetingActive.objects.get(id = mid)
+
+    if aid == 'p':      # aid -> professional page is calling
+        meeting.prof = meeting.prof + 1
+
+    elif aid == 'f':    #aid ->  fresher page is calling
+        meeting.fres = meeting.fres + 1
+
+    elif aid == 'r':    #rid -> recording page is calling
+        meeting.record = meeting.record + 1
+
+    else:
+        meeting_error_email( '' , '' , 'Not related to any team ,aid->{} '.format(aid) )
+
+        return Response( data={'message':'Not related to anything team '}, status = 400 )
+    
+
+    # Code to check whether the time is over for the meeting
+    if timezone.now() > meeting.record_stop_time:
+        return Response(data={'message':'stop'})
+
+    meeting.save() 
+
+    data={
+        'message':'success',
+        'pro':meeting.prof, 
+        'fres': meeting.fres, 
+        'record':meeting.record }
+
+    # For professional , time is sent from here. After fresher is joined to meeting
+    
+    pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
+    
+    if t != 0 and pro_meeting.meeting_details.fre_joined:
+        
+
+        # skills_time = len(pro_meeting.skills.split(',')) + 1 #The last + 1 is for interaction apart from the topics
+        # # record end time is addition of 10 * skills minutes and + 1 for other discussion.
+
+        # pro_meeting.meeting_details.record_stop_time = pro_meeting.meeting_details.record_start_time + timedelta( minutes = skills_time*10) # Each skill has given equal 10 minutes time for interview
+        # pro_meeting.meeting_details.save()
+
+        
+
+        time = int((pro_meeting.meeting_details.record_stop_time - timezone.now()).total_seconds())
+
+        data['time'] = time
+    
+        
+
+    return Response(data = data )
 
 
 # to test the audio recording for aws s3 agora recording
@@ -380,9 +516,17 @@ def record_resource_id(pro_meeting):
 
 
 # Function to send email if any error before the meeting
-def meeting_error_email(meeting,message):
-        subject = 'welcome to GFG world'
-        message = f'Could not record the meeting .' + str(meeting.dict()) + str(message)
+def meeting_error_email(meeting,resp,message=''):
+    # print(meeting,resp,message)
+    if resp != '' :
+        subject = 'Error From ClassFly meeting'
+        message = f'Could not record the meeting .' + str(meeting.dict()) + str(resp.json())
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['ravichandrareddy88@gmail.com', ]
+        send_mail( subject, message, email_from, recipient_list )
+    else:
+        subject = 'Error From ClassFly recording'
+        message = f'Could not record the meeting .' + str(meeting.dict()) + message
         email_from = settings.EMAIL_HOST_USER
         recipient_list = ['ravichandrareddy88@gmail.com', ]
         send_mail( subject, message, email_from, recipient_list )
@@ -391,8 +535,12 @@ def meeting_error_email(meeting,message):
 def start_record_api(pro_meeting):
         
     # return 
+    
+
 
     url = 'https://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/' + pro_meeting.meeting_details.resource_id + '/mode/web/start'
+    
+
     
     data = {
     "cname":"car",
@@ -405,8 +553,8 @@ def start_record_api(pro_meeting):
                     "serviceName":"web_recorder_service",
                     "errorHandlePolicy": "error_abort",
                     "serviceParam": {  
-                        # "url": "https://www.classfly.in/record/" + pro_meeting.fresher.id + '/' + pro_meeting.id,
-                        "url": "https://www.classfly.in/record",
+                        "url": "https://www.classfly.in/record/" + str( pro_meeting.fresher.id ) + '/' + str( pro_meeting.id ),
+                        # "url": "https://www.classfly.in/record",
                         "audioProfile":0,
                         "videoWidth":1280,
                         "videoHeight":720,
@@ -444,7 +592,134 @@ def start_record_api(pro_meeting):
 
     res = requests.post(url=url,data=json.dumps(data),headers=headers)
 
-    print(res)
+    print('line 560 == ',res)
 
     return res
+
+
+
+def record_file_exists(key = ''):
+
+
+    s3 = boto3.resource("s3",region_name="ap-south-1",
+                          aws_access_key_id="AKIAS6UIIOP5B476WEOF",
+                          aws_secret_access_key="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",
+                          config=Config(signature_version="s3v4"))
+    bucket = s3.Bucket('classfly')
+
+    if key =='' or key == '.mp4':
+        return 'Wrong key'
+
+    
+
+    objs = list(bucket.objects.filter(Prefix=key))
+    if len(objs) > 0 and objs[0].key == key:
+        print('line 617 ==',"Exists!")
+        return 'Found'
+
+    else:
+        print('line 581==',"Doesn't exist")
+        return 'Not Found'
+
+
+
+# Code to start to upload video from s3 to VDO
+def upload_s3video(file):
+
+        
+    url = "https://dev.vdocipher.com/api/videos/importUrl"
+
+    payload = json.dumps({"url":"https://classfly.s3.ap-south-1.amazonaws.com/" + file })
+    
+    headers = {    
+        'Authorization': "Apisecret " + settings.VDO_API,  
+        'Accept': "application/json",    
+        'Content-Type': "application/json"    
+        }
+
+    response = requests.request("PUT", url, data=payload, headers=headers)
+
+    return response
+
+
+
+def upload_vdo_status(vdo_id):
+    
+    url = "https://dev.vdocipher.com/api/videos/" + vdo_id
+
+    headers = {    'Authorization': "Apisecret " + settings.VDO_API,
+            'Content-Type': "application/json", 
+            'Accept': "application/json"    }
+
+    resp = requests.request("GET", url, headers=headers)
+
+    return resp 
+
+
+# Code to work after video calling is done, Mainly fresher work.
+'''
+Step1: We have to check whether the recording has stopped and .mp4 is available in S3.
+Step2: When .mp4 is ready in S3, call VDO to get meeting video uploaded.
+Step3: Code to show the upload status.
+'''
+
+
+
+# Step1: We have to check whether the recording has stopped and .mp4 is available in S3.
+@csrf_exempt
+@api_view(['GET'])
+def record_complete(request,pfmid):
+
+    if ProFrehserMeeting.objects.filter(id = pfmid).count() == 0:
+        return Response(data = {'message':'Not a valid meeting'})
+
+    pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
+    file = 'directory1/directory7/' + pro_meeting.meeting_details.sid + '_' + pro_meeting.channel_name + '_0.mp4'
+
+    status = record_file_exists(file)
+
+    if status == 'Wrong key': # Some key error from meeting , email to admin
+        meeting_error_email(pro_meeting,'','There is no SID for given  meeting')
+        return Response(data={'message':'Server Error, We have sent report for Admin. We will get back to you soon'}, status=400)
+
+    elif status == 'Found':
+        if not DEBUG:
+            file_name  = 'directory1/directory7/' + pro_meeting.meeting_details.sid + '_' + pro_meeting.channel_name + '_0.mp4' 
+            
+            resp = upload_s3video(file_name)
+
+            if str(resp.status_code) != '200':
+                meeting_error_email(pro_meeting,resp,'Uploading to VDO error')
+                return Response(data={'message':'We have reported the problem for admin, We will get back to you soon'},status= 400)
+            
+            # If upload video initiating is success, store the vdo_id in DB
+
+            pro_meeting.meeting_details.vdo_id = resp.json()['id']
+            pro_meeting.meeting_details.save()
+
+
+        return Response(data={'message':'success'}) #File found so check with uploading as next step
+    
+    else:
+        return Response(data={'message':'Waiting'}) #We have to wait for some more time for the file to appear here
+
+    
+
+
+# Render the template after the meeting is complete
+def after_record(request,pfmid):
+
+    if ProFrehserMeeting.objects.filter(id = pfmid).count() == 0:
+        raise Http404
+    
+    pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
+    return render(request,'after_record.html',context={'form':{},'pfmid':pfmid})
+
+
+
+
+
+
+
+
 

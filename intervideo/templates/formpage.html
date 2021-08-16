@@ -1,0 +1,203 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login V1</title>
+	<meta charset="UTF-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="{% static 'hrstatic/images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/css/main.css' %}">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+                
+                <!-- <div class="login100-pic js-tilt" data-tilt>
+					<img src="{% static 'hrstatic/images/img-01.png' %}" alt="IMG">
+                </div>  -->
+
+				<form class="login100-form validate-form" method="POST" action=""  >
+					<span class="login100-form-title">
+					<u>{{title}}</u>
+					</span>
+
+					<!-- Code for deatil view of job -->
+					{% if details %}
+
+					<h6> <u>Company :&nbsp;{{company.company_name}}  </u>   <p>Posted On : {{job.created_on}}</p></h6>
+					
+					<br>
+					<h5><u>Skills :</u><br> 
+						<!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -->
+						<p>{{job.skills}} </p>  </h5>
+				<br>
+					<h5><u>Experience:</u>  
+						<br>
+						  <p> {{job.min_exp}} - {{job.max_exp}}  years </p></h5>
+						  <br>
+					<h65><u>Salary : </u> 
+						<br>
+					<p>	{{job.min_salary}} to {{job.max_salary}} Per Anum </p></h5>
+					
+					<br>
+					<br>
+					
+					<h4> <u>Job Description: </u></h4>
+					
+					<br>
+					<p>{{job.description}}</p>
+					<br><br>
+					<h4> <u> Job Requirement : </u></h4>
+					<br>
+					<p>{{job.requirement}}</p>
+
+					<br>
+						<h6>Role: <p>{{job.role}}</p></h6>
+					<h6>Industry: <p>{{job.industry_type}}</p></h6>
+					<h6>JOB Type: <p>{{job.employment_type}}</p></h6>
+					<br>
+					
+					<h5><u>Education : </u></h5>
+					<br>
+					<h6>UG: {{job.edu_ug}}</h6>
+					<h6>PG: {{job.edu_pg}}</h6>
+					<h6>Doctrate: {{job.edu_doc}}</h6>
+					<br>
+					<!-- <h6>h6</h6> -->
+					<!-- <p>Paragraph</p> -->
+					<!-- <label>Label</label> -->
+				
+					<h5><u>Questions asked by HR</u></h5>
+					<br>
+						{% endif %}
+					<!-- <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+						<input class="input100" type="text" name="phone" placeholder="Phone Number">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-envelope" aria-hidden="true"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<input class="input100" type="password" name="pass" placeholder="Password">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
+					</div> -->
+					{% csrf_token %}
+				{% for i in form %} 
+					<p>{{i.label_tag}}</p>
+					<div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<!-- <input class="input100" type="password" name="con-pass" placeholder="Confirm Password"> -->
+						{{i}}
+						<span class="focus-input100"><br><br>				
+						</span>
+						<span class="symbol-input100">
+								<i class="{{ i.field.icon }}" aria-hidden="true"></i>
+							<!-- <i class="fa fa-lock" aria-hidden="true"></i> -->
+						</span>
+					</div>
+					<h6 style="color:red" id="error_mssg">{{ i.errors}}</h6>
+				{% endfor %} 
+				
+				
+				<h6 style="color:red" id="error_mssg">{{error}}</h6>
+				<div class="container-login100-form-btn">
+					<button class="login100-form-btn">
+						Submit  
+					</button>
+				</div>
+					
+				
+					{% if details %}
+					<h5><u>About Company :</u></h5>
+					<br>
+					<p> {{company.about}}</p>
+					<br>
+					<h5><u>Address: </u></h5>
+					<p>{{company.address}}</p>
+					<br>
+					<h6><u>State : {{company.state}}</u></h6>
+					<h6><u>City : {{company.city}} </u></h6>
+					<br>
+					{% endif %}
+					<!-- <div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<input class="input100" type="password" name="con-pass" placeholder="Confirm Password">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
+					</div> -->
+
+					<!-- div to add extra button using JS -->
+					<div class="container-login100-form-btn" id="dynamic">
+						
+					</div>
+
+					
+					
+
+					<!-- div for next line content -->
+					<div class="text-center p-t-12" id='next_line'>
+						
+					</div>
+
+					<div class="text-center p-t-136">
+						<a class="txt2" href="#">
+							Create your Account
+							<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	
+
+
+	
+<!--===============================================================================================-->	
+	<script src="{% static 'hrstatic/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'hrstatic/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'hrstatic/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'hrstatic/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'hrstatic/vendor/tilt/tilt.jquery.min.js' %}"></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'hrstatic/js/main.js'%}"></script>
+
+
+
+	<!-- Code to include js with respcet to form -->
+	{{form.media}}
+
+
+
+</body>
+</html>

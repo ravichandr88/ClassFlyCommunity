@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core import validators
 import re
-from user.models import OTP
+from user.models import OTP,Phonenumber
 
 
 #Function to validate Phone Number
@@ -85,15 +85,35 @@ class LoginForm(BootstrapModelForm):
         phone_number = self.cleaned_data.get('phone_number')
         #Check whether username exists or not
         user = None
+        
         try:
-            user = User.objects.get(username=phone_number)
+            # print('entered')
+            if User.objects.filter(username=phone_number).count() != 0:
+                user = User.objects.get(username=phone_number)
+            
+            elif Phonenumber.objects.filter(phone_number = phone_number).count() != 0:
+                user = Phonenumber.objects.get(phone_number = phone_number).user
+                
+
+            else:
+                User.objects.get(username=phone_number)
+
+
+
+            # print(user,'---------')
         except:
-              self.add_error('phone_number', 'Phone Number not found')
+            self.add_error('phone_number', 'Phone Number not found')
+            # print(user,'---------')
+             
+            # raise forms.ValidationError("Please correct the errors below.")
 
         #Check whether user account is active or not
-        if not user.is_active:
-             self.add_error('phone_number', 'OTP not confirmed')
-             self.redirect = True
+        if user is not None and not user.is_active:
+            self.add_error('phone_number', 'OTP not confirmed')
+            self.redirect = True
+        
+        else:
+            self.user = user    #storing the user object for the form, to access in authenticate funtion in views
 
         return cleaned_data
 

@@ -14,7 +14,7 @@ class BootstrapModelForm(forms.Form):
             # add form-control class to all fields
             
 
-            if field_name != 'about_yourself' and field_name !='address' and field_name !='project' and field_name != 'exp_work_1'and field_name != 'exp_work_2'and field_name != 'exp_work_3':
+            if field_name != 'about_yourself' and field_name != 'about' and field_name !='address' and field_name !='project' and field_name != 'exp_work_1'and field_name != 'exp_work_2'and field_name != 'exp_work_3':
                 
                 field.widget.attrs['class'] = 'input100'
             
@@ -164,6 +164,7 @@ class ProIntervTime(BootstrapModelForm):
 
 class CompanyForm(BootstrapModelForm):
     company_name = forms.CharField(max_length = 100,required=True)
+    about = forms.CharField(max_length = 800,required=True, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"About Company "}))
     address = forms.CharField(max_length = 500,required=True, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Company Address"}))    
     city = forms.CharField(max_length=50,required=True)
     state = forms.CharField(max_length = 100, required=True)

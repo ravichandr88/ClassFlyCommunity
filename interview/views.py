@@ -36,7 +36,7 @@ def student(request):
             branch           = student.cleaned_data['branch'],
             passout_year     = student.cleaned_data['passout_year'],
             about_yourself   = student.cleaned_data['about_yourself'],
-            total_experience = int(int(int(student.cleaned_data['total_experience'])/12)) + '.' + str(int(student.cleaned_data['total_experience'])%12),
+            total_experience = int(student.cleaned_data['total_experience']),
             skills           = str(request.POST.getlist('skills')))
           fresher.save() 
 
@@ -274,6 +274,7 @@ def company_singup(request):
 
             Company(
               created_by              = User.objects.get(username = request.user),
+              about                   = form.cleaned_data['about'],
               company_name            = form.cleaned_data['company_name'],
               address                 = form.cleaned_data['address'],
               city                    = form.cleaned_data['city'],
@@ -306,7 +307,7 @@ def hr_account_creation(request):
               linkedin_url     = form.cleaned_data['linkedin_url'],
               office_email     = User.objects.get(username = request.user).email
             ).save()
-
+            
             return redirect('hr_id_card')
 
     return render(request,'form.html',context={'form':form})

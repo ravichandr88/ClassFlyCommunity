@@ -8,6 +8,7 @@ class Fresher(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name='applicant')
     college = models.CharField(max_length=40)
     branch = models.CharField(max_length = 50) 
+    city = models.CharField(max_length = 50, default = 'Bangalore')
     passout_year = models.IntegerField()
     about_yourself = models.CharField(max_length=500,null=True)
     total_experience = models.FloatField()
@@ -17,16 +18,31 @@ class Fresher(models.Model):
 
     def __str__(self):
         return "User {} College {} Branch {} Exp {} url {}".format(self.user,self.college,self.branch,self.total_experience,self.resume_url)
+# Function to get the video button in applicants and hrdashboard
+    # It will retuen true if the candiadte has passed any interview till now
+    def video(self):
+        g = self.fresher_interview.filter(passed = True)
+        if len(g) > 0:
+            return g[0].id
+
+        return False
+
 
 class Experience(models.Model):
     applicant = models.ForeignKey(Fresher,on_delete=models.CASCADE,related_name='experience')
-    exp_company = models.CharField(max_length=80)
-    exp_work = models.CharField(max_length=500)
-    exp_period = models.CharField(max_length=40)
+    exp_company = models.CharField(max_length=80,default = '')
+    exp_work = models.CharField(max_length=500, default = '')
+    exp_period = models.CharField(max_length=40, default = '')
 
     def __str__(self):
         return "Applicant {} Exp_Comp {} Exp_Work {} Exp_Period {}".format(self.applicant,self.exp_company,self.exp_work,self.exp_period)
     
+    #Function to show only filled fields in aaplicants search page details.
+    def available(self):
+        if self.exp_company == '':
+            return False
+        
+        return True
 
 
 class Prfessional(models.Model):
@@ -82,6 +98,7 @@ class Professinal_Interview_Time(models.Model):
 class Company(models.Model):
     created_by              = models.OneToOneField(User,  related_name='company', on_delete=models.CASCADE)
     company_name            = models.CharField(max_length = 100,null=False)
+    about                   = models.TextField(max_length = 800, default = '')
     address                 = models.TextField(max_length = 500, null=False)    
     city                    = models.CharField(max_length=50,null=False)
     company_linkedin_url    = models.URLField()
@@ -100,9 +117,8 @@ class HRaccount(models.Model):
     created_on       = models.DateTimeField(auto_now=True)
     idcard           = models.URLField(default='')
     profilepic       = models.URLField(default='')
-    office_email     = models.EmailField(null=True)
-
-
+    office_email     = models.EmailField(null=True) 
+    
 
     def __str__(self):
         return "user {} designation {} linkedinurl {} idcard {} profile_pic {}".format(self.user.username,self.designation,self.linkedin_url, self.idcard, self.profilepic)
@@ -129,7 +145,7 @@ class Expert(models.Model):
 class ProfessionalInterview(models.Model):
     expert = models.ForeignKey(Expert, on_delete = models.CASCADE, related_name='interviewed')
     pro   = models.OneToOneField(Prfessional, on_delete = models.CASCADE, related_name ='pro_interview')
-    interview_on = models.DateTimeField()
+    interview_on = models.DateTimeField() 
     interview_url = models.URLField()
     topics = models.CharField(max_length = 300)
     comments = models.CharField(max_length = 200)
@@ -162,5 +178,7 @@ class Professinal_Account_Details(models.Model):
 
     def __str__(self):
         return " Professional {} IFSC {} Account Number {} Name {} UPI {}".format(self.pro.user.username,self.ifsc,self.account_number,self.name,self.upi)
+
+
 
 

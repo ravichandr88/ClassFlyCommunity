@@ -266,7 +266,8 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            user = authenticate(request, username=form.cleaned_data['phone_number'], password=form.cleaned_data['password'])
+
+            user = authenticate(request, username=form.user.username, password=form.cleaned_data['password'])
             
 
             if user == None:
@@ -279,7 +280,7 @@ def login_view(request):
 
         else:
             #If usre account is not activated, reirect to OTP page
-            if form.redirect:
+            if hasattr(form, 'redirect') and form.redirect:
                 return redirect('otp_verify')
             return render(request,'signupcopy.html',context={'form':form})
 

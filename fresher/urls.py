@@ -9,3 +9,4 @@ urlpatterns = [
     path('pro_dashboard', views.pro_dash,name = 'pro_dashboard'),
     
 ]
+

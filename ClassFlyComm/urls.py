@@ -16,5 +16,6 @@ urlpatterns = [
     path('',include('interview.urls')),
     path('',include('fresher.urls')),
     path('',include('call.urls')),
+    path('',include('intervideo.urls')),
 
 ]

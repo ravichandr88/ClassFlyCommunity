@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'interview',
     'channels',
     'call',
+    'intervideo',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -323,7 +324,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'classfly.in@gmail.com'
 EMAIL_HOST_PASSWORD = 'hfuzrqtspqwwefox'
 
-
+VDO_API = "uVigALnjD16hnj2770F07XGJS2bRNfLrTVv08gYWfsL8KMcD2uNWp9GSpSglq7Ta"
 
 
 

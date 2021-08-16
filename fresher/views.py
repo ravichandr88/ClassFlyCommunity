@@ -35,8 +35,6 @@ def search_professional(request,query=''):
         
         profs = list(Prfessional.objects.filter(city__icontains = city).filter( skills__icontains = skill).filter(company__icontains = company).filter(designation__icontains = designation))
             
-    
-    
 
     return render(request,'search_pro/pro_search.html',context={'profs':profs,'skill':skill,'city':city,'company':company,'designation':designation})
 

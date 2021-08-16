@@ -18,5 +18,8 @@ urlpatterns = [
 	path('pro_join/<int:pid>/<int:mid>',   views.connect_to_call_pro),
 	path('pro_joined/<int:mid>/<int:fid>', views.pro_joined),	# call to get into video rrom from waiting room
 	path('fre_join/<int:fid>/<int:mid>',   views.connect_to_call_fresh),
-	
+	path('meeting_status/<str:aid>/<int:mid>/<int:pfmid>',views.meeting_status),
+	path('meeting_status/<str:aid>/<int:mid>/<int:pfmid>/<int:t>',views.meeting_status),
+	path('after_meeting/<int:pfmid>',views.after_record),
+	path('spot_file/<int:pfmid>',views.record_complete)
 ]

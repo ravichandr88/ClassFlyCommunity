@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - bPlayer - Customize Video Player</title>
+  <link rel="stylesheet" href="{% static  'player_static/style.css' %}">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>bPlayer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+ 
+<body class="bg">
+  <div class="bPlayer">
+
+      <div id="embedBox" style="width:1280px;max-width:100%;height:auto;"></div>
+      <script>
+        (function(v,i,d,e,o){v[o]=v[o]||{}; v[o].add = v[o].add || function V(a){ (v[o].d=v[o].d||[]).push(a);};
+      if(!v[o].l) { v[o].l=1*new Date(); a=i.createElement(d), m=i.getElementsByTagName(d)[0];
+      a.async=1; a.src=e; m.parentNode.insertBefore(a,m);}
+      })(window,document,"script","https://player.vdocipher.com/playerAssets/1.6.10/vdo.js","vdo");
+      vdo.add({
+        // otp: "20160313versASE3234rqFdfnzH95kht5ktEkxM6xSAsgnoMv6Oa297vDrShWfhx",
+        // playbackInfo: "eyJ2aWRlb0lkIjoiZTI5OWEzNGRhYzQxNGQzYmEyOTY3ZjdiNDAwMDdjZTMifQ==",
+        otp:"{{otp}}",
+        playbackInfo: "{{playbackInfo}}",
+        theme: "9ae8bbe8dd964ddc9bdb932cca1cb59a",
+        container: document.querySelector( "#embedBox" ),
+      });
+      </script>
+
+    <!-- <video class="video" autoplay loop>
+      <source  src="https://www.w3schools.com/html/mov_bbb.mp4">
+    </video> -->
+
+    <!-- <input type="range" class="progressRng" min="1" max="100" value="0" step="0.1"></input>
+  <span class="current">00:00</span>
+  <span class="duration">01:59</span>
+    <div class="ctrlArea">
+      <button class="playBtn" id="playBtn">▶</button>
+      <button data-skip="-10" class="fastBkrd"><<</button>
+      <button data-skip="20" class="fastFwrd">>></button>
+      <input type="range" class="volume" min="0" max="1" step="0.05" value="1">
+      <input type="range" class="speed" min="0" max="2" step="0.1" value="1">
+      <button class="fullScreen">⛶</button>
+    </div> -->
+  </div>
+  
+  
+  <script src="{% static  'player_static/script.js' %}"></script>
+</body>
+</html>
+<!-- partial -->
+  <!-- <script  src="./script.js"></script> -->
+
+</body>
+</html>

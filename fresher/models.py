@@ -68,10 +68,22 @@ class Meeting(models.Model):
     record_stop_time = models.DateTimeField(null=True)
     
 
+
     def __str__(self):
         return "Record Started {} Record Stopped {} "
 
 
+class MeetingActive(models.Model):
+    meeting = models.OneToOneField( ProFrehserMeeting, on_delete = models.CASCADE, related_name = 'meeting_status' )
+    prof    = models.IntegerField(default = 0)
+    fres    = models.IntegerField(default = 0)
+    record  = models.IntegerField(default = 0)
+    created_on = models.DateTimeField(auto_now=True)
+    
+
+
+    def __str__(self):
+        return "Created On {} ".format(self.created_on)
 
 
 

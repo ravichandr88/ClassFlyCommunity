@@ -63,9 +63,9 @@ var remoteUsers = {};
  * When a user clicks Join or Leave in the HTML form, this procedure gathers the information
  * entered in the form and calls join asynchronously. The UI is updated to match the option entered
  * by the user.
- */
+ */ 
 
- $("#join-form").submit(async function (e) {
+ $("#join-form").click(async function (e) {
 
   console.log('******************************Pressed');
   console.log(option);
@@ -215,4 +215,156 @@ function handleUserUnpublished(user) {
   delete remoteUsers[id];
   $(`#player-wrapper-${id}`).remove();
 }
+
+
+// Code to connect if he has disconnected in between the meeting
+// this code will connect them autmatically
+if(auto_connect == 'True')
+{
+  let element = document.getElementById('join-form');
+  element.click();
+  console.log('Auto connect');
 }
+
+
+// Code to get the meeting status from everyone
+
+var h = 0;
+var interval = 1000;
+var check_interval = 20000;
+
+var pro_count = 0;  // profesional count
+var fre_count = 0;  //fresher return count
+var rec_count = 0;  // recording count
+var get_time = 1;
+var chance = 0;   //variable to record the chance given to keep up with meeting.,
+
+// if the chance is gfreater than 3, stop the meeting and recording.
+
+async function meeting_status()
+{
+
+  // meeting_status/<int:aid>/<int:mid>/<int:pfmid>
+  const res = await fetch('/meeting_status/' + aid  +'/' + mid + '/' + pfmid + '/' + get_time )
+    .then(res => res.json());
+    if (res.message == 'success')
+    { 
+      //check if time is recived or not, if received set 'get_time = 0', 
+      // if not receivd call tick_tock(res.time)
+      if (get_time == 1 && typeof res.time != 'undefined' )
+      {
+        tick_tock(res.time)
+        get_time = 0;
+      }
+
+      
+      // check whether the status of profesional or fresher has changed or not
+      if (pro_count == res.pro )
+      {
+          chance = chance + 1;
+      }
+      else if( pro_count == res.fres)
+      {
+        chance = chance + 1;
+      }
+      else if( rec_count == res.record ) 
+      {
+        chance = chance + 1;
+      }
+      else{
+        chance = 0;
+      }
+
+      pro_count = res.pro
+      fre_count = res.fres
+      rec_count = res.record
+      
+      console.log(pro_count, fre_count, rec_count);
+
+      
+      
+      // check the chance given, if it is greater than 3, close the window
+      if (chance > 5)
+      {
+        leave();
+        window.location = '/pro_dashboard' ;
+
+      }
+       
+    }
+// If it recieves any message saying stop, stop the meeting
+    else if (res.message == 'stop')
+    {
+      window.location = '/pro_dashoard';
+    }
+    else{
+      leave();
+      // the code wont connect when person is rejected for some reason
+      console.log('failed',res.message);
+      window.close(); 
+    }
+
+    
+    setTimeout(meeting_status, interval);
+
+
+}
+
+setTimeout(meeting_status, interval);
+
+
+
+
+
+ }
+
+
+ 
+window.fun = function()
+{
+  this.document.getElementById('leave').click();
+  window.location = '/pro_dashboard';
+  
+}
+
+
+ function tick_tock(time)
+{
+// Set the date we're counting down to
+var countDownDate = new Date().getTime() + (time * 1000);
+// console.log(countDownDate);
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+  // new Date(now + (30*60*1000));
+// console.log(now);
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="demo"
+  document.getElementById("demo").innerHTML =  hours + ":"
+  + minutes + ":" + seconds ;
+  // console.log('testing');
+  // If the count down is finished, write some text
+  if (distance < 0) {
+    clearInterval(x);
+    window.fun();
+    document.getElementById("demo").innerHTML = "EXPIRED";
+  
+    
+  }
+}, 1000);
+
+
+}
+
+
+

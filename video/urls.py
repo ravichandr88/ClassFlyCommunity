@@ -36,7 +36,7 @@ urlpatterns = [
 	path('videoslist',views.videos_list),
 	path('dept_dashboard',views.depthead_dashboard,name='dept_dashboard'),	#link for dept head dashboard
 	path('dept_dashboard/<slug:page>',views.depthead_dashboard),
-	path('video_upload',views.video_uploader),
+	path('video_upload',views.video_uploader), 
 	path('videos_list',views.videos_uploaded_list,name='videom_dashboard'),	#link for video maker dashboard
 	path('ap_rj_vd',views.approve_reject_video),
 	path('reader/<slug:id>',views.reader),	#page for all the pdf's display

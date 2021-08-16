@@ -121,6 +121,8 @@
 
 
     <div class="button-group">
+      <p id='demo'></p>
+      
       <button id="join" type="submit" class="btn btn-primary btn-sm">Join</button>
       <button id="leave" type="button" class="btn btn-primary btn-sm" disabled>Leave</button>
     </div>
@@ -167,7 +169,18 @@ var uid = '{{uid}}'
 var meet = '{{meet.id}}'  ;// id for meeting id
 
 
-// console.log(option);
+// variables for meeting status
+
+
+var aid = '{{aid}}'
+var mid = '{{mid}}'
+var pfmid = '{{pfmid}}'
+
+//variables to connect to meeting automatically,( When disconnected by some reason)
+
+var auto_connect = '{{auto_connect}}';
+
+
  
 
 

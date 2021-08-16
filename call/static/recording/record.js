@@ -191,6 +191,7 @@ $("#remote-playerlist").html("");
  * @param  {IAgoraRTCRemoteUser} user - The {@link  https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/iagorartcremoteuser.html| remote user} to add.
  * @param {trackMediaType - The {@link https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/itrack.html#trackmediatype | media type} to add.
  */
+
 async function subscribe(user, mediaType) {
   const uid = user.uid;
   // subscribe to a remote user
@@ -241,20 +242,12 @@ function handleUserUnpublished(user) {
 });
 
 
-
-
-
-
-
-var h = 0;
-var interval = 1000;
-
-function doAjax()
+function meeting_active()
 {
   if (h  < 15)
   {
   h = h + 1
-  setTimeout(doAjax, interval);
+  setTimeout(meeting_active, interval);
   document.getElementById('code').innerHTML = h + 'secs';
   }
   else 
@@ -265,7 +258,150 @@ function doAjax()
   }
 
 }
-setTimeout(doAjax, interval);
+setTimeout(meeting_active, check_interval);
+
+
+
+
+
+
+//Code to get the status of the meeting every 20 seconds.
+// If the status return the same count for prrofessional or fresher for 3 times.
+// Something is worng with the meeting and need to get the things dnoe,
+// like stop the recording and meeting maybe
+
+var h = 0;
+var interval = 1000;
+var check_interval = 20000;
+
+var pro_count = 0;  // profesional count
+var fre_count = 0;  //fresher return count
+var rec_count = 0;  // recording count
+
+var chance = 0;   //variable to record the chance given to keep up with meeting.,
+// if the chance is gfreater than 3, stop the meeting and recording.
+
+var get_time = 1; // 1 defines -> need to get time, 0-> defines we already have time
+
+async function meeting_status()
+{
+
+  // meeting_status/<int:aid>/<int:mid>/<int:pfmid>
+  const res = await fetch('/meeting_status/' + aid  +'/' + mid + '/' + pfmid + '/' + get_time)
+    .then(res => res.json());
+    if (res.message == 'success')
+    { 
+      
+       //check if time is recived or not, if received set 'get_time = 0', 
+      // if not receivd call tick_tock(res.time)
+      if (get_time == 1 && typeof res.time != 'undefined' )
+      {
+        tick_tock(res.time)
+        get_time = 0;
+      }
+      
+      if (res.message == 'stop')
+      {
+        window.close();
+      }
+      
+      
+      // check whether the status of profesional or fresher has changed or not
+      if (pro_count == res.pro )
+      {
+          chance = chance + 1;
+      }
+      else if( pro_count == res.fres)
+      {
+        chance = chance + 1;
+      }
+      else if( rec_count == res.record ) 
+      {
+        chance = chance + 1;
+      }
+      else{
+        chance = 0;
+      }
+
+      pro_count = res.pro
+      fre_count = res.fres
+      rec_count = res.record
+      
+      console.log(pro_count, fre_count, rec_count);
+
+      
+      
+      // check the chance given, if it is greater than 3, close the window
+      if (chance > 5)
+      {
+        window.close(); 
+      }
+       
+    }
+    else{
+
+      // the code wont connect when person is rejected for some reason
+      console.log('failed',res.message);
+      window.close(); 
+     
+
+    }
+    
+setTimeout(meeting_status, check_interval);
+
+
+}
+
+setTimeout(meeting_status, check_interval);
+
+
+
+ 
+window.fun = function()
+{
+  this.document.getElementById('leave').click();
+  window.location = '/f_dashh';
+  
+}
+
+
+ function tick_tock(time)
+{
+// Set the date we're counting down to
+var countDownDate = new Date().getTime() + (time * 1000);
+// console.log(countDownDate);
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+  // new Date(now + (30*60*1000));
+// console.log(now);
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result in the element with id="demo"
+  document.getElementById("demo").innerHTML =  hours + ":"
+  + minutes + ":" + seconds ;
+  // console.log('testing');
+  // If the count down is finished, write some text
+  if (distance < 0) {
+    clearInterval(x);
+    window.fun();
+    document.getElementById("demo").innerHTML = "EXPIRED";
+  
+    
+  }
+}, 1000);
+
+
+}
 
 
 
