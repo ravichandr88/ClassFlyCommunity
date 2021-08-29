@@ -66,7 +66,7 @@ var remoteUsers = {};
  */ 
 
  $("#join-form").click(async function (e) {
-
+ 
   console.log('******************************Pressed');
   console.log(option);
 
@@ -162,6 +162,8 @@ async function leave() {
   $("#join").attr("disabled", false);
   $("#leave").attr("disabled", true);
   console.log("client leaves channel success");
+
+  window.location = '/feedback/'+pfmid;
 }
 
 
@@ -178,9 +180,9 @@ async function subscribe(user, mediaType) {
   console.log("subscribe success");
   if (mediaType === 'video') {
     const player = $(`
-      <div id="player-wrapper-${uid}">
+      <div id="player-wrapper-${uid}"  style="width:90%;height:100%;margin-left:5%>
         <p class="player-name">remoteUser(${uid})</p>
-        <div id="player-${uid}" class="player"></div>
+        <div id="player-${uid}" style="width:100%;height:100%"></div>
       </div>
     `);
     $("#remote-playerlist").append(player);
@@ -221,7 +223,7 @@ function handleUserUnpublished(user) {
 // this code will connect them autmatically
 if(auto_connect == 'True')
 {
-  let element = document.getElementById('join-form');
+  let element = document.getElementById('join');
   element.click();
   console.log('Auto connect');
 }
@@ -287,7 +289,7 @@ async function meeting_status()
       if (chance > 5)
       {
         leave();
-        window.location = '/pro_dashboard' ;
+        window.location = '/feedback'+pfmid ;
 
       }
        
@@ -295,7 +297,7 @@ async function meeting_status()
 // If it recieves any message saying stop, stop the meeting
     else if (res.message == 'stop')
     {
-      window.location = '/pro_dashoard';
+      window.location = '/feedback'+pfmid;
     }
     else{
       leave();
@@ -303,7 +305,7 @@ async function meeting_status()
       console.log('failed',res.message);
       window.close(); 
     }
-
+ 
     
     setTimeout(meeting_status, interval);
 
@@ -323,7 +325,7 @@ setTimeout(meeting_status, interval);
 window.fun = function()
 {
   this.document.getElementById('leave').click();
-  window.location = '/pro_dashboard';
+  window.location = '/feedback/'+pfmid;
   
 }
 

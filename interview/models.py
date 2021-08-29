@@ -4,20 +4,28 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class Fresher(models.Model):
+class Fresher(models.Model): 
     user = models.OneToOneField(User,on_delete=models.CASCADE,related_name='applicant')
-    college = models.CharField(max_length=40)
-    branch = models.CharField(max_length = 50) 
+    college = models.CharField(max_length=40)    #degree college
+    branch = models.CharField(max_length = 50)   # degree brnach
+    master_college = models.CharField(max_length=50, default = '') 
+    master_branch = models.CharField(max_length=40, default = '') 
+    pre_college = models.CharField(max_length=50, default = '') 
+    pre_branch = models.CharField(max_length=50, default = '') 
     city = models.CharField(max_length = 50, default = 'Bangalore')
-    passout_year = models.IntegerField()
+    passout_year = models.IntegerField(default = 0000)    #degree passout
+    pre_passout =  models.IntegerField(default=0000)    #pre-college passout
+    master_passout =  models.IntegerField(default=0000) #master passout
     about_yourself = models.CharField(max_length=500,null=True)
-    total_experience = models.FloatField()
+    total_experience = models.FloatField() 
     resume_url = models.URLField(null=True)
     skills = models.CharField(max_length=500,default='')    
     profile_pic = models.URLField(default='')
+    language_spoken = models.CharField(max_length = 100, default= '')
 
     def __str__(self):
         return "User {} College {} Branch {} Exp {} url {}".format(self.user,self.college,self.branch,self.total_experience,self.resume_url)
+
 # Function to get the video button in applicants and hrdashboard
     # It will retuen true if the candiadte has passed any interview till now
     def video(self):
@@ -27,6 +35,8 @@ class Fresher(models.Model):
 
         return False
 
+    def experiencevalue(self):
+        return int(self.total_experience)
 
 class Experience(models.Model):
     applicant = models.ForeignKey(Fresher,on_delete=models.CASCADE,related_name='experience')
@@ -48,7 +58,7 @@ class Experience(models.Model):
 class Prfessional(models.Model):
     user            = models.OneToOneField(User,on_delete=models.CASCADE, related_name = 'proaccount')
     company         = models.CharField(max_length=70, null=False)
-    designation     = models.CharField(max_length=60, null=False)
+    designation     = models.CharField(max_length=60, null=False) 
     city            = models.CharField(max_length=60, null=False)
     stream          = models.CharField(max_length = 60,null=False)
     college         = models.CharField(max_length=80, null=False)
@@ -132,7 +142,7 @@ class Expert(models.Model):
     resume  = models.URLField()
     company        = models.CharField(max_length = 100)
     designation    = models.CharField(max_length = 100)
-    experience     = models.FloatField()
+    experience     = models.FloatField()  #in years
     created_on     = models.DateTimeField(auto_now=True)
     profile_pic    = models.URLField()
 
@@ -144,9 +154,9 @@ class Expert(models.Model):
  
 class ProfessionalInterview(models.Model):
     expert = models.ForeignKey(Expert, on_delete = models.CASCADE, related_name='interviewed')
-    pro   = models.OneToOneField(Prfessional, on_delete = models.CASCADE, related_name ='pro_interview')
+    pro   = models.OneToOneField(Prfessional, on_delete = models.CASCADE, related_name ='pro_interview') 
     interview_on = models.DateTimeField() 
-    interview_url = models.URLField()
+    interview_url = models.CharField(max_length = 200, default='')
     topics = models.CharField(max_length = 300)
     comments = models.CharField(max_length = 200)
 

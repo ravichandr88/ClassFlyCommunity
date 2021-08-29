@@ -314,7 +314,7 @@
 </li>
 
 
-<li><a href="#">Browse Candidates</a></li>
+<li><a href="/hr_dash/{{job.id}}">Jobs Posted</a></li>
 <li class="menu-title">
 <span>Jobs Posted</span>
 
@@ -438,12 +438,12 @@
 		
 		<td>
 		<h2 class="table-avatar">
-		<a href="#" class="avatar"><img alt=""  id ="img{{i.id}}" src=""></a>
-		<a href="#"> {{i.user.first_name  }}  {{i.user.last_name}} </a>
+		<a href="/fresher/{{i.user.id}}" class="avatar"><img alt=""  id ="img{{i.id}}" src=""></a>
+		<a href="/fresher/{{i.user.id}}"> {{i.user.first_name  }}  {{i.user.last_name}} </a>
 		</h2> 
 		</td> 
 		<td><a href="smarthr-laravel/html-template/light/job-details.html" name='branch' id="branch{{i.id}}" >{{i.branch}}</a></td>
-		<td><p name='exp' value="{{i.total_experience}}" id="exp{{i.id}}"> {{i.total_experience}} </p> months</td>
+		<td><u name='exp' value="{{i.experiencevalue}}" id="exp{{i.id}}"> {{i.experiencevalue}} </u> months</td>
 		<td class="text-center">
 		<div class="dropdown action-label">
 		<a class="btn btn-white btn-sm btn-rounded " href="#"  onclick="answer({{i.id}})">

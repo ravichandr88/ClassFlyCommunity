@@ -1,10 +1,11 @@
 from django.urls import path
 from . import views
 from . import projects
-
+ 
 
 urlpatterns = [
     path('startpage',views.startpage),
+    path('community/v1',views.startpage),
     path('search_now',views.searchpage),
     path('prologin',views.login_view,name='login_new'),
     path('prohome',views.homepage, name='pro_home'),

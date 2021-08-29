@@ -25,7 +25,6 @@ $(document).ready(function(){
 
   });
 
-  window.cardno = 1;
 
   
   $(document).ready(function(){
@@ -52,8 +51,8 @@ $(document).ready(function(){
         '</cdiv>');
 
       $('#invisible').append("<input name='company"+ window.cardno+ "'  id='company"+ window.cardno+ "' value='"+ company +"' style='display:none'></input>")
-      $('#invisible').append("<input name='designation"+ window.cardno+ "'  id='designation"+ window.cardno+ "'  value='"+ company +"' style='display:none'></input>")
-      $('#invisible').append("<input name='project"+ window.cardno+ "'  id='project"+ window.cardno+ "' value='"+ company +"' style='display:none'></input>")
+      $('#invisible').append("<input name='designation"+ window.cardno+ "'  id='designation"+ window.cardno+ "'  value='"+ designation +"' style='display:none'></input>")
+      $('#invisible').append("<input name='project"+ window.cardno+ "'  id='project"+ window.cardno+ "' value='"+ project +"' style='display:none'></input>")
       $('#invisible').append("<input name='from"+ window.cardno+ "'  id='from"+ window.cardno+ "' value='"+ mon[$('#id_from_Month').val()]+','+ JSON.stringify($('#id_from_Year').val()) +"' style='display:none'></input>")
       $('#invisible').append("<input name='to"+ window.cardno+ "' id='to"+ window.cardno+ "' value='" + mon[$('#id_to_Month').val()]+','+ JSON.stringify($('#id_to_Year').val()) +"' style='display:none'></input>")
       
@@ -77,7 +76,63 @@ $(document).ready(function(){
     });
   });
 
-  
 
-
+ 
 console.log("Started");
+
+
+
+
+
+
+
+
+
+
+/*
+
+@login_required
+def pro_bank(request, edit = 0):
+    # edit = 1 is for updating the bank details
+    form = ProfessionalBankForm()
+    prof = Prfessional.objects.get(user__username = request.user)
+
+    if edit == 1:
+      
+      form.initial['ifsc']              = prof.pro_bank_account.ifsc
+      form.initial['account_number']    = prof.pro_bank_account.account_number
+      form.initial['name']              = prof.pro_bank_account.name
+      form.initial['upi']               = prof.pro_bank_account.upi
+
+    
+    if request.method == 'POST':
+        form = ProfessionalBankForm(request.POST)
+        if form.is_valid():
+          if Prfessional.objects.filter(user__username = request.user).count == 0:
+              return HttpResponse('Sorry you are not signed up for porfessional person')
+
+          pro = Professinal_Account_Details()
+
+          if edit == 1:
+            pro = prof.pro_bank_account
+            
+
+          if Professinal_Account_Details.objects.filter(pro = Prfessional.objects.get(user__username = request.user)).count() != 0:
+              pro = Professinal_Account_Details.objects.get(pro = Prfessional.objects.get(user__username = request.user))
+          
+
+              
+          pro.pro  = Prfessional.objects.get(user__username = request.user)
+          pro.ifsc =           form.cleaned_data['ifsc']
+          pro.account_number = form.cleaned_data['account_number']
+          pro.name =           form.cleaned_data['name']
+          pro.upi  =           form.cleaned_data['upi']
+          
+          pro.save()
+
+          return redirect('pro_dashboard')
+    
+    return render(request,'form.html',context={'form':form})
+
+
+*/

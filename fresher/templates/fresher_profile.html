@@ -1,0 +1,897 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+<meta name="description" content="Smarthr - Bootstrap Admin Template">
+<meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
+<meta name="author" content="Dreamguys - Bootstrap Admin Template">
+<meta name="robots" content="noindex, nofollow">
+<title>Client Profile - HRMS admin template</title>
+
+<link rel="shortcut icon" type="image/x-icon" href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/assets/img/favicon.png">
+<link rel="stylesheet" href="{% static 'hrdash/smarthr-laravel/html-template/light/assets/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'hrdash/smarthr-laravel/html-template/light/assets/css/font-awesome.min.css' %}">
+<link rel="stylesheet" href="{% static 'hrdash/smarthr-laravel/html-template/light/assets/css/line-awesome.min.css' %}">
+<link rel="stylesheet" href="{% static 'hrdash/smarthr-laravel/html-template/light/assets/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'hrdash/smarthr-laravel/html-template/light/assets/css/style.css' %}">
+
+</head>
+<body>
+
+<div class="main-wrapper">
+
+<div class="header">
+
+<div class="header-left">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/index.html" class="logo">
+<img src="#" alt="" width="40" height="40">
+</a>
+</div>
+
+<a id="toggle_btn" href="#">
+<span class="bar-icon">
+<span></span>
+<span></span>
+<span></span>
+</span>
+</a>
+
+<div class="page-title-box">
+<h3>ClassFly</h3>
+</div>
+
+<!-- <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a> -->
+
+<!-- <ul class="nav user-menu">
+
+<li class="nav-item">
+<div class="top-nav-search">
+<a href="javascript:void(0);" class="responsive-search">
+<i class="fa fa-search"></i>
+</a>
+<form action="search.html">
+<input class="form-control" type="text" placeholder="Search here">
+<button class="btn" type="submit"><i class="fa fa-search"></i></button>
+</form>
+</div>
+</li>
+
+
+<li class="nav-item dropdown has-arrow flag-nav">
+<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+<img src="Client%20Profile%20-%20HRMS%20admin%20template_files/us.png" alt="" height="20"> <span>English</span>
+</a>
+<div class="dropdown-menu dropdown-menu-right">
+<a href="javascript:void(0);" class="dropdown-item">
+<img src="Client%20Profile%20-%20HRMS%20admin%20template_files/us.png" alt="" height="16"> English
+</a>
+<a href="javascript:void(0);" class="dropdown-item">
+<img src="Client%20Profile%20-%20HRMS%20admin%20template_files/fr.png" alt="" height="16"> French
+</a>
+<a href="javascript:void(0);" class="dropdown-item">
+<img src="Client%20Profile%20-%20HRMS%20admin%20template_files/es.png" alt="" height="16"> Spanish
+</a>
+<a href="javascript:void(0);" class="dropdown-item">
+<img src="Client%20Profile%20-%20HRMS%20admin%20template_files/de.png" alt="" height="16"> German
+</a>
+</div>
+</li>
+
+
+<li class="nav-item dropdown">
+<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+<i class="fa fa-bell-o"></i> <span class="badge badge-pill">3</span>
+</a>
+<div class="dropdown-menu notifications">
+<div class="topnav-dropdown-header">
+<span class="notification-title">Notifications</span>
+<a href="javascript:void(0)" class="clear-noti"> Clear All </a>
+</div>
+<div class="noti-content">
+<ul class="notification-list">
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/activities.html">
+<div class="media">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-02.jpg">
+</span>
+<div class="media-body">
+<p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
+<p class="noti-time"><span class="notification-time">4 mins ago</span></p>
+</div>
+</div>
+</a>
+</li>
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/activities.html">
+<div class="media">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-03.jpg">
+</span>
+<div class="media-body">
+<p class="noti-details"><span class="noti-title">Tarah Shropshire</span> changed the task name <span class="noti-title">Appointment booking with payment gateway</span></p>
+<p class="noti-time"><span class="notification-time">6 mins ago</span></p>
+</div>
+</div>
+</a>
+</li>
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/activities.html">
+<div class="media">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-06.jpg">
+</span>
+<div class="media-body">
+<p class="noti-details"><span class="noti-title">Misty Tison</span> added <span class="noti-title">Domenic Houston</span> and <span class="noti-title">Claire Mapes</span> to project <span class="noti-title">Doctor available module</span></p>
+<p class="noti-time"><span class="notification-time">8 mins ago</span></p>
+</div>
+</div>
+</a>
+</li>
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/activities.html">
+<div class="media">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-17.jpg">
+</span>
+<div class="media-body">
+<p class="noti-details"><span class="noti-title">Rolland Webber</span> completed task <span class="noti-title">Patient and Doctor video conferencing</span></p>
+<p class="noti-time"><span class="notification-time">12 mins ago</span></p>
+</div>
+</div>
+</a>
+</li>
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/activities.html">
+<div class="media">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-13.jpg">
+</span>
+<div class="media-body">
+<p class="noti-details"><span class="noti-title">Bernardo Galaviz</span> added new task <span class="noti-title">Private chat module</span></p>
+<p class="noti-time"><span class="notification-time">2 days ago</span></p>
+</div>
+</div>
+</a>
+</li>
+</ul>
+</div>
+<div class="topnav-dropdown-footer">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/activities.html">View all Notifications</a>
+</div>
+</div>
+</li>
+
+
+<li class="nav-item dropdown">
+<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+<i class="fa fa-comment-o"></i> <span class="badge badge-pill">8</span>
+</a>
+<div class="dropdown-menu notifications">
+<div class="topnav-dropdown-header">
+<span class="notification-title">Messages</span>
+<a href="javascript:void(0)" class="clear-noti"> Clear All </a>
+</div>
+<div class="noti-content">
+<ul class="notification-list">
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/chat.html">
+ <div class="list-item">
+<div class="list-left">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-09.jpg">
+</span>
+</div>
+<div class="list-body">
+<span class="message-author">Richard Miles </span>
+<span class="message-time">12:28 AM</span>
+<div class="clearfix"></div>
+<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+</div>
+</div>
+</a>
+</li>
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/chat.html">
+<div class="list-item">
+<div class="list-left">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-02.jpg">
+</span>
+</div>
+<div class="list-body">
+<span class="message-author">John Doe</span>
+<span class="message-time">6 Mar</span>
+<div class="clearfix"></div>
+<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+</div>
+</div>
+</a>
+</li>
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/chat.html">
+<div class="list-item">
+<div class="list-left">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-03.jpg">
+</span>
+</div>
+<div class="list-body">
+<span class="message-author"> Tarah Shropshire </span>
+<span class="message-time">5 Mar</span>
+<div class="clearfix"></div>
+<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+</div>
+</div>
+</a>
+</li>
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/chat.html">
+<div class="list-item">
+<div class="list-left">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-05.jpg">
+</span>
+</div>
+<div class="list-body">
+<span class="message-author">Mike Litorus</span>
+<span class="message-time">3 Mar</span>
+<div class="clearfix"></div>
+<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+</div>
+</div>
+</a>
+</li>
+<li class="notification-message">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/chat.html">
+<div class="list-item">
+<div class="list-left">
+<span class="avatar">
+<img alt="" src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-08.jpg">
+</span>
+</div>
+<div class="list-body">
+<span class="message-author"> Catherine Manseau </span>
+<span class="message-time">27 Feb</span>
+<div class="clearfix"></div>
+<span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
+</div>
+</div>
+</a>
+</li>
+</ul>
+</div>
+<div class="topnav-dropdown-footer">
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/chat.html">View all Messages</a>
+</div>
+</div>
+</li>
+
+<li class="nav-item dropdown has-arrow main-drop">
+<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+<span class="user-img"><img src="Client%20Profile%20-%20HRMS%20admin%20template_files/avatar-21.jpg" alt="">
+<span class="status online"></span></span>
+<span>Admin</span>
+</a>
+<div class="dropdown-menu">
+<a class="dropdown-item" href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/profile.html">My Profile</a>
+<a class="dropdown-item" href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/settings.html">Settings</a>
+<a class="dropdown-item" href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/login.html">Logout</a>
+</div>
+</li>
+</ul> -->
+
+
+<div class="dropdown mobile-user-menu">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+<div class="dropdown-menu dropdown-menu-right">
+<a class="dropdown-item" href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/profile.html">My Profile</a>
+<a class="dropdown-item" href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/settings.html">Settings</a>
+<a class="dropdown-item" href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/login.html">Logout</a>
+</div>
+</div>
+
+</div>
+
+
+<!-- <div class="sidebar" id="sidebar">
+<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: 100%; height: 715px;"><div class="sidebar-inner slimscroll" style="overflow: hidden; width: 100%; height: 715px;">
+<div id="sidebar-menu" class="sidebar-menu">
+<ul>
+<li class="menu-title">
+<span>Main</span>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-dashboard"></i> <span> Dashboard</span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/index.html">Admin Dashboard</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/employee-dashboard.html">Employee Dashboard</a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-cube"></i> <span> Apps</span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/chat.html">Chat</a></li>
+<li class="submenu">
+<a href="#"><span> Calls</span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/voice-call.html">Voice Call</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/video-call.html">Video Call</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/outgoing-call.html">Outgoing Call</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/incoming-call.html">Incoming Call</a></li>
+</ul>
+</li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/events.html">Calendar</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/contacts.html">Contacts</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/inbox.html">Email</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/file-manager.html">File Manager</a></li>
+</ul>
+</li>
+<li class="menu-title">
+<span>Employees</span>
+</li>
+<li class="submenu">
+<a href="#" class="noti-dot"><i class="la la-user"></i> <span> Employees</span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/employees.html">All Employees</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/holidays.html">Holidays</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/leaves.html">Leaves (Admin) <span class="badge badge-pill bg-primary float-right">1</span></a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/leaves-employee.html">Leaves (Employee)</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/leave-settings.html">Leave Settings</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/attendance.html">Attendance (Admin)</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/attendance-employee.html">Attendance (Employee)</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/departments.html">Departments</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/designations.html">Designations</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/timesheet.html">Timesheet</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/shift-scheduling.html">Shift &amp; Schedule</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/overtime.html">Overtime</a></li>
+</ul>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/clients.html"><i class="la la-users"></i> <span>Clients</span></a>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-rocket"></i> <span> Projects</span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/projects.html">Projects</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/tasks.html">Tasks</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/task-board.html">Task Board</a></li>
+</ul>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/leads.html"><i class="la la-user-secret"></i> <span>Leads</span></a>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/tickets.html"><i class="la la-ticket"></i> <span>Tickets</span></a>
+</li>
+<li class="menu-title">
+<span>HR</span>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-files-o"></i> <span> Sales </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/estimates.html">Estimates</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/invoices.html">Invoices</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/payments.html">Payments</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/expenses.html">Expenses</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/provident-fund.html">Provident Fund</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/taxes.html">Taxes</a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-files-o"></i> <span> Accounting </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/categories.html">Categories</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/budgets.html">Budgets</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/budget-expenses.html">Budget Expenses</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/budget-revenues.html">Budget Revenues</a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-money"></i> <span> Payroll </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/salary.html"> Employee Salary </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/salary-view.html"> Payslip </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/payroll-items.html"> Payroll Items </a></li>
+</ul>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/policies.html"><i class="la la-file-pdf-o"></i> <span>Policies</span></a>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-pie-chart"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/expense-reports.html"> Expense Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/invoice-reports.html"> Invoice Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/payments-reports.html"> Payments Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/project-reports.html"> Project Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/task-reports.html"> Task Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/user-reports.html"> User Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/employee-reports.html"> Employee Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/payslip-reports.html"> Payslip Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/attendance-reports.html"> Attendance Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/leave-reports.html"> Leave Report </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/daily-reports.html"> Daily Report </a></li>
+</ul>
+</li>
+<li class="menu-title">
+<span>Performance</span>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-graduation-cap"></i> <span> Performance </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/performance-indicator.html"> Performance Indicator </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/performance.html"> Performance Review </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/performance-appraisal.html"> Performance Appraisal </a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-crosshairs"></i> <span> Goals </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/goal-tracking.html"> Goal List </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/goal-type.html"> Goal Type </a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-edit"></i> <span> Training </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/training.html"> Training List </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/trainers.html"> Trainers</a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/training-type.html"> Training Type </a></li>
+</ul>
+</li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/promotion.html"><i class="la la-bullhorn"></i> <span>Promotion</span></a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/resignation.html"><i class="la la-external-link-square"></i> <span>Resignation</span></a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/termination.html"><i class="la la-times-circle"></i> <span>Termination</span></a></li>
+<li class="menu-title">
+<span>Administration</span>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/assets.html"><i class="la la-object-ungroup"></i> <span>Assets</span></a>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-briefcase"></i> <span> Jobs </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/user-dashboard.html"> User Dasboard </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/jobs-dashboard.html"> Jobs Dasboard </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/jobs.html"> Manage Jobs </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/manage-resumes.html"> Manage Resumes </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/shortlist-candidates.html"> Shortlist Candidates </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/interview-questions.html"> Interview Questions </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/offer_approvals.html"> Offer Approvals </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/experiance-level.html"> Experience Level </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/candidates.html"> Candidates List </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/schedule-timing.html"> Schedule timing </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/apptitude-result.html"> Aptitude Results </a></li>
+</ul>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/knowledgebase.html"><i class="la la-question"></i> <span>Knowledgebase</span></a>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/activities.html"><i class="la la-bell"></i> <span>Activities</span></a>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/users.html"><i class="la la-user-plus"></i> <span>Users</span></a>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/settings.html"><i class="la la-cog"></i> <span>Settings</span></a>
+</li>
+<li class="menu-title">
+<span>Pages</span>
+</li>
+<li class="submenu">
+<a href="#" class="active subdrop"><i class="la la-user"></i> <span> Profile </span> <span class="menu-arrow"></span></a>
+<ul style="display: block;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/profile.html"> Employee Profile </a></li>
+<li><a class="active" href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/client-profile.html"> Client Profile </a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-key"></i> <span> Authentication </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/login.html"> Login </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/register.html"> Register </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/forgot-password.html"> Forgot Password </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/otp.html"> OTP </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/lock-screen.html"> Lock Screen </a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-exclamation-triangle"></i> <span> Error Pages </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/error-404.html">404 Error </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/error-500.html">500 Error </a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-hand-o-up"></i> <span> Subscriptions </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/subscriptions.html"> Subscriptions (Admin) </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/subscriptions-company.html"> Subscriptions (Company) </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/subscribed-companies.html"> Subscribed Companies</a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-columns"></i> <span> Pages </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/search.html"> Search </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/faq.html"> FAQ </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/terms.html"> Terms </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/privacy-policy.html"> Privacy Policy </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/blank-page.html"> Blank Page </a></li>
+</ul>
+</li>
+<li class="menu-title">
+<span>UI Interface</span>
+</li>
+<li>
+<a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/components.html"><i class="la la-puzzle-piece"></i> <span>Components</span></a>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-object-group"></i> <span> Forms </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/form-basic-inputs.html">Basic Inputs </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/form-input-groups.html">Input Groups </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/form-horizontal.html">Horizontal Form </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/form-vertical.html"> Vertical Form </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/form-mask.html"> Form Mask </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/form-validation.html"> Form Validation </a></li>
+</ul>
+</li>
+<li class="submenu">
+<a href="#"><i class="la la-table"></i> <span> Tables </span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/tables-basic.html">Basic Tables </a></li>
+<li><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/data-tables.html">Data Table </a></li>
+</ul>
+</li>
+<li class="menu-title">
+<span>Extras</span>
+</li>
+<li>
+<a href="#"><i class="la la-file-text"></i> <span>Documentation</span></a>
+</li>
+<li>
+<a href="javascript:void(0);"><i class="la la-info"></i> <span>Change Log</span> <span class="badge badge-primary ml-auto">v3.4</span></a>
+</li>
+<li class="submenu">
+<a href="javascript:void(0);"><i class="la la-share-alt"></i> <span>Multi Level</span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li class="submenu">
+<a href="javascript:void(0);"> <span>Level 1</span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="javascript:void(0);"><span>Level 2</span></a></li>
+<li class="submenu">
+<a href="javascript:void(0);"> <span> Level 2</span> <span class="menu-arrow"></span></a>
+<ul style="display: none;">
+<li><a href="javascript:void(0);">Level 3</a></li>
+<li><a href="javascript:void(0);">Level 3</a></li>
+</ul>
+</li>
+<li><a href="javascript:void(0);"> <span>Level 2</span></a></li>
+</ul>
+</li>
+<li>
+<a href="javascript:void(0);"> <span>Level 1</span></a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div><div class="slimScrollBar" style="background: rgb(204, 204, 204) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 306.306px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+</div> -->
+
+
+<div class="page-wrapper" style="min-height: 775px;">
+
+<div class="content container-fluid">
+
+<div class="page-header">
+<div class="row">
+<div class="col-sm-12">
+<h3 class="page-title">Profile</h3>
+<ul class="breadcrumb">
+<li class="breadcrumb-item"><a href="https://smarthr.dreamguystech.com/smarthr-laravel/html-template/light/index.html">Dashboard</a></li>
+<li class="breadcrumb-item active">Profile</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="card mb-0">
+<div class="card-body">
+<div class="row">
+<div class="col-md-12">
+<div class="profile-view">
+<div class="profile-img-wrap">
+<div class="profile-img">
+<a href="">
+<img src="#" alt="" id="pro_pic">
+</a>
+</div>
+</div>
+<div class="profile-basic">
+<div class="row">
+<div class="col-md-5">
+<div class="profile-info-left">
+<h3 class="user-name m-t-0"> {{pro_user.first_name}}</h3>
+<h5 class="company-role m-t-0 mb-0">Pre College: {{fresher.pre_college}}</h5>
+
+<div class="staff-id">Stream: {{fresher.pre_branch}} </div>
+<small class="text-muted">Passout Year: {{fresher.pre_passout}} </small>
+<br><br>
+<h5 class="company-role m-t-0 mb-0">College: {{fresher.college}}</h5>
+<div class="staff-id">Stream: {{fresher.branch}} </div>
+<small class="text-muted">Passout Year: {{fresher.passout_year}} </small>
+<br><br>
+<h5 class="company-role m-t-0 mb-0">Master College: {{fresher.master_college}}</h5>
+
+<div class="staff-id">Stream: {{fresher.master_branch}} </div>
+<small class="text-muted">Passout Year: {{fresher.master_passout}} </small>
+<br><br>
+
+<br>
+<div class="staff-id">Experience: {{fresher.experiencevalue | default:"0"}} months. </div>
+
+
+<div class="staff-msg"><a href="#" class="btn btn-custom">Send Message</a></div>
+{% if fresher.video %}
+<div class="staff-msg"><a href="/player_now/{{fresher.video}}" class="btn btn-custom">Interview Video</a></div>
+{% else %}
+<h5>Not interviewed Yet</h5>
+{% endif %}
+<!-- <div class="staff-msg"><a href="/book/{{fresher.user.id}}" class="btn btn-custom">Book Interview</a></div> -->
+
+</div>
+</div>
+
+<div class="col-md-7">
+<ul class="personal-info">
+<li>
+<span class="title">Skills Interviewed:</span> 
+<span class="text"><a href="#">{{fresher.skills}}</a></span>
+</li>
+
+<li>
+<span class="title">City:</span>
+<span class="text">{{fresher.city}}</span>
+</li>
+<li>
+        <span class="title">Language Spoken:</span>
+        <span class="text">{{fresher.language_spoken }}</span>
+</li>
+<li>
+        <span class="title">About:</span>
+        <span class="text">{{fresher.about_yourself}}</span>
+</li>
+
+
+</ul>
+</div> 
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="card tab-box">
+<div class="row user-tabs">
+<div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
+<ul class="nav nav-tabs nav-tabs-bottom">
+<li class="nav-item col-sm-3"><a class="nav-link active" data-toggle="tab" href="#myprojects">Experience</a></li>
+<!-- <li class="nav-item col-sm-3"><a class="nav-link" data-toggle="tab" href="#tasks">Tasks</a></li> -->
+</ul>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-lg-12">
+<div class="tab-content profile-tab-content">
+
+<div id="myprojects" class="tab-pane fade show active">
+<div class="row">
+
+{% for i in fresher.experience.all %}
+<div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
+<div class="card">
+<div class="card-body">
+
+
+<h4 class="project-title"><a href="#">{{i.exp_company}}</a></h4>
+<h5>{{i.exp_work}}</h5>
+<!-- <p class="text-muted">{{i.project}}
+</p> -->
+
+<div class="pro-deadline m-b-15">
+<div class="sub-title">
+Period: {{i.exp_period}} months.
+</div>
+
+</div>
+
+
+
+
+</div>
+</div>
+</div>
+
+{% endfor %}
+
+</div>
+</div>
+
+
+
+<!-- <div id="tasks" class="tab-pane fade">
+<div class="project-task">
+<ul class="nav nav-tabs nav-tabs-top nav-justified mb-0">
+<li class="nav-item"><a class="nav-link active" href="#all_tasks" data-toggle="tab" aria-expanded="true">All Tasks</a></li>
+<li class="nav-item"><a class="nav-link" href="#pending_tasks" data-toggle="tab" aria-expanded="false">Pending Tasks</a></li>
+<li class="nav-item"><a class="nav-link" href="#completed_tasks" data-toggle="tab" aria-expanded="false">Completed Tasks</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane show active" id="all_tasks">
+<div class="task-wrapper">
+<div class="task-list-container">
+<div class="task-list-body">
+<ul id="task-list">
+<li class="task">
+<div class="task-container">
+<span class="task-action-btn task-check">
+<span class="action-circle large complete-btn" title="Mark Complete">
+<i class="material-icons">check</i>
+</span>
+</span>
+<span class="task-label" contenteditable="true">Patient appointment booking</span>
+<span class="task-action-btn task-btn-right">
+ <span class="action-circle large" title="Assign">
+<i class="material-icons">person_add</i>
+</span>
+<span class="action-circle large delete-btn" title="Delete Task">
+<i class="material-icons">delete</i>
+</span>
+</span>
+</div>
+</li>
+<li class="task">
+<div class="task-container">
+<span class="task-action-btn task-check">
+<span class="action-circle large complete-btn" title="Mark Complete">
+<i class="material-icons">check</i>
+</span>
+</span>
+<span class="task-label" contenteditable="true">Appointment booking with payment gateway</span>
+<span class="task-action-btn task-btn-right">
+<span class="action-circle large" title="Assign">
+<i class="material-icons">person_add</i>
+</span>
+<span class="action-circle large delete-btn" title="Delete Task">
+<i class="material-icons">delete</i>
+</span>
+</span>
+</div>
+</li>
+<li class="completed task">
+<div class="task-container">
+<span class="task-action-btn task-check">
+<span class="action-circle large complete-btn" title="Mark Complete">
+<i class="material-icons">check</i>
+</span>
+</span>
+<span class="task-label">Doctor available module</span>
+<span class="task-action-btn task-btn-right">
+<span class="action-circle large" title="Assign">
+<i class="material-icons">person_add</i>
+</span>
+<span class="action-circle large delete-btn" title="Delete Task">
+<i class="material-icons">delete</i>
+</span>
+</span>
+</div>
+</li>
+<li class="task">
+<div class="task-container">
+<span class="task-action-btn task-check">
+<span class="action-circle large complete-btn" title="Mark Complete">
+<i class="material-icons">check</i>
+</span>
+</span>
+<span class="task-label" contenteditable="true">Patient and Doctor video conferencing</span>
+<span class="task-action-btn task-btn-right">
+<span class="action-circle large" title="Assign">
+<i class="material-icons">person_add</i>
+</span>
+<span class="action-circle large delete-btn" title="Delete Task">
+<i class="material-icons">delete</i>
+</span>
+</span>
+</div>
+</li>
+<li class="task">
+<div class="task-container">
+<span class="task-action-btn task-check">
+<span class="action-circle large complete-btn" title="Mark Complete">
+<i class="material-icons">check</i>
+</span>
+</span>
+<span class="task-label" contenteditable="true">Private chat module</span>
+<span class="task-action-btn task-btn-right">
+<span class="action-circle large" title="Assign">
+<i class="material-icons">person_add</i>
+</span>
+<span class="action-circle large delete-btn" title="Delete Task">
+<i class="material-icons">delete</i>
+</span>
+</span>
+</div>
+</li>
+<li class="task">
+<div class="task-container">
+<span class="task-action-btn task-check">
+<span class="action-circle large complete-btn" title="Mark Complete">
+<i class="material-icons">check</i>
+</span>
+</span>
+<span class="task-label" contenteditable="true">Patient Profile add</span>
+<span class="task-action-btn task-btn-right">
+<span class="action-circle large" title="Assign">
+<i class="material-icons">person_add</i>
+</span>
+<span class="action-circle large delete-btn" title="Delete Task">
+<i class="material-icons">delete</i>
+</span>
+</span>
+</div>
+</li>
+</ul>
+</div>
+<div class="task-list-footer">
+<div class="new-task-wrapper">
+<textarea id="new-task" placeholder="Enter new task here. . ."></textarea>
+<span class="error-message hidden">You need to enter a task first</span>
+<span class="add-new-task-btn btn" id="add-task">Add Task</span>
+<span class="btn" id="close-task-panel">Close</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div> -->
+
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/jquery-3.5.1.min.js' %}"></script>
+
+<script>
+
+var url = "{{fresher.profile_pic}}";
+
+    fetch(url).then(function(response) {
+    response.text().then(function(text)
+    {document.getElementById('pro_pic').src = text;});});
+
+</script>
+<script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/popper.min.js' %}"></script>
+<script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/select2.min.js' %}"></script>
+<script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/app.js' %}"></script>
+
+</body>
+</html>

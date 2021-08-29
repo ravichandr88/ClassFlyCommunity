@@ -39,7 +39,7 @@
 	<script src="{% static 'prosignup/script.js' %}"></script>	
 </head>
 <body>
-
+ 
 	
 		{{ form.media }}
 
@@ -53,7 +53,7 @@
 
 				<form class="login100-form validate-form" method="POST" action=""  >
 					<span class="login100-form-title">
-						ClassFly Professional
+						{{ title |default:' ClassFly Professional' }}
 						<br>
 						<p>{{message | safe}}</p>
 					</span>
@@ -119,7 +119,14 @@
 		</div>
 	</div>
 	
-	
+
+	<!-- code for upating experience -->
+	<script>
+	window.cardno = parseInt('{{card_no}}');
+	console.log('Done');
+	</script>
+
+
 
 	
 <!--===============================================================================================-->	
@@ -143,6 +150,25 @@
 	<script>
 	{{js_code | safe}}
 	</script>
+
+	<!-- code used for updating the experience of Professional -->
+	
+	<script>
+		$(document).ready(function(){
+			
+	{% for i in experienc %}
+
+	console.log('Entered to the loops');
+	  $('#invisible').append('<input name="company{{ forloop.counter }}"  id="company{{forloop.counter}}" value="{{i.company}}" style="display:none"></input>');
+      $('#invisible').append("<input name='designation{{ forloop.counter }}'  id='designation{{forloop.counter}}'  value='{{i.designation}}' style='display:none'></input>")
+      $('#invisible').append("<input name='project{{ forloop.counter }}'  id='project{{forloop.counter}}' value='{{i.project}}' style='display:none'></input>")
+      $('#invisible').append("<input name='from{{ forloop.counter }}'  id='from{{forloop.counter}}' value='{{i.cfrom}}' style='display:none'></input>")
+      $('#invisible').append("<input name='to{{ forloop.counter }}' id='to{{forloop.counter}}' value='{{i.cto}}' style='display:none'></input>")
+		
+	  {% endfor %} 
+
+	});
+	  </script>
 
 
 <!-- <div class="card" style="width: 18rem;">

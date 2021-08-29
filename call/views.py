@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
-import requests
+import requests 
 import json
 from datetime import timedelta
 from django.conf import settings
@@ -24,6 +24,7 @@ from botocore.client import Config
 
 from fresher.models import ProFrehserMeeting, Meeting, MeetingActive
 from interview.models import Prfessional, Fresher
+from .forms import MeetingFeedbackForm
 # from .models import 
 
 # Contains one SMS call REST API
@@ -124,7 +125,7 @@ def videocall(request):
     
     if Prfessional.objects.filter(id =  meeting.prof.id).count() == 1 and request.session['category'] == 'p':
         user = 'prof'
-
+        print(user)
 
     elif Fresher.objects.filter(user__username = request.user).count() == 1 and request.session['category'] == 'f':
         user = 'fresher'
@@ -162,8 +163,8 @@ def videocall(request):
     if request.session['category'] == 'f' and not(meet_details.pro_joined) :
         # default varibel to pass the html page
         # if professional has not joined, then redirect to waiting room
-        remain = datetime.datetime.now()
-        now    = datetime.datetime.now()
+        remain = timezone.now()
+        now    = timezone.now()
 
         waiting_room = 'True' # Which supoorts te decision to make sure we call server evry 30 seconds to know whether the professional have joined the meeting or not.
        
@@ -213,13 +214,14 @@ def videocall(request):
     'mid'           : meeting.meeting_status.id,
     'pfmid'         : meeting.id,
     #Code the auto connect the user, if disconnected for any reason 
-    'auto_connect'  : True if  timezone.now() < meeting.meeting_details.record_stop_time  else False 
+    'auto_connect'  : True if   meeting.meeting_details.record_stop_time != None and timezone.now() < meeting.meeting_details.record_stop_time else False 
     }
 
     print('line 218===',data['auto_connect'])
 
-    return render(request,'videocall/call.html',context = data)
+    # return render(request,'videocall/call.html',context = data)
 
+    return render(request,'videocall.html',context = data)
 
 
 # API call for professional to inform about  joining  the meeting
@@ -431,11 +433,12 @@ def meeting_status(request,aid, mid, pfmid,t = 0): # aid (account id) -> Profess
 
         return Response( data={'message':'Not related to anything team '}, status = 400 )
     
-
-    # Code to check whether the time is over for the meeting
-    if timezone.now() > meeting.record_stop_time:
-        return Response(data={'message':'stop'})
-
+    try:
+        # Code to check whether the time is over for the meeting
+        if  timezone.now() > meeting.record_stop_time:
+            return Response(data={'message':'stop'})
+    except:
+        pass
     meeting.save() 
 
     data={
@@ -716,7 +719,44 @@ def after_record(request,pfmid):
     return render(request,'after_record.html',context={'form':{},'pfmid':pfmid})
 
 
+def meeting_feedback(request,mid=0):
 
+    form = MeetingFeedbackForm()
+
+    # check for meeting id
+    if ProFrehserMeeting.objects.filter(id = mid).count() == 0 :
+         raise Http404
+    
+    meeting = ProFrehserMeeting.objects.get(id = mid)
+
+    if len(meeting.feedback) > 3:
+        form.initial['result'] = ('Passed','pass') if meeting.passed else ('Failed','fail')
+        form.initial['skills'] = meeting.fresher.skills
+        form.initial['feedback'] = meeting.feedback
+
+    
+    try:
+        if meeting.meeting_details.record_stop_time > timezone.now() + timezone.timedelta(minutes = 40):
+            return HttpResponse('You have already submitted the feedback')
+    except:
+            raise Http404
+
+    if request.method == 'POST':
+        form = MeetingFeedbackForm(request.POST)
+
+
+        if form.is_valid():
+
+            meeting.feedback = form.cleaned_data['feedback']
+            meeting.passed =True if form.cleaned_data['result'] == 'pass' else False
+            meeting.fresher.skills = form.cleaned_data['skills']
+
+            meeting.save()
+
+            return redirect('pro_dashboard')
+    print(form.errors.as_text)
+    title = 'Feedback'
+    return render(request,'dform.html',context={'form':form,'title':title})    #useapp templates signupcopy.html
 
 
 

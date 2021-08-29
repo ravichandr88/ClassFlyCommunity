@@ -1,3 +1,7 @@
+//global job delete id variable
+var job_id = 0;
+
+
 
 // code for the expansion of the answers by the applicants
 function answer(id)
@@ -324,3 +328,26 @@ function global_filter()
 
 }
 
+
+
+function delete_job_post()
+{
+    $(document).ready(function(){
+        $.get("/jobpost_delete/"+job_id, function(data, status_code){
+    
+        if(data.message == 'success')
+        {
+            job_id = 0;
+            window.location.reload();
+        }
+    })
+});
+    
+}
+
+
+function delete_job_id(id)
+{
+    job_id = id;
+
+}

@@ -9,6 +9,7 @@ from django.db.models import Q
 
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
 
 
 from rest_framework.decorators import api_view
@@ -16,7 +17,7 @@ from rest_framework.response import Response
 
 from .models import Jobpost, Applicantion, FresherInvited
 from fresher.models import ProFrehserMeeting, Meeting, MeetingActive
-from interview.models import Prfessional, Fresher, HRaccount, Company
+from interview.models import Prfessional, Fresher, HRaccount, Company, ProfessionalInterview
 from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect,Http404
 
 import json
@@ -25,13 +26,18 @@ import json
 def hraccount(function):
     # @wraps(function)
     def inner(request, *args, **kwargs):
+        
         user = User.objects.get(username = request.user)
-
+        
         if HRaccount.objects.filter(user = user).count() == 1 :
             
             if Company.objects.filter(created_by = user).count() == 1 and  Company.objects.get(created_by = user).verified :
 
                 return function(request, **kwargs)
+
+            elif not Company.objects.get(created_by = user).verified:
+
+                return HttpResponse('HR account not activated, Still verifying under process.')
         
         return HttpResponse('Not a HR account ')
 
@@ -55,27 +61,40 @@ def skillsmatch(job,fresher):
 # Create your views here.
 # REST API
 
-def video_player(request,pfmid = 3):
+def video_player(request,pfmid = 3, prof=False):
+
+    resp = ''
+    if not prof :
+        if ProFrehserMeeting.objects.filter(id = pfmid).count() == 0:
+            print('line 17')
+            raise Http404
+        
+        pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
+
+        try:
+            resp = get_video_otp(pro_meeting.meeting_details.vdo_id)
+
+            if str(resp.status_code) != '200':
+                print(resp.json()) 
+                raise Http404
+        except:        
+            return HttpResponse('Not yet interviewed')
+
+        
+        
+    else:
+        try:
+            pro = ProfessionalInterview.objects.get(id = pfmid)
+            
+            resp = get_video_otp(pro.interview_url)
+
+            if str(resp.status_code) != '200':
+                raise Http404
+        except:
+            return HttpResponse('Not yet interviewed')
 
 
-    if ProFrehserMeeting.objects.filter(id = pfmid).count() == 0:
-        print('line 17')
-        raise Http404
-    
-    pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
-
-    if pro_meeting.meeting_details.vdo_id is  None:
-        return HttpResponse('Not yet interviewed')
-
-    resp = get_video_otp(pro_meeting.meeting_details.vdo_id)
-
-    if str(resp.status_code) != '200':
-        print(resp.json()) 
-        raise Http404
-
-     
     return render(request,'videoplayer_now.html', context={'otp':resp.json()['otp'],'playbackInfo':resp.json()['playbackInfo']})
-
 
 
 
@@ -109,14 +128,14 @@ def hr_dashboard(request, id = '', skill='', status = 0):
     
         
 
-
     hr = HRaccount.objects.get(user__username = request.user)
-    jobs = hr.job_posted.filter(active= True)
+    jobs = hr.job_posted.filter(active= True,deleted = False)
     
+  
     applicants = jobs[0].applicants.filter(available = True) if len(jobs) > 0 else [] 
-
     
-    if id != '' and hr.job_posted.filter(id=id).count() != 0:
+    
+    if id != '' and hr.job_posted.filter(id=id,deleted = False).count() != 0:
         
         
         applicants = hr.job_posted.get(id = id).applicants.filter(available = True)
@@ -133,12 +152,12 @@ def hr_dashboard(request, id = '', skill='', status = 0):
     # Filter the applicants based on the skills
     skills =  skill.split(',')
 
+    if len(applicants) > 0:
+        applicants = applicants.filter(fresher__skills__icontains = skills[0]) #filter to get required skills
 
-    applicants = applicants.filter(fresher__skills__icontains = skills[0]) #filter to get required skills
-
-
-    for i in skills[1:]:
-        applicants = applicants | applicants.filter(fresher__skills__icontains = i) 
+    
+        for i in skills[1:]:
+            applicants = applicants | applicants.filter(fresher__skills__icontains = i) 
 
 
     # status -> 1 -> select, 2 -> short, 3 -> reject
@@ -159,12 +178,12 @@ def hr_dashboard(request, id = '', skill='', status = 0):
                 applicants = applicants.filter(~Q(id=i.id))
                 break
             
-    
+    print(job)
     data={
         'jobs':jobs,
         'pass_applicants':pass_applicants,
         'applicants':applicants,
-        'job_id':job.id,
+        'job_id':'' if job == '' else job.id,
         'job':job,
         'skills':skill 
     }
@@ -189,7 +208,7 @@ def applicants_search(request,id=0,skill = ''):
         raise Http404
 
     
-    jobs = hr.job_posted.filter(active = True)    # this onject list is used for labeling about which wjob is being shown in the webpage
+    jobs = hr.job_posted.filter(active = True, deleted = False)    # this onject list is used for labeling about which wjob is being shown in the webpage
     job = jobs.get(id = id)
 
     #Instead of applicants for the job posted, we will be showing the candidates list for
@@ -267,12 +286,26 @@ def jobpost(request):
                 qu2             =  form.cleaned_data['question2'],
                 qu3             =  form.cleaned_data['question3']
             ).save()
-
+            return redirect('hrdashboard')
         
     data = {'form':form,
             'title':'Post a Job'}
     return render(request, 'formpage.html', context=data)
 
+@login_required
+@hraccount
+@api_view(['GET'])
+def delete_jobpost(request,id):
+    if Jobpost.objects.filter(id = id).count() == 0:
+        return Response(data={'message':'Job post not found '}, status=400)
+    
+    job = Jobpost.objects.get(id=id)
+
+    job.deleted = True
+    job.deleted_date = timezone.now()
+    job.save()
+
+    return Response(data={'message':'success'})
 
 #  to see the posted job in detail
 @login_required
@@ -282,13 +315,18 @@ def jobdetails(request,id = 0):
         raise Http404
     
     if Jobpost.objects.filter(id = id).count() == 0:
-        return render(request, 'formpage.html', context={'title':'Job not Found'})
+        return render(request, 'formpage.html', context={'title':'Job not Found','submit':False})   #'submit' is for showing go back button title
+    
     
     job =  Jobpost.objects.get(id = id)
 
     company = Company.objects.get(created_by = job.hr.user)
 
     form = JobApplyForm(ques1=job.qu1,ques2=job.qu2,ques3=job.qu3)
+    
+    if job.applicants.filter(fresher__user__username = 'bunny').count() == 1:
+        form = None
+        # return render(request, 'formpage.html', context={'title':'You already applied','submit':False})
     
     data={
         'title':job.designation,
@@ -335,8 +373,13 @@ def jobdetails(request,id = 0):
                 ans3        = request.POST['question3']
             ).save()
 
-    
-    
+        if FresherInvited.objects.filter(job = job, fresher = fresher).count() != 0:
+            freshinvite = FresherInvited.objects.get(job = job, fresher = fresher)
+            freshinvite.accepted = True
+            freshinvite.save()
+        
+        return redirect('jobsearh')
+
     return render(request, 'formpage.html', context=data)
 
 
@@ -440,3 +483,26 @@ def invite_email(job_url,to_email):
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [to_email, ]
     send_mail( subject, message, email_from, recipient_list )
+
+
+
+@login_required
+def jobs_applied(request):
+    
+    if Fresher.objects.filter(user__username = request.user).count() == 0:
+        raise Http404
+    fresher  = Fresher.objects.get(user__username = request.user)
+    applicants =[i for i in fresher.jobs_applied.all()]
+    invited_jobs = fresher.invited_to.filter(accepted = False)
+
+    data={
+        'jobs':applicants,
+        'invitations':invited_jobs,
+        'applicants':applicants,
+        'job_id':'',
+        'job':None,
+        'skills':[] 
+    }
+
+    return render(request, 'jobs_applied.html', context = data)
+

@@ -62,7 +62,7 @@ def signup(request,type="student"):
         return redirect('pro_home')
 
     # Signup candidate type of registration, -> student,proessional,company
-    request.type = type
+    request.session['type'] = type
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -199,17 +199,15 @@ def email_otp(request):
 
                     emailotp.requedsted = False
                 #after successful signup, redirect user based on type from request, -> student,professional,company
-                    if request.type == 'student':
+                    if request.session['type'] == 'student':
                         return redirect('student')
                     
-                    elif request.type == 'professional':
+                    elif request.session['type'] == 'professional':
                         return redirect('professional')
 
-                    else:
+                    else: 
                         return redirect('company')
 
-
-   
 
     return render(request,'signupcopy.html', context={'form':form})
 
@@ -285,7 +283,7 @@ def login_view(request):
             return render(request,'signupcopy.html',context={'form':form})
 
     form = LoginForm()
-    return render(request,'signupcopy.html',context={'form':form})
+    return render(request,'signupcopy.html',context={'form':form,'title':'Login'})
 
 
 @login_required

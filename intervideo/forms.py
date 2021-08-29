@@ -19,10 +19,7 @@ class BootstrapModelForm(forms.Form):
             # code to placholder assign
             if field_name in place_holder:
                 field.widget.attrs['placeholder'] = place_holder[field_name]
-            
-            
-
-            
+             
            
             if field_name != 'description' and field_name != 'requirement' and field_name != 'skills' and field_name != 'question1' and field_name != 'question2' and field_name != 'question3':
                 

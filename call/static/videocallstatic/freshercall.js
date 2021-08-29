@@ -79,7 +79,7 @@ var remoteUsers = {};
   Then connect to the meeting
  */
 
- $("#join-form").click( async function (e) {
+ $("#join").click( async function (e) {
 
   // console.log(option);
 
@@ -202,6 +202,8 @@ async function leave() {
   $("#join").attr("disabled", false);
   $("#leave").attr("disabled", true);
   console.log("client leaves channel success");
+
+  window.location = '/f_dashh';
 }
 
 
@@ -218,12 +220,14 @@ async function subscribe(user, mediaType) {
   console.log("subscribe success");
   if (mediaType === 'video') {
     const player = $(`
-      <div id="player-wrapper-${uid}">
-        <p class="player-name">remoteUser(${uid})</p>
-        <div id="player-${uid}" class="player"></div>
+      <div id="player-wrapper-${uid}" style="width:90%;height:100%;margin-left:5%">
+        <p >remoteUser(${uid})</p>
+        <div id="player-${uid}" style="width:100%;height:100%"></div>
       </div>
-    `);
+    `);  
+    console.log(player);
     $("#remote-playerlist").append(player);
+    // $("#user-video").append(player);
     user.videoTrack.play(`player-${uid}`);
   }
   if (mediaType === 'audio') {
@@ -266,8 +270,10 @@ console.log('called to join',auto_connect);
 if(auto_connect == 'True' )
 {
   // document.getElementById('join-form').submit();
-  let element = document.getElementById('join-form');
-  element.click();
+  // let element = document.getElementById('join-form');
+  let element = document.getElementById('join');
+
+  element.click(); 
   // element.dispatchEvent(new Event("click"));
   // $('#join-form').trigger('customEventName', []);
   console.log('called to join',auto_connect);
@@ -358,7 +364,7 @@ setTimeout(meeting_status, check_interval);
 //Code to tick for every second and show the timings
 
 // tick_tock(10);
-
+ 
 window.fun = function()
 {
   this.document.getElementById('leave').click();

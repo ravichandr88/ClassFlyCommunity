@@ -1,8 +1,12 @@
 from django.db import models
 
 from fresher.models import HRaccount,Company, Fresher
-
+from django.utils import timezone
 # Create your models here.
+
+# default time value for deleted column JobPost Table
+def now():
+    return timezone.now()
 
 
 # Table to store Job Post
@@ -30,6 +34,8 @@ class Jobpost(models.Model):
     qu3             = models.CharField(max_length = 400)
     city            = models.CharField(max_length = 100, default = '')
     active          = models.BooleanField(default = False )
+    deleted         = models.BooleanField(default = False)
+    deleted_date    = models.DateTimeField(default = now)
 
 
     def __str__(self):

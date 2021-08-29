@@ -18,9 +18,9 @@ class ProFrehserMeeting(models.Model):
     actual interview done to students.
     
     '''
- 
+
     prof         = models.ForeignKey(Prfessional, on_delete = models.CASCADE, related_name = 'interviews_done', null = False)
-    fresher      = models.ForeignKey(Fresher, on_delete = models.CASCADE, related_name = 'fresher_interview', null = False)
+    fresher      = models.ForeignKey(Fresher, on_delete = models.CASCADE, related_name = 'fresher_interview', null = False) 
     video_url    = models.URLField(null=True)
     date_time    = models.DateTimeField(null = False)
     skills       = models.CharField(max_length = 500, null = False)
@@ -32,7 +32,7 @@ class ProFrehserMeeting(models.Model):
     feedback     = models.TextField(max_length = 1000, default='')   #givn by profesnl about the student
     passed       = models.BooleanField(default = False)  #Whether student has passed the exams or not
     approved     = models.BooleanField(default = False) #Approved by Professional for meeting
-
+    rejected     = models.BooleanField(default = False)
 
     def __str__(self):
         
@@ -49,8 +49,10 @@ class ProFrehserMeeting(models.Model):
             'paid'          : self.paid,
             'channel_name'  : self.channel_name
         }
+    
+    
 
-
+ 
 # video calling detailas table
 
 class Meeting(models.Model):   

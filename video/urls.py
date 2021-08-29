@@ -12,7 +12,7 @@ urlpatterns = [
 	path('community.html',views.lib,name='home'),
 	path('community',views.lib,name='home'),
 	path('community/home',views.lib,name='home'),
-	path('community/v1',views.lib,name='home'),
+	# path('community/v1',views.lib,name='home'),
 
 
 

@@ -36,21 +36,28 @@ class BootstrapModelForm(forms.Form):
             
 class StudentForm(BootstrapModelForm):
 
+    pre_college = forms.CharField(label='Pre University/ Diploma College',max_length=40)
+    pre_branch = forms.CharField(label='PreUniversity/Diploma Branch',max_length = 50)
+    pre_passout = forms.CharField(label='PreUniversity/Diploma Passout Year', widget=forms.TextInput(attrs={'min':2016,'max': 2030,'type': 'number'}))
     college = forms.CharField(max_length=40)
     branch = forms.CharField(max_length = 50)
+    language_spoke = forms.CharField(label='Language Spoken(Enter comma seperated',max_length = 60)
     passout_year = forms.CharField(label='Passout Year', widget=forms.TextInput(attrs={'min':2016,'max': 2030,'type': 'number'}))
+    master_college = forms.CharField(label='Master Degree College',max_length=40)
+    master_branch = forms.CharField(label='Master Branch',max_length = 50)
+    master_passout = forms.CharField(label='Master Degree Passout Year', widget=forms.TextInput(attrs={'min':2016,'max': 2030,'type': 'number'}))
     about_yourself = forms.CharField(required=False,max_length=500, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'id':"exampleFormControlTextarea1"}))
     total_experience = forms.CharField(label='Experience in Months', widget=forms.TextInput(attrs={'min':2,'max': 48,'type': 'number'}))
     about_yourself = forms.CharField(required=False,max_length=500, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'id':"exampleFormControlTextarea1"}))
     exp_company_1 = forms.CharField(max_length=80, required=False)
     exp_work_1 = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Technologies used and project done."}))
-    exp_period_1 = forms.CharField(max_length=40, required=False)
-    exp_company_2 = forms.CharField(max_length=80, required=False)
+    exp_period_1 = forms.CharField(label='From - To Date',max_length=40, required=False)
+    exp_company_2 = forms.CharField(max_length=80, required=False) 
     exp_work_2 = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Technologies used and project done."}))
-    exp_period_2 = forms.CharField(max_length=40, required=False)
+    exp_period_2 = forms.CharField(label='From - To Date',max_length=40, required=False)
     exp_company_3 = forms.CharField(max_length=80, required=False)
     exp_work_3 = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Technologies used and project done."}))
-    exp_period_3 = forms.CharField(max_length=40,required=False)
+    exp_period_3 = forms.CharField(label='From - To Date',max_length=40,required=False)
     
 
     def exp(self,n):
@@ -67,12 +74,10 @@ class StudentForm(BootstrapModelForm):
 
 
 
-
-
     class Meta:
         fields = ['college','branch','passout_year','about_yourself','exp_company_1','exp_work_1','exp_period_1','exp_company_2','exp_work_2','exp_period_2','exp_company_3','exp_work_3','exp_period_3']
         icons = {'password1': 'fa fa-lock','username':'fa fa-mobile','password2':'fa fa-lock','first_name':'fa fa-user'}
-        place_holder = {'total_experience':"Months",'exp_period_1':'From Date & To Date','exp_period_2':'From Date & To Date','exp_period_3':'From Date & To Date','branch':"Branch"}
+        place_holder = {'language_spoke':'English, Telugu, ','total_experience':"Months",'exp_period_1':'2 July 2016 - 3 March 2017','exp_period_2':'2 July 2016 - 3 March 2017','exp_period_3':'2 July 2016 - 3 March 2017','branch':"Branch"}
     
     class Media:
         js =("studentacc/tagscript.js",)
@@ -164,8 +169,8 @@ class ProIntervTime(BootstrapModelForm):
 
 class CompanyForm(BootstrapModelForm):
     company_name = forms.CharField(max_length = 100,required=True)
-    about = forms.CharField(max_length = 800,required=True, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"About Company "}))
-    address = forms.CharField(max_length = 500,required=True, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Company Address"}))    
+    about = forms.CharField(label="About Copmany(500 length )",max_length = 800,required=True, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"About Company "}))
+    address = forms.CharField(label='Copmplete Address ',max_length = 500,required=True, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Company Address"}))    
     city = forms.CharField(max_length=50,required=True)
     state = forms.CharField(max_length = 100, required=True)
     company_linkedin_url = forms.URLField() 
@@ -178,7 +183,6 @@ class CompanyForm(BootstrapModelForm):
 class HRForm(BootstrapModelForm):
     designation      = forms.CharField(max_length = 50,required=True)
     linkedin_url     = forms.URLField() 
-    office_email     = forms.EmailField()
     
 
     class Meta:
@@ -192,7 +196,8 @@ WEEK_DAYS =(
     ('THU','THU'),
     ('FRI','FRI'),
     ('SAT','SAT'),
-    ('SUN','SUN')
+    ('SUN','SUN'),
+    ('NULL','NULL')
 )
 
 class ProfTimeTableForm(BootstrapModelForm):

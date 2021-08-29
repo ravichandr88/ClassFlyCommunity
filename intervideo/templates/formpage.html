@@ -119,13 +119,21 @@
 				{% endfor %} 
 				
 				
+
 				<h6 style="color:red" id="error_mssg">{{error}}</h6>
+				{% if submit %}
 				<div class="container-login100-form-btn">
-					<button class="login100-form-btn">
-						Submit  
-					</button>
+						<button class="login100-form-btn">
+							Submit  
+						</button>
+					</div>
+				{% else %}
+				<div class="container-login100-form-btn">
+						<button class="login100-form-btn">
+							Go back
+						</button>
 				</div>
-					
+				{% endif %}
 				
 					{% if details %}
 					<h5><u>About Company :</u></h5>

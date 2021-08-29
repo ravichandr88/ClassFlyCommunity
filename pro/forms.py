@@ -33,6 +33,9 @@ class BootstrapModelForm(forms.Form):
             # set icon attr on field object
             if field_name is 'username':
                 field.label = 'Phone Number'
+            
+            if field_name is 'first_name':
+                field.label = 'Full Name'
 
             if field_name in icons:
                 field.icon = icons[field_name]
@@ -77,7 +80,7 @@ class SMSotpForm(BootstrapModelForm):
 
 
 class LoginForm(BootstrapModelForm):
-    phone_number = forms.CharField(required = True)
+    phone_number = forms.CharField(label='Username/PhoneNumber',required = True)
     password = forms.CharField(required = True, widget=forms.PasswordInput())
 
     def clean(self):

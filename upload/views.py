@@ -285,21 +285,37 @@ def classfly_complete_upload(request):
         except ClientError as e:
                 print(e)
 
-        Contact_number(filename = data['file_name']).save()
+        # Contact_number(filename = data['file_name']).save()
         
 
         if Fresher.objects.filter(user__username = data['username']).count() != 0:
                 user = Fresher.objects.get(user__username = data['username'])
+                if len(user.profile_pic) > 4:
+                        s3_client.delete_object(
+                        Bucket= 'classfly',
+                        Key= user.profile_pic
+                        )
+
                 user.profile_pic = 'https://classfly.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
                 
         elif Prfessional.objects.filter(user__username = data['username']).count() != 0:
                 user = Prfessional.objects.get(user__username = data['username'])
+                if len(user.profile_pic) > 4:
+                        s3_client.delete_object(
+                        Bucket= 'classfly',
+                        Key= user.profile_pic
+                        )
                 user.profile_pic = 'https://classfly.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
 
         elif HRaccount.objects.filter(user__username = data['username']).count() != 0:
                 user = HRaccount.objects.get(user__username = data['username'])
+                if len(user.profilepic) > 4:
+                        s3_client.delete_object(
+                        Bucket= 'classfly',
+                        Key= user.profilepic
+                        )
                 user.profilepic = 'https://classfly.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
 

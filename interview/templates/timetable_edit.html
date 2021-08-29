@@ -1,0 +1,241 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login V1</title>
+	<meta charset="UTF-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="{% static 'login/images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'login/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'login/css/main.css' %}">
+<!--===============================================================================================-->
+
+<!-- Loading JQuery url  -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+	<!-- Card CSS project details  -->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	
+
+	 <link rel="stylesheet" type="text/css" href="{% static 'studentacc/style.css' %}"/>
+	<link rel="stylesheet" type="text/css" href="{% static 'studentacc/tagstyle.css' %}"/>
+	
+	<!-- <script src="{% static 'studentacc/tagscript.js' %}"></script> -->
+	
+	<!-- Code to include js with respcet to form -->
+	<script src="{% static 'prosignup/script.js' %}"></script>	
+</head>
+<body>
+
+	
+		{{ form.media }}
+
+
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-pic js-tilt" data-tilt>
+					<img src="{% static 'login/images/img-01.png' %}" alt="IMG">
+				</div> 
+
+				<form class="login100-form validate-form" method="POST" action=""  >
+					<span class="login100-form-title">
+						ClassFly Professional
+						<br>
+						<p>{{message | safe}}</p>
+					</span>
+				
+					
+					
+				<div id="expcard">
+					<br>
+				{{ card|safe }}		
+					</div>
+					
+					{% for i in data %}
+					<p>Day</p>
+					<div class="wrap-input100 " >
+						
+						<!-- <input class="input100" type="password" name="con-pass" placeholder="Confirm Password"> -->
+						<select name="day" class="input100" id="id_day" >
+							{% if i.meet != 'MON' %}
+							<option value="MON" >MON</option>
+							{% else %}
+							<option value="MON" selected="selected">MON</option>
+							{% endif %}
+
+							{% if i.meet != 'TUE' %}
+							<option value="TUE">TUE</option>
+							{% else %}
+							<option value="TUE" selected="selected">TUE</option>
+							{% endif %}
+							
+							{% if i.meet != 'WED' %}
+							<option value="WED">WED</option>
+							{% else %}
+							<option value="WED" selected="selected">WED</option>
+							{% endif %}
+							
+							{% if i.meet != 'THU' %}
+							<option value="THU">THU</option>
+							{% else %}
+							<option value="THU" selected="selected">THU</option>
+							{% endif %}
+
+							{% if i.meet != 'FRI' %}
+							<option value="FRI">FRI</option>
+							{% else %}
+							<option value="FRI" selected="selected">FRI</option>
+							{% endif %}
+						  
+							{% if i.meet != 'SAT' %}
+							<option value="SAT">SAT</option>
+							{% else %}
+							<option value="SAT" selected="selected">SAT</option>
+							{% endif %}
+						  
+							{% if i.meet != 'SUN' %}
+							<option value="SUN">SUN</option>
+							{% else %}
+							<option value="SUN" selected="selected">SUN</option>
+							{% endif %}
+							
+							{% if i.meet != 'NULL' %}
+							<option value="NULL">NULL</option>
+							{% else %}
+							<option value="NULL" selected="selected">NULL</option>
+							{% endif %}
+						
+						  </select>
+							<span class="focus-input100"><br><br>				
+							</span>
+							<span class="symbol-input100">
+									<i class="" aria-hidden="true"></i>
+								<!-- <i class="fa fa-lock" aria-hidden="true"></i> -->
+							</span>
+											  
+						<span class="focus-input100"><br><br>				
+						</span>
+						<span class="symbol-input100">
+								<i  aria-hidden="true"></i>
+							<!-- <i class="fa fa-lock" aria-hidden="true"></i> -->
+						</span>
+					</div>
+					<p>Time</p>
+					<div class="wrap-input100">
+							<!-- <input class="input100" type="password" name="con-pass" placeholder="Confirm Password"> -->
+							<input type="time" name="time" class="input100"  value="{{i.time|time:'h:i:s'}}">
+							<span class="focus-input100"><br><br>				
+							</span>
+							<span class="symbol-input100">
+									<i class="" aria-hidden="true"></i>
+								<!-- <i class="fa fa-lock" aria-hidden="true"></i> -->
+							</span>
+						</div>
+
+
+					<h6 style="color:red" id="error_mssg">{{ i.errors}}</h6>
+				{% endfor %}
+
+					
+					{% for i in form %}
+					<p>{{i.label_tag}}</p>
+					<div class="wrap-input100 " >
+						<!-- <input class="input100" type="password" name="con-pass" placeholder="Confirm Password"> -->
+						{{i}}
+						<span class="focus-input100"><br><br>				
+						</span>
+						<span class="symbol-input100">
+								<i class="{{ i.field.icon }}" aria-hidden="true"></i>
+							<!-- <i class="fa fa-lock" aria-hidden="true"></i> -->
+						</span>
+					</div>
+					<h6 style="color:red" id="error_mssg">{{ i.errors}}</h6>
+				{% endfor %} 
+
+				
+				<div id="invisible">
+
+				</div>
+
+				
+ 
+				{{ skills|safe }}
+
+					
+					<!-- div to add extra button using JS -->
+					<div class="container-login100-form-btn" id="dynamic">
+						
+					</div>
+					{% csrf_token %}	
+					<div class="container-login100-form-btn" id="submit_button">
+						<button class="login100-form-btn" >
+							Submit  
+						</button>
+					</div>
+
+					<!-- div for next line content -->
+					<div class="text-center p-t-12" id='next_line'>
+						
+					</div>
+
+					<!-- <div class="text-center p-t-136">
+						<a class="txt2" href="#">
+							Create your Account
+							<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+						</a>
+					</div> -->
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	
+
+	
+<!--===============================================================================================-->	
+	<script src="{% static 'login/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'login/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'login/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'login/vendor/tilt/tilt.jquery.min.js' %}"></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'login/js/main.js'%}"></script>
+
+	<!-- code from professional waiitng to hide the submit button -->
+	<script>
+	{{js_code | safe}}
+	</script>
+
+
+<!-- <div class="card" style="width: 18rem;">
+						<div class="card-body">
+						  <h5 class="card-title">Card title</h5>
+						</div>
+					  </div> -->
+	
+
+
+</body>
+</html>

@@ -22,23 +22,42 @@ def student(request):
     exp_period_1 
     """
     
-    form = StudentForm()    #preparing an empty form
+    student = StudentForm()    #preparing an empty form
 
+    skills = """
+                    <div id="extra"></div>
+				<ul class=" wrap-input100 ">
+					<li class="tags-new">
+							<div class="wrap-input100 " >
+								<h5>Skills</h5>
+					  <input class="input100" type="text" placeholder="Skills"> 
+					  </div>
+					  <p style="color:'red'">Enter skills seperated by comma.</p>
+					</li>
+				  </ul>"""
 
     if request.method == 'POST':
         student = StudentForm(request.POST)
-        
 
-        if student.is_valid():
-          fresher = Fresher(
+        if student.is_valid() and len(request.POST.getlist('skills')) != 0:
+          fresher = Fresher( 
             user             = User.objects.get(username = request.user),
             college          = student.cleaned_data['college'],
             branch           = student.cleaned_data['branch'],
             passout_year     = student.cleaned_data['passout_year'],
+            master_college   = student.cleaned_data['master_college'],
+            master_branch    = student.cleaned_data['master_branch'],
+            pre_college      = student.cleaned_data['pre_college'],
+            pre_branch       = student.cleaned_data['pre_branch'],
             about_yourself   = student.cleaned_data['about_yourself'],
+            pre_passout      = student.cleaned_data['pre_passout'],
+            master_passout   = student.cleaned_data['master_passout'],
             total_experience = int(student.cleaned_data['total_experience']),
-            skills           = str(request.POST.getlist('skills')))
+            skills           = str(request.POST.getlist('skills'))[1:][:-1],
+            language_spoken  = student.cleaned_data['language_spoke'])
           fresher.save() 
+
+          return redirect('resume')
 
           exp1 = student.exp(1)
           if exp1 != 0:
@@ -54,7 +73,24 @@ def student(request):
           if exp3 != 0:
             exp3.applicant = fresher
             exp3.save()
-        
+
+
+        # if form is not valid
+        elif len(request.POST.getlist('skills')) == 0:
+          skills = """
+                    <div id="extra"></div>
+				  <ul class=" wrap-input100 ">
+					<li class="tags-new">
+							<div class="wrap-input100 " >
+								<h5>Skills</h5>
+					  <input class="input100" type="text" placeholder="Skills"> 
+					  </div>
+					  <p style="color:red">Enter skills seperated by comma.</p>
+					</li>
+				  </ul>"""
+        return render(request,'form.html',context={'form':student, 'skills':skills,'title':'Student Signup'})
+
+
 # A special input, to get skills , we are providing extra html code.
     skills = """
                     <div id="extra"></div>
@@ -64,23 +100,29 @@ def student(request):
 								<h5>Skills</h5>
 					  <input class="input100" type="text" placeholder="Skills"> 
 					  </div>
-					  Enter skills seperated by comma.
+					  <p style="color:red">Enter skills seperated by comma.</p>
 					</li>
 				  </ul>"""
-    return render(request,'form.html',context={'form':form, 'skills':skills})
+    return render(request,'form.html',context={'form':student, 'skills':skills})
 
 
 # Professional Page-6
 # Fresher Page-4
 
 @login_required
-def resumeview(request):
-
+def resumeview(request, edit = 0):
+# edit = 1 means updating previuos resume
+    next = 'notFound'
     # form = ResumeForm()
-  
-    next = '/pro/profile'
-
-    return render(request,'form.1.html',context={'content':"Resume", 'next' : next})
+    if edit == 0:
+      next = '/pro/profile'
+    else:
+      # know which is the user ,  professional or Fresher
+      if Prfessional.objects.filter(user__username = request.user).count() != 0: 
+        next = '/pro_dashboard'
+      elif Fresher.objects.filter(user_username = request.user).count()  != 0:
+        next = '/f_dashh'
+    return render(request,'form.1.html',context={'content':"Resume", 'next' : next,'title':'Resume Upload'})
 
 
 
@@ -90,8 +132,10 @@ def resumeview(request):
 
 @login_required
 #function to professional signup
-def prosignup(request):
-    
+def prosignup(request, edit = 0):
+    # edit = 1, refers to update of the curent data, edit = 0 means it is filling a new one
+
+
     #special input field for adding skills
     skills = """
                     <div id="extra"></div>
@@ -104,43 +148,99 @@ def prosignup(request):
 					  Enter skills seperated by comma.
 					</li>
 				  </ul>"""
-    form = ProfessionalForm()
-    
 
-    if request.method == 'POST':
+    prof = ProfessionalForm()
+# if 
+    if request.method == 'GET' and edit == 1:
+          pro =  Prfessional.objects.get(user__username = request.user)
+
+          prof.initial['company']         = pro.company
+          prof.initial['designation']     = pro.designation
+          prof.initial['city']            = pro.city
+          prof.initial['stream']          = pro.stream
+          prof.initial['college']         = pro.college
+          prof.initial['language_spoke']  = pro.language_spoke
+          prof.initial['about_yourself']  = pro.about_yourself 
+          prof.initial['total_exp_year']  = str(pro.total_exp_year).split('.')[0]
+          prof.initial['total_exp_month'] = str(pro.total_exp_year).split('.')[1]
+          
+          #special input field for adding skills
+          skills = """
+                    <div id="extra"></div>
+				<ul class=" wrap-input100 "> """
+        
+          for i in pro.skills.replace("'",'').split(','):
+
+            skills +=	'<li class="tags" id="fun"><span>'+ i +'</span><i class="fa fa-times"></i></li>' + '<input name="skills" id="'+i  +'" value="'+ i+'" style="display:none"></input>'
+				  
+          skills += """
+					<li class="tags-new">
+							<div class="wrap-input100 " >
+								<h5>Skills</h5>
+					  <input class="input100" type="text" placeholder="Skills"> 
+					  </div>
+					  Enter skills seperated by comma.
+					</li>
+				  </ul>"""
+
+
+    # If the edit option is enabled , get the default values by query
+
+    if request.method == 'POST' :
         prof = ProfessionalForm(request.POST)
 
-        if prof.is_valid():
+        
+
+        if prof.is_valid() and len(request.POST.getlist('skills')):
           # print(prof)
           
           #prepare experience value
           exp = float( prof.cleaned_data['total_exp_year'] + '.' + prof.cleaned_data['total_exp_month'] )
           
+          # create a new one if edit = 0
+          pro = Prfessional()
           
-          pro = Prfessional(
-          user            = User.objects.get(username = request.user),
-          company         = prof.cleaned_data['company'],
-          designation     = prof.cleaned_data['designation'],
-          city            = prof.cleaned_data['city'],
-          stream          = prof.cleaned_data['stream'],
-          college         = prof.cleaned_data['college'],
-          language_spoke  = prof.cleaned_data['language_spoke'],
-          about_yourself  = prof.cleaned_data['about_yourself'],
-          total_exp_year  = exp,
-          skills = str(request.POST.getlist('skills'))
-          )
+          if edit == 1:
+            pro = Prfessional.objects.get(user__username = request.user)
+          
+           
+          pro.user            = User.objects.get(username = request.user)
+          pro.company         = prof.cleaned_data['company']
+          pro.designation     = prof.cleaned_data['designation']
+          pro.city            = prof.cleaned_data['city']
+          pro.stream          = prof.cleaned_data['stream']
+          pro.college         = prof.cleaned_data['college']
+          pro.language_spoke  = prof.cleaned_data['language_spoke']
+          pro.about_yourself  = prof.cleaned_data['about_yourself']
+          pro.total_exp_year  = exp
+          print(request.POST.getlist('skills'))
+          pro.skills = str(request.POST.getlist('skills')).replace("'","")[1:][:-1]
+          
 
           pro.save()
 
-          return redirect('/pro/exp')
+          if edit == 0:
+            return redirect('/pro/exp')
+          else:
+            return redirect('pro_dashboard')
         
         else:
-  
-          return render(request,'form.html',context={'form':prof,'skills':skills})
+          skills = """
+                    <div id="extra"></div>
+				<ul class=" wrap-input100 ">
+					<li class="tags-new">
+							<div class="wrap-input100 " >
+								<h5>Skills</h5>
+					  <input class="input100" type="text" placeholder="Skills"> 
+					  </div>
+					<p style="color:red">  Enter skills seperated by comma.</p>
+					</li>
+				  </ul>"""
+          # return render(request,'form.html',context={'form':prof,'skills':skills})
           
-    form = ProfessionalForm()
     
-    return render(request,'form.html',context={'form':form,'skills':skills})
+    
+    return render(request,'form.html',context={'form':prof,'skills':skills,'title':'Professional Details'})
 
 
 
@@ -149,37 +249,11 @@ def prosignup(request):
 
 @login_required
 #function to professional signup
-def proexp(request):
-    
+def proexp(request,edit=0):
+    # edit = 0 is new form, edit = 1 is update of the same form
+
     form = Experienc()
 
-
-    if request.method == 'POST':
-        data = request.POST.dict()
-        keys = list(data.keys())[7:]
-        n = 5
-        l = [keys[i * n:(i + 1) * n] for i in range((len(keys) + n - 1) // n )]
-        l = l[:-1]
-
-        print(l)
-
-        for i in l:
-          # 'company1', 'designation1', 'project1', 'from1', 'to1'
-          ProExperience(
-            pro          = Prfessional.objects.get(user = User.objects.get(username = request.user)),
-            company      = data[i[0]],
-            designation  = data[i[1]],
-            project      = data[i[2]],
-            cfrom        = data[i[3]],
-            cto          = data[i[4]]
-          ).save() 
-
-          # print(data[i[0]], data[i[0]], i[2], i[3], i[4])
-          return redirect('/resume')
-
-
-
-    
     card = """
     <cdiv class="go" id="butn">
 						<h3>Company</h3>
@@ -191,14 +265,81 @@ def proexp(request):
 						<br>
 						</cdiv>
 				"""
-
-
+        
     skills = """
     <button class="login100-form-btn" type="button" id='add'>
 							Add More 
 						</button>
     """
-    return render(request,'form.html',context={'form':form,'skills':skills,'card':card})
+
+    card_no = 1
+
+    experience = [] # varibale used to store experience objects, when called for update
+
+
+# if edit = 1, which means this is for update the data
+    if edit == 1:
+          
+          prof = Prfessional.objects.get(user__username = request.user)
+
+          experience = prof.experience.all()
+          
+          card_no = len(experience)
+
+          for i in range(len(experience)):
+            card += str('<cdiv class="go" id="butn" name="'+ str(i+1) +'">'
+            '<br><h3>'+ experience[i].company +'</h3>'
+            '<h1>'+ experience[i].designation +'</h1>'
+            '<p>'+ experience[i].project +'</p>'
+            '<span>'+ experience[i].cfrom +' - '+ experience[i].cto +'</span>'
+            '<br></cdiv>')
+
+          '''
+          <cdiv class="go" id="butn" name="1">
+          <br><h3>wipro</h3>
+          <h1>great</h1>
+          <p>good to go</p>
+          <span>JAN 2012  -  JAN 2013</span>
+          <br></cdiv>
+          '''
+
+
+
+    if request.method == 'POST':
+
+        
+        data = request.POST.dict()
+        print(data)
+        keys = list(data.keys())[7:]
+        n = 5
+        l = [keys[i * n:(i + 1) * n] for i in range((len(keys) + n - 1) // n )]
+        l = l[:-1]
+
+        print(l)
+        prof = Prfessional.objects.get(user = User.objects.get(username = request.user))
+
+        if edit == 1:
+            prof.experience.all().delete()
+
+        for i in l:
+            print('Entered')
+            # 'company1', 'designation1', 'project1', 'from1', 'to1'
+            ProExperience(
+              pro          = prof,
+              company      = data[i[0]],
+              designation  = data[i[1]],
+              project      = data[i[2]],
+              cfrom        = data[i[3]],
+              cto          = data[i[4]]
+            ).save() 
+
+            # print(data[i[0]], data[i[0]], i[2], i[3], i[4])
+        return redirect('/resume')
+
+
+
+    
+    return render(request,'form.html',context={'form':form,'skills':skills,'card':card,'card_no':card_no,'experienc':experience,'title':'Work Experience'})
 
 
 
@@ -211,7 +352,7 @@ def prof_initial_meet(request):
     form = ProIntervTime()
 
     if request.method == 'POST':
-        print(request.POST['meet1_date'],request.POST['meet1_time'])
+        # print(request.POST['meet1_date'],request.POST['meet1_time'])
 
         # print(datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']))
         
@@ -235,7 +376,7 @@ def prof_initial_meet(request):
     Please provide possible timings you are free, 
     and we will SMS the timings that our Experts agree on. </p> <br> """
 
-    return render(request,'form.html',context={'form':form, 'card':card})
+    return render(request,'form.html',context={'form':form, 'card':card,'title':'Interview Timings'})
 
 
 # Professional Signup Page-7
@@ -252,7 +393,7 @@ def profile_pic(request):
         next = '/pro/meet'
     
     if Fresher.objects.filter(user__username = request.user).count() !=  0:
-        next = '/applicant/dashboard'
+        next = '/f_dashh'
 
     return render(request,'pic_crop.html', context={'next' : next})
 
@@ -261,9 +402,21 @@ def profile_pic(request):
 
 # HR Singup Page-3
 @login_required
-def company_singup(request):
+def company_singup(request, edit = 0):
     
     form = CompanyForm()
+    
+    
+
+    if edit == 1 and request.method == 'GET':
+      comp = Company(created_by__username = request.user)
+
+      form.initial['about'] = comp.about
+      form.initial['city']  = comp.city
+      form.initial['state'] = comp.state
+      form.initial['company_name'] = comp.company_name
+      form.initial['address'] = comp.address
+      form.initial['company_linkedin_url'] = comp.company_linkedin_url
 
     if request.method == 'POST':
 
@@ -272,45 +425,58 @@ def company_singup(request):
         if form.is_valid():
             print(form.cleaned_data)
 
-            Company(
-              created_by              = User.objects.get(username = request.user),
-              about                   = form.cleaned_data['about'],
-              company_name            = form.cleaned_data['company_name'],
-              address                 = form.cleaned_data['address'],
-              city                    = form.cleaned_data['city'],
-              state                   = form.cleaned_data['state'],
-              company_linkedin_url    = form.cleaned_data['company_linkedin_url'],
-              ).save()
+           
+            comp = Company()
+
+            if edit == 1:
+               comp = Company.objects.get(created_by__username = request.user)
+
+            comp.created_by              = User.objects.get(username = request.user),
+            comp.about                   = form.cleaned_data['about'],
+            comp.company_name            = form.cleaned_data['company_name'],
+            comp.address                 = form.cleaned_data['address'],
+            comp.city                    = form.cleaned_data['city'],
+            comp.state                   = form.cleaned_data['state'],
+            comp.company_linkedin_url    = form.cleaned_data['company_linkedin_url'],
+            comp.save()
 
 
             return redirect('hr_account_creation')
 
 
-    return render(request,'form.html',context={'form':form})
+    return render(request,'form.html',context={'form':form,'title':'Company Details'})
 
 
 # Company account creatoin done , now addding self account as HR for the company
 # HR- account creatoin Page-4
 
 @login_required
-def hr_account_creation(request):
+def hr_account_creation(request,edit = 0):
     
     form = HRForm()
+    hr = HRaccount()
+    
+    if edit == 1 and request.method == 'GET':
+      hr = HRaccount.objects.get(user__username = request.user)
+
+      form.initial['designation']  = hr.designation
+      form.initial['linkedin_url'] = hr.linkedin_url
+      
 
     if request.method == 'POST':
           form = HRForm(request.POST)
-
+          
           if form.is_valid():
-            HRaccount(
-              user             = User.objects.get(username = request.user),
-              designation      = form.cleaned_data['designation'],
-              linkedin_url     = form.cleaned_data['linkedin_url'],
-              office_email     = User.objects.get(username = request.user).email
-            ).save()
+              print()
+              hr.user             = User.objects.get(username = request.user)
+              hr.designation      = form.cleaned_data['designation']
+              hr.linkedin_url     = form.cleaned_data['linkedin_url']
+              hr.office_email     = User.objects.get(username = request.user).email
+              hr.save()
             
-            return redirect('hr_id_card')
+              return redirect('hr_id_card')
 
-    return render(request,'form.html',context={'form':form})
+    return render(request,'form.html',context={'form':form,'title':'HR Details'})
 
 
 # HR account creation Page-5
@@ -324,7 +490,7 @@ def hr_id_card(request):
     # variable to decide the next success url
     next = '/hrprofile'
     
-    return render(request,'form.1.html',context = {'content':content,'next': next})
+    return render(request,'form.1.html',context = {'content':content,'next': next,'title':'HR ID Card'})
 
 
 # HR account creation Page-6
@@ -333,23 +499,41 @@ def hr_id_card(request):
 def hr_profile_pic(request):
 
 
-    next ='/hr/dashboard'
+    next ='/hr_waiting'
 
-    return render(request,'pic_crop.html', context = {'content':'Profile Pic of HR'})
+    return render(request,'pic_crop.html', context = {'content':'Profile Pic of HR','next':next})
 
 
-
-# Professional Page-12
+# Professioinal Page-11
 
 @login_required 
-def pro_timetable(request):
-    if request.method == 'POST':
+def pro_timetable(request,edit=0):
+# edit = 0 is dont want to edit, 1 to edit
+
+    form = ProfTimeTableForm()
+    
+    prof = Prfessional.objects.get(user__username = request.user)
+    
+    skills = """
+    <button class="login100-form-btn" type="button" id="addd">
+							Add More 
+						</button>
+    """
+
+    if edit == 1 and request.method == 'GET':
+      
+      data = prof.prof_interview.all()
+      # print(form)
+
+      return render(request,'timetable_edit.html',context={'form':form,'skills':skills,'data':data})
+
+
+    if request.method == 'POST' :
 
         # print(request.POST)
-        prof = Prfessional.objects.get(user__username = request.user)
-
-        print(prof)
-        prof.save()
+        
+        # print(prof)
+        prof.prof_interview.all().delete()
 
         data = dict( request.POST )
         days = data['day']
@@ -357,36 +541,41 @@ def pro_timetable(request):
 
         for i in range(len(days)):
 
-          if  times[i] != '':
+          if  times[i] != '' and days[i] != 'NULL':
               Professinal_Interview_Time(
               meet = days[i],
               time = times[i],
               prof = prof   ).save()
-
-        return redirect('banking')
+        if edit == 0:
+          return redirect('banking')
+        
+        else:
+          return redirect('pro_dashboard')
 
 
         # print(days,times)
 
 
-    form = ProfTimeTableForm()
-
-
-    skills = """
-    <button class="login100-form-btn" type="button" id="addd">
-							Add More 
-						</button>
-    """
     
-    return render(request,'form.html',context={'form':form,'skills':skills})
+    
+    return render(request,'form.html',context={'form':form,'skills':skills,'title':'Meeting Timings'})
 
 
-# Professioinal Page-11
+
+# Professional Page-12
 
 @login_required
-def pro_bank(request):
-    
+def pro_bank(request, edit = 0):
+    # edit = 1 is for updating the bank details
     form = ProfessionalBankForm()
+    prof = Prfessional.objects.get(user__username = request.user)
+
+    if edit == 1 and request.method == 'GET':
+      
+      form.initial['ifsc']              = prof.pro_bank_account.ifsc
+      form.initial['account_number']    = prof.pro_bank_account.account_number
+      form.initial['name']              = prof.pro_bank_account.name
+      form.initial['upi']               = prof.pro_bank_account.upi
 
     
     if request.method == 'POST':
@@ -396,6 +585,7 @@ def pro_bank(request):
               return HttpResponse('Sorry you are not signed up for porfessional person')
 
           pro = Professinal_Account_Details()
+  
 
           if Professinal_Account_Details.objects.filter(pro = Prfessional.objects.get(user__username = request.user)).count() != 0:
               pro = Professinal_Account_Details.objects.get(pro = Prfessional.objects.get(user__username = request.user))
@@ -410,9 +600,12 @@ def pro_bank(request):
           
           pro.save()
 
+
+          
           return redirect('pro_dashboard')
     
-    return render(request,'form.html',context={'form':form})
+    return render(request,'form.html',context={'form':form,'title':'Bank Account Details'})
+
 
 
 # HR account Page-7
@@ -424,10 +617,9 @@ def hr_dashboard(request):
 
 
 # Fresher Dashboard Page-6
-
-@login_required
-def applicant_dashboard(request):
-    return HttpResponse('Fresher Dashbaord')
+# url = 'f_dashh'
+# path('f_dashh', views.fresher_dash, name = 'f_dashboard'),
+# fresher app
 
 
 # professional Page-13
@@ -452,6 +644,16 @@ def pro_waiting(request):
     return render(request,'form.html',{'js_code':js_code,'message':'Will be waiting till your interview with Expert is done.'})
 
 
+@login_required
+def hr_waiting(request):
+
+    js_code = '''
+    $(document).ready(function(){
+      console.log('ready');
+      $('#submit_button').hide();
+    })
+    '''
+    return render(request,'form.html',{'js_code':js_code,'message':'Will be waiting till your company is verified.'})
 
 
 
