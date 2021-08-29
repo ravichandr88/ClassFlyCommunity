@@ -20,12 +20,13 @@ def adding_task(x, y):
 
 #@shared_task
 def send_otp(phone_number,otp):
-    requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(phone_number,otp))
+    
+    requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=26&type=text&contacts={}&senderid=OpenDND&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(phone_number,otp))
     return
 
 @shared_task
 def send_student_otp(phone,otp):
-    requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+REVA%2C+Your+otp+is+{}.".format(phone,otp))
+    requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=26&type=text&contacts={}&senderid=OpenDND&msg=Welcome+to+REVA%2C+Your+otp+is+{}.".format(phone,otp))
     return 
 
 @shared_task
