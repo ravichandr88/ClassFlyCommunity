@@ -83,7 +83,7 @@ def signup(request,type="student"):
             otp = str(randint(1234,9876)) 
             otp = OTP(user=user,otp=otp)
             otp.save()
-            send_otp.delay(user.username,otp.otp)
+            send_otp(user.username,otp.otp)
 
             return redirect('otp_verify')
         else: 
@@ -253,7 +253,7 @@ def resend_otp(request):
     if otp.count > 25:
         return JsonResponse({'message':'Sorry'},status=500)
         
-    send_otp.delay(user.username,otp.otp)
+    send_otp(user.username,otp.otp)
     return JsonResponse({'message':'Sent Successfully'},status=200)
 
 
