@@ -4,7 +4,7 @@ from . import projects
  
 
 urlpatterns = [
-    path('startpage',views.startpage),
+    path('startpage',views.startpage, name='start'),
     path('community/v1',views.start),
     path('search_now',views.searchpage),
     path('prologin',views.login_view,name='login_new'),
