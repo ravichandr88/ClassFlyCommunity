@@ -199,7 +199,7 @@ def email_otp(request):
                 # disbale the otp "requested" varibale in "EmailOTP" table 
                     emailotp = EmailOTP.objects.get(user__username = request.user)
 
-                    emailotp.requedsted = False
+                    emailotp.requested = False
                 #after successful signup, redirect user based on type from request, -> student,professional,company
                     if request.session['type'] == 'student':
                         return redirect('student')
