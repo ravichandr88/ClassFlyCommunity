@@ -47,6 +47,8 @@ def session(function):
 
     return inner
 
+def start(request):
+    return redirect('start')
 
 def startpage(request):
     return render(request,'startpage.html',context={})
