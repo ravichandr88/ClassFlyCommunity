@@ -626,6 +626,7 @@
 <div class="staff-msg"><a href="#" class="btn btn-custom">Send Message</a></div>
 <div class="staff-msg"><a href="/player_now/{{prof.pro_interview.id}}" class="btn btn-custom">Interview Video</a></div>
 <div class="staff-msg"><a href="/book/{{prof.user.id}}" class="btn btn-custom">Book Interview</a></div>
+<div class="staff-msg"><a href="#" onclick="download_file('{{prof.id}}')" class="btn btn-custom" download="resume.pdf">Resume</a></div>
 
 </div>
 </div>
@@ -874,9 +875,59 @@ Till:
 
 var url = "{{pro_user.proaccount.profile_pic}}";
 
-    fetch(url).then(function(response) {
-    response.text().then(function(text)
-    {document.getElementById('pro_pic').src = text;});});
+fetch(url).then(function(response) {
+response.text().then(function(text)
+{document.getElementById('pro_pic').src = text;});});
+
+
+//code to download the file
+function download_file(fileURL, fileName='resume.pdf') {
+    
+    var url = ''
+    
+    fetch('/get_url/'+fileURL).then((response) => {
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error('good');
+  }
+})
+.then((responseJson) => {
+  // Do something with the response
+    
+    if (responseJson.message)
+    {
+        if (responseJson.message == 'login')
+        {
+            window.location = '/prologin';
+        }
+        else{
+            alert(responseJson.message);
+        }
+
+        return 
+    }
+    // for non-IE
+    if (!window.ActiveXObject) {
+        var save = document.createElement('a');
+        save.href = responseJson.url ;
+        save.target = '_blank';
+        save.download = fileName || 'unknown';
+
+        var evt = new MouseEvent('click', {
+            'view': window,
+            'bubbles': true,
+            'cancelable': false
+        });
+        save.dispatchEvent(evt);
+
+        (window.URL || window.webkitURL).revokeObjectURL(save.href);
+    }
+}).catch((error) => {     // code for something gone wrong while fetching the url
+//   console.log(JSON.stringify(error));
+ alert('Error, Please try again later' );
+});
+}
 
 </script>
 <script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/popper.min.js' %}"></script>

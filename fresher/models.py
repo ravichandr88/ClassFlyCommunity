@@ -18,9 +18,10 @@ class ProFrehserMeeting(models.Model):
     actual interview done to students.
     
     '''
-
+ 
     prof         = models.ForeignKey(Prfessional, on_delete = models.CASCADE, related_name = 'interviews_done', null = False)
     fresher      = models.ForeignKey(Fresher, on_delete = models.CASCADE, related_name = 'fresher_interview', null = False) 
+    designation  = models.CharField(max_length = 50,default='')
     video_url    = models.URLField(null=True)
     date_time    = models.DateTimeField(null = False)
     skills       = models.CharField(max_length = 500, null = False)
@@ -50,7 +51,8 @@ class ProFrehserMeeting(models.Model):
             'channel_name'  : self.channel_name
         }
     
-    
+    def skills_count(self):
+        return len(self.skills.split(','))    
 
  
 # video calling detailas table

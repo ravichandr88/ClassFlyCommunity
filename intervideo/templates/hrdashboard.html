@@ -313,7 +313,7 @@
 </li>
 
 {% if job %}
-<li><a href="/applicants/{{job.id}}">Browse Candidates</a></li>
+<li><a href="/applicants/{{job.id}}">Browse Candidates <span class="menu-arrow"></span></a></li>
 {% endif %}
 
 <li class="menu-title">
@@ -878,7 +878,7 @@ document.getElementById({{j.id}}).innerHTML = '<td colspan="10" >'
 $('#close{{j.id}}').click(function(){
 	$('#{{j.id}}').hide();
 })
-
+ 
 
 
 // <!-- code to get the profile pic of the applications -->

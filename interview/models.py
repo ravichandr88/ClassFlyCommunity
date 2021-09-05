@@ -12,6 +12,9 @@ class Fresher(models.Model):
     master_branch = models.CharField(max_length=40, default = '') 
     pre_college = models.CharField(max_length=50, default = '') 
     pre_branch = models.CharField(max_length=50, default = '') 
+    city_1 =    models.CharField(max_length = 50,default = '')
+    city_2 =    models.CharField(max_length = 50,default = '')
+    city_3 =    models.CharField(max_length = 50,default = '')
     city = models.CharField(max_length = 50, default = 'Bangalore')
     passout_year = models.IntegerField(default = 0000)    #degree passout
     pre_passout =  models.IntegerField(default=0000)    #pre-college passout
@@ -38,6 +41,12 @@ class Fresher(models.Model):
     def experiencevalue(self):
         return int(self.total_experience)
 
+    def all_feedback(self):
+        feedbacks = self.fresher_interview.filter(approved =  True, passed = True ) | self.fresher_interview.filter(approved =  True, rejected = True)
+
+        return feedbacks
+
+
 class Experience(models.Model):
     applicant = models.ForeignKey(Fresher,on_delete=models.CASCADE,related_name='experience')
     exp_company = models.CharField(max_length=80,default = '')
@@ -54,7 +63,7 @@ class Experience(models.Model):
         
         return True
 
-
+ 
 class Prfessional(models.Model):
     user            = models.OneToOneField(User,on_delete=models.CASCADE, related_name = 'proaccount')
     company         = models.CharField(max_length=70, null=False)

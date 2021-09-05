@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('applicant',views.student,name= 'student'),    #2nd form for fresher to fill his details, colleg to skills
+    path('applicant/<int:edit>',views.student),    #2nd form for fresher to fill his details, colleg to skills
     path('resume',views.resumeview, name='resume'),
     path('pro/signup',views.prosignup, name= 'professional'),
     path('pro/signup/<int:edit>',views.prosignup, name= 'professional'),

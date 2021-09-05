@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate,logout
 import django.contrib.auth.password_validation as validators
 from django.core import exceptions
+from interview.models import Fresher,Prfessional, HRaccount
 
 from .models import  EmailOTP
 
@@ -59,15 +60,33 @@ def signup(request,type="student"):
 
     # print(request.user)
     #IF the user is already logged in 
-    if request.user is 'AnonymousUser':
+    if request.user is  not 'AnonymousUser':
         # print(request.user)
-        return redirect('pro_home')
+        if Fresher.objects.filter(user__username = request.user).count() == 1:
+            return redirect('jobsearh')
+         
+        elif Prfessional.objects.filter(user__username = request.user).count() == 1:
+            return redirect('pro_dashboard')
+        
+        elif HRaccount.objects.filter(user__username = request.user).count() == 1:
+            return redirect('hrdashboard')
+
+        
 
     # Signup candidate type of registration, -> student,proessional,company
     request.session['type'] = type
 
+    
     if request.method == 'POST':
+# check if the username exists and not activated, dele the user account
+        
+
         form = SignupForm(request.POST)
+
+        if User.objects.filter(username = form.data['username'], is_active = False).count() == 1:
+            User.objects.get(username = form.data['username']).delete()
+        
+
         #Validate Phone Number
 
         if form.is_valid():
@@ -99,6 +118,8 @@ def signup(request,type="student"):
 
 @session
 def otp_verify_view(request):
+    print(request.session.keys())
+
     if request.method == 'POST':
         form = SMSotpForm(request.POST)
         # print(request.session['username'])
@@ -112,10 +133,6 @@ def otp_verify_view(request):
                 print('Started')
                 #Check the reason for OTP
                 if request.session['reason'] == 'signup':
-                    #After Successfull OTP validation Login the user
-                    user.is_active = True   #activate user account
-                    user.save()
-                    login(request,user)
                     
                     return redirect('emailpage')
                     # code that will redirect the users with respect to account type
@@ -139,8 +156,10 @@ def otp_verify_view(request):
 
 
 # Function to accept  Email from User
-@login_required
+@session
 def email_function(request):
+    print(request.session.keys())
+    
     form = EmailForm()
     
     if request.method == 'POST':
@@ -155,7 +174,7 @@ def email_function(request):
             otp = randint(111111,999999)
 
             # User object for reference, and update the email
-            user = User.objects.get(username = request.user)
+            user = User.objects.get(username = request.session['username'])
             user.email = form.cleaned_data['email']
             user.save()
 
@@ -168,8 +187,8 @@ def email_function(request):
 
 
             # If the user has already created email otp oject just override it
-            if EmailOTP.objects.filter(user__username = request.user).count() != 0:
-                email_otp = EmailOTP.objects.get(user__username = request.user)
+            if EmailOTP.objects.filter(user__username = request.session['username']).count() != 0:
+                email_otp = EmailOTP.objects.get(user__username = request.session['username'])
 
             
             
@@ -182,25 +201,35 @@ def email_function(request):
 
 
 # Function to recive the email otp from user
-@login_required
+@session
 def email_otp(request):
+    print(request.session.keys())
+
     # First check whether the user have requedsted for email otp
     form  = EmailOTPForm()
 
 
     # request.session['username'] = 'bunny'
-
+    
     if request.method == 'POST':
         form = EmailOTPForm(request.POST)
 
         if form.is_valid():
             otp = form.cleaned_data['email_otp']
-            if EmailOTP.objects.filter(user__username = request.user,otp = otp).count() == 1:
+            if EmailOTP.objects.filter(user__username = request.session['username'],otp = otp).count() == 1:
                 # disbale the otp "requested" varibale in "EmailOTP" table 
-                    emailotp = EmailOTP.objects.get(user__username = request.user)
+                    
+                    emailotp = EmailOTP.objects.get(user__username = request.session['username'])
 
                     emailotp.requested = False
-                #after successful signup, redirect user based on type from request, -> student,professional,company
+
+                    user = User.objects.get(username = request.session['username'])
+
+                    #After Successfull OTP validation Login the user
+                    user.is_active = True   #activate user account
+                    user.save()
+                    login(request,user)
+                    #after successful signup, redirect user based on type from request, -> student,professional,company
                     if request.session['type'] == 'student':
                         return redirect('student')
                     

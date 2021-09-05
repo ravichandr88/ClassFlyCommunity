@@ -113,12 +113,11 @@ CACHES = {
 
 
 
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [os.environ['REDIS_URL']],
+            "hosts": ['rediss://:pe8586157d58d6c7e8d69c9879829d808b16354b8a7a87dfd976a82125845a61b@ec2-108-128-33-61.eu-west-1.compute.amazonaws.com:15710'],
         },
     },
 }
@@ -317,6 +316,8 @@ CELERY_TRACK_STARTED = True
 
 FORKED_BY_MULTIPROCESSING=1
 
+# ASGI_APPLICATION = 'ClassFlyComm.asgi.application'
+ 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
@@ -326,6 +327,9 @@ EMAIL_HOST_PASSWORD = 'hfuzrqtspqwwefox'
 
 VDO_API = "uVigALnjD16hnj2770F07XGJS2bRNfLrTVv08gYWfsL8KMcD2uNWp9GSpSglq7Ta"
 
+# Razorpay
+KEY_ID = 'rzp_test_ufU0SSyGNbrP2q'
+KEY_SECRET = '75v0XLMgYytmqphZ1WmITrxO'
 
 
 # celeryd: celery -A ClassFlyComm worker --pool=solo -l info

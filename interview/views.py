@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,Http404
 from .forms import StudentForm,ProfessionalForm,HRForm,ProfessionalBankForm,ProfTimeTableForm,Experienc,ProIntervTime,CompanyForm
 from django.contrib.auth.decorators import login_required
 from .models import Fresher, Professinal_Interview_Time, HRaccount,Company,Experience,Professinal_Account_Details ,Prfessional,ProExperience, Professional_Meeting
@@ -10,7 +10,15 @@ from django.shortcuts import redirect
 # Fresher Singup Page-3
 # Create your views here.
 @login_required
-def student(request):
+def student(request, edit = 0):
+
+    if request.method == 'GET' and edit == 0 and Fresher.objects.filter(user__username = request.user).count() == 1:
+      return HttpResponse('Please go to dashboard to edit profile information')
+
+  # edit = 1 means loading the for editing
+    if edit == 1 and Fresher.objects.filter(user__username = request.user).count() == 0:
+        raise Http404
+
     """
     form values 
     college 
@@ -24,41 +32,85 @@ def student(request):
     
     student = StudentForm()    #preparing an empty form
 
-    skills = """
-                    <div id="extra"></div>
-				<ul class=" wrap-input100 ">
-					<li class="tags-new">
-							<div class="wrap-input100 " >
-								<h5>Skills</h5>
-					  <input class="input100" type="text" placeholder="Skills"> 
-					  </div>
-					  <p style="color:'red'">Enter skills seperated by comma.</p>
-					</li>
-				  </ul>"""
+    # If the function called for editing
+    if edit == 1:
+        fresher  = Fresher.objects.get(user__username = request.user)
+        student.initial['college']          =  fresher.college    
+        student.initial['branch']           =  fresher.branch    
+        student.initial['passout_year']     = fresher.passout_year  
+        student.initial['master_college']   = fresher.master_college 
+        student.initial['master_branch']    = fresher.master_branch
+        student.initial['pre_college']      = fresher.pre_college  
+        student.initial['pre_branch']       = fresher.pre_branch  
+        student.initial['about_yourself']   = fresher.about_yourself 
+        student.initial['pre_passout']      = fresher.pre_passout 
+        student.initial['master_passout']   = fresher.master_passout 
+        student.initial['total_experience'] = fresher.total_experience
+        student.initial['language_spoke']   =  fresher.language_spoken 
+          
+    
+        # A special input, to get skills , we are providing extra html code.
+        skills = """
+                        <div id="extra">"""
+
+        for i in fresher.skills.split(','):
+        
+            skills = skills + '<input name="skills" id="' + i.replace(' ','') + '" value="' + i + '" style="display:none">'
+
+        skills = skills + '  </div><ul class=" wrap-input100 "> '
+
+        for i in fresher.skills.split(','):
+          skills = skills + '<li class="tags" id="fun"><span>' + i.replace(' ','') +'</span><i class="fa fa-times"></i></li>'
+
+
+            
+        skills = skills + """<li class="tags-new">
+                  <div class="wrap-input100 " >
+                    <h5>Skills</h5>
+                <input class="input100" type="text" placeholder="Skills"> 
+                </div>
+                
+              </li>
+              </ul>"""
+        
+
+    # skills = """
+    #                 <div id="extra">
+    #                 </div>
+		# 		<ul class=" wrap-input100 ">
+		# 			<li class="tags-new">
+		# 					<div class="wrap-input100 " >
+		# 						<h5>Skills</h5>
+		# 			  <input class="input100" type="text" placeholder="Skills"> 
+		# 			  </div>
+		# 			  <p style="color:'red'">Enter skills seperated by comma.</p>
+		# 			</li>
+		# 		  </ul>"""
+
+
 
     if request.method == 'POST':
         student = StudentForm(request.POST)
 
         if student.is_valid() and len(request.POST.getlist('skills')) != 0:
-          fresher = Fresher( 
-            user             = User.objects.get(username = request.user),
-            college          = student.cleaned_data['college'],
-            branch           = student.cleaned_data['branch'],
-            passout_year     = student.cleaned_data['passout_year'],
-            master_college   = student.cleaned_data['master_college'],
-            master_branch    = student.cleaned_data['master_branch'],
-            pre_college      = student.cleaned_data['pre_college'],
-            pre_branch       = student.cleaned_data['pre_branch'],
-            about_yourself   = student.cleaned_data['about_yourself'],
-            pre_passout      = student.cleaned_data['pre_passout'],
-            master_passout   = student.cleaned_data['master_passout'],
-            total_experience = int(student.cleaned_data['total_experience']),
-            skills           = str(request.POST.getlist('skills'))[1:][:-1],
-            language_spoken  = student.cleaned_data['language_spoke'])
+          fresher = Fresher()
+          fresher.user             = User.objects.get(username = request.user)
+          fresher.college          = student.cleaned_data['college']
+          fresher.branch           = student.cleaned_data['branch']
+          fresher.passout_year     = student.cleaned_data['passout_year']
+          fresher.master_college   = student.cleaned_data['master_college']
+          fresher.master_branch    = student.cleaned_data['master_branch']
+          fresher.pre_college      = student.cleaned_data['pre_college']
+          fresher.pre_branch       = student.cleaned_data['pre_branch']
+          fresher.about_yourself   = student.cleaned_data['about_yourself']
+          fresher.pre_passout      = student.cleaned_data['pre_passout']
+          fresher.master_passout   = 0000 if student.cleaned_data['master_passout'] == '' else student.cleaned_data['master_passout']
+          fresher.total_experience = int(student.cleaned_data['total_experience'])
+          fresher.skills           = str(request.POST.getlist('skills'))[1:][:-1]
+          fresher.language_spoken  = student.cleaned_data['language_spoke']
           fresher.save() 
 
-          return redirect('resume')
-
+          
           exp1 = student.exp(1)
           if exp1 != 0:
              exp1.applicant = fresher
@@ -74,6 +126,7 @@ def student(request):
             exp3.applicant = fresher
             exp3.save()
 
+          return redirect('resume')
 
         # if form is not valid
         elif len(request.POST.getlist('skills')) == 0:
@@ -88,21 +141,10 @@ def student(request):
 					  <p style="color:red">Enter skills seperated by comma.</p>
 					</li>
 				  </ul>"""
+
         return render(request,'form.html',context={'form':student, 'skills':skills,'title':'Student Signup'})
 
 
-# A special input, to get skills , we are providing extra html code.
-    skills = """
-                    <div id="extra"></div>
-				<ul class=" wrap-input100 ">
-					<li class="tags-new">
-							<div class="wrap-input100 " >
-								<h5>Skills</h5>
-					  <input class="input100" type="text" placeholder="Skills"> 
-					  </div>
-					  <p style="color:red">Enter skills seperated by comma.</p>
-					</li>
-				  </ul>"""
     return render(request,'form.html',context={'form':student, 'skills':skills})
 
 

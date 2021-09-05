@@ -57,8 +57,6 @@ def fresher_dash(request):
     return render(request,'fresher_dash.html',context={'meetings':p,'today':today,'self':user})
 
 
-
-
 def pro_dash(request):
 # Types   of meeting states possible
 # State 1 -> Booked
@@ -167,6 +165,7 @@ def book_interview(request, prof = 0):  # page 22
         ProFrehserMeeting(
         prof         = prof,
         fresher      = Fresher.objects.get(user__username = request.user),
+        designation  = request.POST.get('designation'),
         date_time    = timezone.datetime.fromisoformat(date_time),
         skills       = technologies,
         channel_name = 'car',

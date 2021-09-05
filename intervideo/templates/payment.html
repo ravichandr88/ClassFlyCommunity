@@ -1,0 +1,218 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Login V1</title>
+	<meta charset="UTF-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="{% static 'hrstatic/images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/vendor/animate/animate.css' %}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/vendor/css-hamburgers/hamburgers.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/vendor/select2/select2.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'hrstatic/css/main.css' %}">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+                
+                <!-- <div class="login100-pic js-tilt" data-tilt>
+					<img src="{% static 'hrstatic/images/img-01.png' %}" alt="IMG">
+                </div>  -->
+
+				<form class="login100-form validate-form" method="POST" action=""  >
+					<span class="login100-form-title">
+					<u>Payment</u>
+					</span>
+
+					<!-- Code for deatil view of job -->
+					
+					<!-- <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
+						<input class="input100" type="text" name="phone" placeholder="Phone Number">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-envelope" aria-hidden="true"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<input class="input100" type="password" name="pass" placeholder="Password">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
+                    </div> -->
+                
+
+
+				<!-- Code for booking interview program -->
+				{% if meeting %}
+                <div>
+                    <p >Date: {{meeting.payment.created_on |date:"M d, Y"}}</p>
+                    <br>
+                    <h5>Service: <br>Interview with <u>{{meeting.meeting.prof.user.first_name}}({{meeting.meeting.prof.designation}})</u> for <u>{{meeting.meeting.designation}}</u> <br> <br> Skills :<br> <b><u>{{meeting.meeting.skills}}.</u></b></h5>
+                    <br>
+                    <h6>No. of skills : <b>{{meeting.meeting.skills_count }}</b></h6>
+                    <br>
+                    <h6>Interview Date:<b><u> {{meeting.meeting.date_time}} </u></b></h6>
+                    <br>
+                    <h6>Actual Price:<b><u> {{meeting.payment.amount}} Rs</u></b></h6>
+                    <br>
+                    <h6>Tax GST:<b><u> {{meeting.payment.tax}} Rs</u></b></h6>
+                    <br>
+				</div>
+				
+				{% endif %} 
+            <!-- end of code for  -->
+
+
+				<!-- Code for buying the interview video  -->
+				{% if video %}
+                <div>
+                    <p>Date: {{payment.created_on |date:"M d, Y"}}</p>
+                    <br>
+                    <h5>Video Title : {{payment.payment_done.video.video.prof.designation}} | Interview | {{payment.payment_done.video.video.designation}}</h5>
+                    <br>
+                    <h6>Skills  :  <u style="margin-left:5em">{{payment.payment_done.video.video.skills}}</u></h6>
+                    <br>
+                    <h5>Video Price : <b><u>{{payment.amount}} Rs</u></b></h5>
+                    <br>
+                    <h5>Tax Price (18% GST) : <b><u>{{payment.tax}} Rs </u></b></h5>
+                    <br>
+                </div> 
+                <!-- end of code for buying the interview video -->
+				{% endif %}
+				
+				<!-- Code for buying Resume Subscription -->
+				
+{% if resume %}
+                <div>
+                    <p>Date: {{payment.created_on |date:"M d, Y"}}</p>
+                    <br>
+                    <h5>Resume Subscription :<br> Maximum of 30 number of resumes which have skills count of : {{resume.skills_count}}.</h5>
+                    <br> 
+                    <h5>Subscription Ends by :<b><u> {{resume.expiry | date:"M d, Y"}} </u></b> </h5>
+                    <br>
+                    <h5>Subscription Price : <b><u>{{payment.amount}}.Rs</u></b></h5>
+                    <br>
+                    <h5>Tax : <b><u>{{payment.tax}}.Rs</u></b></h5>
+                    <br>
+				</div> 
+			
+			{% endif %}
+			
+                <p>Total Price</p>
+					<div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<input class="input100" type="number" value="{{payment.razorpay_amount}}" readonly="readonly" name="con-pass" placeholder="Confirm Password">
+				
+						<span class="focus-input100"><br><br>				
+						</span>
+						<span class="symbol-input100">
+								<i class="fa fa-money" aria-hidden="true"></i>
+							</span>
+						</div>
+                <!-- End of code for buying Resume subscription -->
+                
+
+				
+				
+
+					<!-- <div class="wrap-input100 validate-input" data-validate = "Password is required">
+						<input class="input100" type="password" name="con-pass" placeholder="Confirm Password">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
+					</div> -->
+
+					
+                    <div class="container-login100-form-btn">
+						<button class="login100-form-btn"  id="rzp-button1">
+							PAY  
+						</button>
+					</div>
+
+
+					<!-- <button >Pay</button> -->
+					<script src="https://checkout.razorpay.com/v1/checkout.js"></script><script>var options = {    "key": "rzp_test_ufU0SSyGNbrP2q", // Enter the Key ID generated from the Dashboard   
+					"amount": "{{ payment.razorpay_amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise   
+					"currency": "INR",  
+					"name": "ClassFly",   
+					"description": "{{payment.service}}",    
+					"image": "https://example.com/your_logo",    
+					"order_id": "{{payment.razor_order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1    
+					"callback_url": "/payment",    
+					"prefill": {       
+						"name": "{{payment.user.first_name}}",        
+						"email": "{{payment.user.email}}",        
+						"contact": "{{payment.user.username}}"    },    
+					"notes": {        
+						"address": "ClassFly Good"    
+						},    
+					"theme": {        
+						"color": "#3399cc"    
+						}
+					};var rzp1 = new Razorpay(options);document.getElementById('rzp-button1').onclick = function(e){    rzp1.open();    e.preventDefault();}</script>
+
+
+					
+					
+
+					<div class="text-center" style="padding-top: 50px">
+						<a class="txt2" href="#" onclick="back()">
+							Back
+							<i class="fa fa-long-arrow-left m-l-5" aria-hidden="true"></i>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	
+
+
+	
+<!--===============================================================================================-->	
+	<script src="{% static 'hrstatic/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'hrstatic/vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'hrstatic/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'hrstatic/vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'hrstatic/vendor/tilt/tilt.jquery.min.js' %}"></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+
+
+        function back()
+        {
+            window.history.back();
+        }
+	</script>
+<!--===============================================================================================-->
+	<script src="{% static 'hrstatic/js/main.js'%}"></script>
+
+
+
+
+
+
+</body>
+</html>

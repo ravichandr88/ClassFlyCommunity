@@ -2,6 +2,7 @@ from django.shortcuts import render
 import boto3 
 from botocore.client import Config
 from botocore.exceptions import ClientError
+from django.contrib.auth.decorators import login_required
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -22,8 +23,9 @@ from django.contrib.auth.models import User
 from .models import Contact_number
 from interview.models import Fresher, Prfessional, HRaccount
 
-def generate_presigned_url(bucket_name, object_key, expiry=3600):
-
+def generate_presigned_url(bucket_name, object_key, expiry=120):
+    
+        
     client = boto3.client("s3",region_name="ap-south-1",
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
                           aws_secret_access_key="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",
@@ -65,17 +67,33 @@ def fileupload(request):
         # imgurl="https://classfly.s3.ap-south-1.amazonaws.com/"+imgurl
         return Response(data={'code':200,'url':url})
 
-@csrf_exempt
-@api_view(['POST','GET'])
-def create_presigned_url(request,filename):
+@api_view(['GET'])
+def create_presigned_url(request,id = 0):
+        if request.user == 'AnonymousUser' or User.objects.filter(username = request.user).count() == 0:
+                return Response(data={'message':'login'})
 
-        count = Contact_number()
-        count.save()
+        #1A Check wehtehr the professional account exists or not
+        if id == 0 or Prfessional.objects.filter(id = id).count() == 0:
+                return Response(data={'message':'Not valid file name'} )
+        
+        prof = Prfessional.objects.get(id = id)
+        
+        # 1B Check whether the current user has option to download the resume, whether paid or not
+        user = User.objects.get(username = request.user)
+        url = ''
+        
+        # Check wehther we can download the pofessional resume based on their servie purchased
+         
+        for i in user.resume_purchase.all():
+               url = i.download(prof) 
+               if url != False:
+                       break
+
+        if url == False:
+                return Response(data={'message':'Sorry, Not subscribed for resume download. Or Subscription Expired'})
+       
         # filename = 'contact'+str(count.id)+filename
-        filename = filename
-        count.filename = filename
-        count.save()
-        print(filename)
+        filename = str(url).replace('https://project0videos.s3.ap-south-1.amazonaws.com/','')
         url = generate_presigned_url('project0videos',filename)
         return Response(data={'url':url})
 
@@ -92,6 +110,7 @@ def upload_raw(request):
 def initiate_upload(request):
 
         print('Inititate Upload 0000000000',request.data)
+
         s3 = boto3.client("s3",region_name="ap-south-1",
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
                           aws_secret_access_key="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",
@@ -99,10 +118,9 @@ def initiate_upload(request):
 
         response = s3.create_multipart_upload(
         Bucket='project0videos', 
-        Key=dict(request.data)['file_name'],
+        Key=str(dict(request.data)['file_name']).replace(' ','+'),
         Expires=3600)
 
-        print(response)
 
         return Response(data={'upload_id':response['UploadId']})
 
@@ -114,7 +132,6 @@ def initiate_upload(request):
 @api_view(['POST'])
 def presigned_url_multipart(request):
         data = dict(request.data)
-        print(data)
         key = data['key']
         part_no = data['part_no']
         upload_id = data['upload_id']
@@ -140,6 +157,7 @@ def presigned_url_multipart(request):
 def complete_upload(request):
         ''' {'upload_id',file_name,'multi_part_etags} '''
         data = request.data
+        data['file_name'] = str(data['file_name'].replace(' ','+'))
 
         s3 = boto3.client("s3",region_name="ap-south-1",
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
@@ -160,7 +178,7 @@ def complete_upload(request):
                 print(e)
 
         Contact_number(filename = data['file_name']).save()
-        
+        data['file_name'] = str(data['file_name']).replace(' ','+')
 
         if Fresher.objects.filter(user__username = data['username']).count() != 0:
                 user = Fresher.objects.get(user__username = data['username'])
@@ -232,10 +250,9 @@ def classfly_initiate_upload(request):
 
         response = s3.create_multipart_upload(
         Bucket='classfly', 
-        Key=dict(request.data)['file_name'],
+        Key=str(dict(request.data)['file_name']).replace(' ','+'),
         Expires=3600)
 
-        print(response)
 
         return Response(data={'upload_id':response['UploadId']})
 
@@ -266,7 +283,7 @@ def classfly_generate_presigned_url(bucket_name, object_key, expiry=3600):
 def classfly_complete_upload(request):
         ''' {'upload_id',file_name,'multi_part_etags} '''
         data = request.data
- 
+        data['file_name'] = str(data['file_name']).replace(' ','+')
         s3 = boto3.client("s3",region_name="ap-south-1",
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
                           aws_secret_access_key="QuQibO56sxbqBxcbBm97YtjEfdvrEGlYx+Okqa2Q",
@@ -275,7 +292,7 @@ def classfly_complete_upload(request):
                 response = s3.complete_multipart_upload(
                 Bucket= 'classfly',
                 MultipartUpload=data['multi_part_etags'],
-                Key= data['file_name'], 
+                Key = data['file_name'], 
                 RequestPayer='requester',
                 UploadId = data['upload_id'])
 

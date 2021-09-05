@@ -6,22 +6,30 @@ from django.contrib.auth.models import User
 from .forms import JobPostForm, JobApplyForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
+import requests
+from requests.auth import HTTPBasicAuth
 
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Jobpost, Applicantion, FresherInvited
+from .models import Jobpost, Applicantion, Payment ,ResumePurchase ,MeetingPurchase , FresherInvited, VideoPurchase, InterviewSearch, InterviewVideo
 from fresher.models import ProFrehserMeeting, Meeting, MeetingActive
 from interview.models import Prfessional, Fresher, HRaccount, Company, ProfessionalInterview
 from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect,Http404
 
 import json
 
+
+
+
+
+# REST API at 566
 
 def hraccount(function):
     # @wraps(function)
@@ -60,41 +68,94 @@ def skillsmatch(job,fresher):
 
 # Create your views here.
 # REST API
+@login_required
+def video_player(request,pfmid = 0, prof=False):
+# pfmid = ProFresherMeeting ID, prof
 
-def video_player(request,pfmid = 3, prof=False):
+
+    if request.method == 'GET' and pfmid == 0:
+        meetings = ProFrehserMeeting.objects.filter(~Q(feedback = ''),approved = True)[:10]
+        message = 'New Interview Videos'
+        if len(meetings) == 0:
+            message = 'Sorry, No interviews found'
+
+        return render(request,'videoplayer_now.html', context={'message':message,'video':False,'meetings':meetings})
+
+
+    
+
+    if request.method == 'POST':
+
+        data = request.POST.dict()
+
+        # Table InterviewSearch, keep record for all the queries done by user
+        InterviewSearch(
+            user =              User.objects.get(username = request.user), 
+            pro_name =          data['pro_name'],
+            pro_designation =   data['pro_designation'],
+            skills =            data['skills']       
+            ).save()
+        
+        
+        meetings  =   ProFrehserMeeting.objects.filter(~Q(feedback = ''), approved = True, prof__user__first_name__icontains = data['pro_name'])
+        
+        meetings  =   meetings.filter(prof__designation__icontains = data['pro_designation'])
+        message = 'New Interview Videos'
+
+        for i in data['skills'].split(','):
+            meetings = meetings.filter(skills__icontains = i)
+        
+        if len(meetings) == 0:
+            message = 'No matching videos found, Will SMS you when these topics interviews are done. Thank You'
+        # variable video is for activating the video player
+        #message is message given based on the videos quer, ex: no videos found
+        return render(request,'videoplayer_now.html', context={'message':message,'video':False,'meetings':meetings})
+
 
     resp = ''
-    if not prof :
+    pro_meeting = ''
+
+    meetings = ProFrehserMeeting.objects.filter(~Q(feedback = ''), approved = True).filter(~Q(id=pfmid)).order_by('-id')[:10]
+
+
+# Code for watching the video
+    if pfmid != 0:
+
         if ProFrehserMeeting.objects.filter(id = pfmid).count() == 0:
-            print('line 17')
-            raise Http404
+                raise Http404 
         
         pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
 
-        try:
-            resp = get_video_otp(pro_meeting.meeting_details.vdo_id)
+        # Code to record the video viewing count for the user and meeting
+        if InterviewVideo.objects.filter(video = pro_meeting,user = User.objects.get(username = request.user)).count() == 0:
 
+            video = InterviewVideo(
+                video = pro_meeting,
+                user = User.objects.get(username = request.user)
+            )
+            video.save()
+
+        try:
+            print(pro_meeting.meeting_details.vdo_id)
+            resp = get_video_otp(pro_meeting.meeting_details.vdo_id)
+            print(resp)
             if str(resp.status_code) != '200':
-                print(resp.json()) 
                 raise Http404
         except:        
-            return HttpResponse('Not yet interviewed')
+            meetings = ProFrehserMeeting.objects.filter(~Q(feedback = ''),approved = True)[:10]
+            print(resp,'00000000000000000000')
+            return render(request,'videoplayer_now.html', context={'message':'Sorry, Video not loaded','video':False,'meetings':meetings})
+
 
         
         
     else:
-        try:
-            pro = ProfessionalInterview.objects.get(id = pfmid)
-            
-            resp = get_video_otp(pro.interview_url)
+        meetings = ProFrehserMeeting.objects.filter(~Q(feedback = ''),approved = True)[:10]
 
-            if str(resp.status_code) != '200':
-                raise Http404
-        except:
-            return HttpResponse('Not yet interviewed')
+        return render(request,'videoplayer_now.html', context={'message':'Candidate not yet interviewed','video':False,'meetings':meetings})
 
 
-    return render(request,'videoplayer_now.html', context={'otp':resp.json()['otp'],'playbackInfo':resp.json()['playbackInfo']})
+    return render(request,'videoplayer_now.html', context={'video':True,'otp':resp.json()['otp'],'playbackInfo':resp.json()['playbackInfo'],'meeting':pro_meeting,'meetings':meetings})
 
 
 
@@ -485,6 +546,16 @@ def invite_email(job_url,to_email):
     send_mail( subject, message, email_from, recipient_list )
 
 
+def error_email(error):
+    
+    return
+    subject = 'Error'
+    message = f'Error while paying: ' + error +'.'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['ravichandrareddy88@gmail.com', ]
+    send_mail( subject, message, email_from, recipient_list )
+
+
 
 @login_required
 def jobs_applied(request):
@@ -506,3 +577,247 @@ def jobs_applied(request):
 
     return render(request, 'jobs_applied.html', context = data)
 
+
+@login_required
+def video_buying(request, vdo_id = 0):
+    #1 check whether vdo exists
+    if vdo_id == 0 or ProFrehserMeeting.objects.filter(id = vdo_id).count() == 0:
+        raise Http404
+    
+    #2 Check if the meeting is done or not
+    meeting = ProFrehserMeeting.objects.get(id = vdo_id)
+    intervideo = '' #assigning the intervideo object
+    try:
+        if not meeting.meeting_details.record_stopped:
+            return HttpResponse('Meeting not yet done')
+    except:
+        return HttpResponse('Meeting not yet done')
+    
+    #3 If User has not watched video, then create InterviewVideo row and add user
+    if InterviewVideo.objects.filter(user__username = request.user,video__id = vdo_id).count() == 0:
+        intervideo = InterviewVideo(
+            user    = User.objects.get(username = request.user),
+            video   = meeting
+        )
+        intervideo.save()
+
+    else:
+        intervideo = InterviewVideo.objects.get(user__username = request.user,video__id = vdo_id)
+    
+    #4 Now create payment object for transaction
+    
+    # 4a We need current Payment id for recipt, so if there are no rows in tbale, get the id = 1
+    reciept_id = 0  # receipt is formed by that row id and ProFreMeeting id and service type
+    
+    try:
+        reciept_id = Payment.objects.latest('id').id + 1
+    except:
+        reciept_id = 1
+    
+
+    payment = Payment(
+        receipt                 = 'VDO000' + str(reciept_id) + '_0' + str(meeting.id) ,
+        user                    = User.objects.get(username = request.user),
+        service                 = meeting.prof.designation + '| interview |' + meeting.designation,
+        amount                  = (len(meeting.skills.split(','))*20),
+        service_type            = 'VDO',
+        )
+    payment.tax             = round((payment.amount)*0.18,2)
+
+    payment.total_amount    =  round(payment.tax + payment.amount )
+    payment.save()
+
+    # 4b Get the order_id from the razorpay by getting 
+    
+    data =    {
+        "amount": payment.total_amount * 100,
+        "currency": "INR",
+        "receipt": payment.receipt
+        } 
+
+    resp = requests.post('https://api.razorpay.com/v1/orders',
+            headers = {'content-type': 'application/json'},data = json.dumps(data),
+            auth = HTTPBasicAuth(settings.KEY_ID, settings.KEY_SECRET))
+
+    if resp.status_code != 200:
+        message = str(resp.json()) + 'User: '+ request.user 
+        error_email(message)
+
+        return HttpResponse('Sorry, Payment not done, Situation is reported. Please start again. Message {}'.format(resp.json()['error']['description']))
+
+# 4c prepare receipt id
+    payment.save()
+
+    video = VideoPurchase(
+        video = intervideo,
+        payment = payment
+    )
+
+    video.save()
+
+    
+    return render(request,'payment.html', context={'video':video,'payment':payment})
+
+
+# function for booking the meetings
+@login_required
+def purchase_interview(request, pfmid = 0):
+
+    meeting = '' #ProFreshermeeting object
+
+    try:
+        meeting = ProFrehserMeeting.objects.get(id = pfmid)
+    except:
+        raise Http404
+
+    # Check if the payment is already done or not
+    if MeetingPurchase.objects.filter(meeting__id = meeting.id).count() != 0:
+        if MeetingPurchase.objects.get(meeting__id = meeting.id).payment.razorpay_signature != '':
+            return HttpResponse('Payment is already done ')
+
+    # Create a payment object, and get razorpayid
+    try:
+        reciept_id = Payment.objects.latest('id').id + 1
+    except:
+        reciept_id = 1
+
+    payment = Payment(
+        receipt                 = 'INT000' + str(reciept_id) + '_0' + str(meeting.id) ,
+        user                    = User.objects.get(username = request.user),
+        service                 = meeting.prof.designation + '| interview for |' + meeting.designation +' | position.',
+        amount                  = (len(meeting.skills.split(','))*111),
+        service_type            = 'INT',
+        )
+
+    payment.tax             = round((payment.amount)*0.18,2)
+    payment.total_amount    =  round(payment.tax + payment.amount )
+    payment.save()
+
+    # 4b Get the order_id from the razorpay by getting 
+    
+    data =    {
+        "amount": payment.total_amount * 100,
+        "currency": "INR",
+        "receipt": payment.receipt
+        } 
+
+    resp = requests.post('https://api.razorpay.com/v1/orders',
+            headers = {'content-type': 'application/json'},data = json.dumps(data),
+            auth = HTTPBasicAuth(settings.KEY_ID, settings.KEY_SECRET))
+
+    if resp.status_code != 200:
+        message = str(resp.json()) + 'User: '+ request.user 
+        error_email(message)
+
+        return HttpResponse('Sorry, Payment not done, Situation is reported. Please start again. Message {}'.format(resp.json()['error']['description']))
+
+# 4c prepare receipt id
+    payment.razor_order_id = resp.json()['id']
+    payment.save()
+
+    meeting_payed = ''
+    try:
+        meeting_payed = MeetingPurchase(
+        meeting  = meeting,
+        payment  = payment
+        ).save()
+    except:
+        meeting_payed = MeetingPurchase.objects.get(meeting__id = meeting.id)
+        meeting_payed.payment = payment
+        meeting_payed.save()
+
+    return render(request, 'payment.html',context={'meeting':meeting_payed,'payment':payment})
+
+
+# Function to buy resume subscription
+@login_required
+def resume_purchase(request,skills = 0):
+    print(skills)
+
+    if skills == 0 and skills != 6 and skills != 16 and skills != 25:
+        raise Http404
+
+    user = User.objects.get(username = request.user)
+
+    # Create a payment object, and get razorpayid
+    try:
+        reciept_id = Payment.objects.latest('id').id + 1
+    except:
+        reciept_id = 1
+
+    payment = Payment(
+        receipt                 = 'RES000' + str(reciept_id) + '_0' + str(user.id) ,
+        user                    =  User.objects.get(username = request.user),
+        service                 = '30 Downloads of ' + str(skills) + ':Skills Resumes',
+        amount                  =  39 if skills == 6 else 99 if skills == 16 else 149,
+        service_type            = 'RES',
+        )
+
+    payment.tax             = round((payment.amount)*0.18,2)
+    payment.total_amount    = round(payment.tax + payment.amount )
+
+    payment.save()
+
+    # 4b Get the order_id from the razorpay by getting 
+    
+    data =    {
+        "amount": payment.total_amount * 100,
+        "currency": "INR",
+        "receipt": payment.receipt
+        } 
+
+    resp = requests.post('https://api.razorpay.com/v1/orders',
+            headers = {'content-type': 'application/json'},data = json.dumps(data),
+            auth = HTTPBasicAuth(settings.KEY_ID, settings.KEY_SECRET))
+
+    if resp.status_code != 200:
+        message = str(resp.json()) + 'User: '+ request.user 
+        error_email(message)
+
+        return HttpResponse('Sorry, Payment not done, Situation is reported. Please start again. Message {}'.format(resp.json()['error']['description']))
+
+# 4c prepare receipt id
+    payment.razor_order_id = resp.json()['id']
+    payment.save()
+
+
+    
+
+    resume = ResumePurchase(
+        user = User.objects.get(username = request.user),
+        payment = payment,
+        skills_count = skills
+    )
+    resume.save()
+
+
+    return render(request, 'payment.html', context={'resume':resume, 'payment': payment})
+
+
+
+# Function for payment
+@login_required
+@csrf_exempt
+def payment(request):
+    data = request.POST.dict()
+
+    # Check if order id is present int the table
+    if Payment.objects.filter(razor_order_id = data['razorpay_order_id']).count() == 0:
+        return HttpResponse('Payment was not placed, ')
+
+    payment = Payment.objects.get(razor_order_id = data['razorpay_order_id'])
+    payment.razorpay_signature = data['razorpay_signature']
+    payment.razorpay_payment_id = data['razorpay_payment_id']
+    payment.save()
+
+    return redirect('pro_search')
+    # return render(request,'payment.html', context={})
+
+
+# Complete bought services by anyone.
+@login_required
+def paid_services(request):
+
+    payments = Payment.objects.filter(~Q(razorpay_signature = ''),user__username = request.user)
+    
+    return render(request, 'paid_services.html',context={'payments':payments})

@@ -261,18 +261,20 @@
 <span>Admin</span>
 </a>
 <div class="dropdown-menu">
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/profile.html">My Profile</a>
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/settings.html">Settings</a>
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/login.html">Logout</a>
- </div>
+    <a class="dropdown-item" href="/applicant/1">My Profile</a>
+    <a class="dropdown-item" href="/resume">Resume</a>
+    <a class="dropdown-item" href="/pro/profile">Profile Pic</a>
+    <a class="dropdown-item" href="/logout">Logout</a>
+</div>
 </li>
 </ul>
 <div class="dropdown mobile-user-menu">
 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 <div class="dropdown-menu dropdown-menu-right">
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/profile.html">My Profile</a>
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/settings.html">Settings</a>
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/login.html">Logout</a>
+<a class="dropdown-item" href="/applicant/1">My Profile</a>
+<a class="dropdown-item" href="/resume">Resume</a>
+<a class="dropdown-item" href="/pro/profile">Profile Pic</a>
+<a class="dropdown-item" href="/logout">Logout</a>
 </div>
 </div>
 </div>
@@ -281,15 +283,13 @@
 <div id="sidebar-menu" class="sidebar-menu">
 <ul>
 <li class="menu-title">
-<span>Main</span>
+<span>Menu</span>
 </li>
-<li><a href="#">Calendar</a></li>
-<li><a href="#">Contacts</a></li>
-<li><a href="#">Email</a></li>
-<li><a href="#">File Manager</a></li>
-<li class="active">
-<a href="#"><i class="la la-users"></i> <span>Clients</span></a>
-</li>
+<li><a href="/searchpage">Professionals</a></li>
+<!-- <li><a href="/f_dashh">Meetings</a></li> -->
+<li><a href="/player_now/1">Videos</a></li> 
+<li><a href="/jobs/search">Jobs Search</a></li>
+<li><a href="/jobs_applied">Jobs Applied/Invited</a></li>
 </ul>
 </div>
 </div>
@@ -305,6 +305,9 @@
 <li class="breadcrumb-item"><a href="smarthr-laravel/html-template/light/index.html">Dashboard</a></li>
 <li class="breadcrumb-item active">Interviews</li>
 </ul>
+
+
+
 </div>
 </div>
 </div>
@@ -391,17 +394,9 @@
 </div>
 </div> -->
 
-
-
-
-
 </div>
 </div>
-
-
-
 </div>
-
 </div>
 
 <script
@@ -483,4 +478,5 @@ var url = "{{i.prof.profile_pic}}";
 <script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/jquery.slimscroll.min.js' %}"></script>
 <script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/select2.min.js' %}"></script>
 <script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/app.js' %}"></script>
+
 </html>

@@ -668,8 +668,20 @@
         <span class="text">{{fresher.about_yourself}}</span>
 </li>
 
+<li>
+        <span class="title">Feedback:</span>
+</li>
+<li>
+        {% for i in fresher.all_feedback %}
+        <br><span class="text">{{forloop.counter}}). Professional: {{i.prof.user.first_name}} ({{i.prof.designation}}),&thinsp; Experience : {{i.prof.total_exp_year}} years<br> &thinsp;&thinsp;<u> {{i.feedback}} </u> </span>
+        {% endfor %}
+        
+</li>
 
 </ul>
+
+<button class="btn nav-link btn-custom" onclick="goback()">Back</button>
+
 </div> 
 
 </div>
@@ -885,6 +897,11 @@ var url = "{{fresher.profile_pic}}";
     fetch(url).then(function(response) {
     response.text().then(function(text)
     {document.getElementById('pro_pic').src = text;});});
+
+function goback(){
+        window.history.back();
+}
+
 
 </script>
 <script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/popper.min.js' %}"></script>
