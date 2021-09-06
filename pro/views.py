@@ -289,7 +289,8 @@ def resend_otp(request):
 
 def login_view(request): 
     #IF the user is already logged in 
-    if request.user != 'AnonymousUser':
+    
+    if str(request.user) != 'AnonymousUser':
         return redirect('pro_home')
 
     if request.method == 'POST':
