@@ -34,12 +34,12 @@ def loginview(request):
         
         return render(request,'login.html',{})
     else:
-        data = dict(request.POST)
-        data['username'] = data['username'][0]
-        data['password'] = data['password'][0]
+        data = request.POST.dict()
+       
         #check if username exists
 
         user = None
+
         if User.objects.filter(username=data['username']).count() == 0:
             # print(User.objects.filter(username=str(data['username'])),data)
             if Phonenumber.objects.filter(phone_number = data['username']).count() == 0:
@@ -47,9 +47,9 @@ def loginview(request):
             user = Phonenumber.objects.get(phone_number=data['username']).user
         else:
             user = User.objects.get(username=data['username'])
-         
+        print(data)
         user = authenticate(request, username=user.username, password=data['password'])
-    
+     
         if user == None:
             # print(user)
             return HttpResponse('Incorrect Paaword , please try again<br><a href="/login" >Go Back</a>')
