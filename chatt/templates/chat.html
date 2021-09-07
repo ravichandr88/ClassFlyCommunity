@@ -1243,13 +1243,28 @@ dashboard.png
     const roomName =  '{{ room_name }}';
     
     const user_id  =  '{{user_id}}';
-    
+     
     console.log(user_id);
          // function to add chat recived
          function received(data)
         {
         
-        if(data.user != user_id)
+            print(data);
+
+
+         if( data.user == user_id)
+        {
+                document.getElementById("chatbox").innerHTML +=  '<div class="chat chat-right">'+
+                        '<div class="chat-body">'+
+                        '<div class="chat-bubble">'+
+                        '<div class="chat-content">'+
+                        '<p>' + data.message  + '</p>'+
+                        '<span class="chat-time">' + data.time + '</span>'+
+                        '</div></div></div></div>';
+                        
+
+        }
+        else  if(data.user != user_id)
         {
 //     document.querySelector('#chat-log').value += (data.message + '\n');
         document.getElementById("chatbox").innerHTML +=       '<div class="chat chat-left">'+
@@ -1265,18 +1280,7 @@ dashboard.png
                                         '<span class="chat-time">' + data.time + '</span>'
                                         '</div>';
         }
-        else if( data.user == user_id)
-        {
-                document.getElementById("chatbox").innerHTML +=  '<div class="chat chat-right">'+
-                        '<div class="chat-body">'+
-                        '<div class="chat-bubble">'+
-                        '<div class="chat-content">'+
-                        '<p>' + data.message  + '</p>'+
-                        '<span class="chat-time">' + data.time + '</span>'+
-                        '</div></div></div></div>';
-                        
-
-        }
+        
         }
 
 
