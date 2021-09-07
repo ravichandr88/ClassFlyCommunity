@@ -821,3 +821,4 @@ def paid_services(request):
     payments = Payment.objects.filter(~Q(razorpay_signature = ''),user__username = request.user)
     
     return render(request, 'paid_services.html',context={'payments':payments})
+

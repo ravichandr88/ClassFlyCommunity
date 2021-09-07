@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.views.generic import TemplateView
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.db.models import Q
 
@@ -24,6 +24,33 @@ def index(request):
     groups = TwoGroup.objects.filter(prof__id = user.id) | TwoGroup.objects.filter(fresher__id = user.id)
 
     return render(request, 'chat/index.html', {'groups':groups})
+
+
+
+
+# Chating function 
+@login_required
+def chatting(request, room_name):
+    # Fetch user details 
+    user = User.objects.get(username = request.user)
+    
+    
+    if TwoGroup.objects.filter(channel_name = room_name).count() == 0:
+        raise Http404
+
+    room = TwoGroup.objects.get(channel_name = room_name)
+
+    user_id = ''
+
+    if room.prof == user:
+        user_id = 'prof'
+    elif room.fresher == user:
+        user_id = 'fresher'
+    else:
+        print(room.prof, room.fresher, user)
+        raise Http404
+
+    return render(request, 'chat.html', context={'room_name': room_name,'user_id':user_id})
 
 
 

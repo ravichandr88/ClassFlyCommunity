@@ -299,7 +299,8 @@ def login_view(request):
 
             user = authenticate(request, username=form.user.username, password=form.cleaned_data['password'])
             
-
+            print(user == None)
+            
             if user == None:
                 form.add_error('password','Incorrect password')
                 return render(request,'signupcopy.html',context={'form':form})
