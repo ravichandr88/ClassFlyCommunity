@@ -72,6 +72,8 @@ from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from .models import TwoGroup,Messages
 from django.utils import timezone
+from datetime import datetime
+
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -133,7 +135,7 @@ class ChatConsumer(WebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'time': timezone.now(),
+                'time': timezone.now().strftime(" %H:%M:%S"),
                 'user': user
             }
         )
