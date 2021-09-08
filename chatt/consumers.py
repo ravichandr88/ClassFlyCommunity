@@ -154,6 +154,7 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
+        print(text_data_json)
         message = ''
         status = ''
         user_channel = ''
@@ -169,7 +170,9 @@ class ChatConsumer(WebsocketConsumer):
             user_channel    = text_data_json['room']
             user_position   = text_data_json['user']
         except:
-            print('Status')
+            print('Status relate call')
+
+        print(message,status,user_channel,user_position)
 
         str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
         session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
@@ -179,7 +182,9 @@ class ChatConsumer(WebsocketConsumer):
             user = User.objects.get(pk=uid)
 
             print(user)
-
+            print('Type: ',type)
+            print("type == 'chat_message'",type == 'chat_message')
+            print("type == 'status'",type == 'status')
             # this is for chatting
             if type == 'chat_message':
                 try:
@@ -230,7 +235,7 @@ class ChatConsumer(WebsocketConsumer):
                     }
                     )
             else:
-                print('')
+                print('Wrong type of status data recived')
         else:    
             print('If condition fails, no session found')
             
