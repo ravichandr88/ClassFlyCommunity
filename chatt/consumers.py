@@ -244,14 +244,16 @@ class ChatConsumer(WebsocketConsumer):
             print('If condition fails, no session found')
             
         return
+    
+    def status(self, event):
+            self.send(text_data=json.dumps({
+                'type':'status',
+                'status':event['status']
+            }))
 
     # Receive message from room group
     def chat_message(self, event):
-        print('event',event)
-        type    =  event['type']
-        print(type)
-
-        if type == 'chat_message':
+        
             message = event['message']
             user    = event['user']
             
@@ -264,14 +266,7 @@ class ChatConsumer(WebsocketConsumer):
                 'user': user
             }))
 
-        elif type == 'status':
-                    
-            status  = event['status']
-            # Send message to WebSocket
-            self.send(text_data=json.dumps({
-                'type':type,
-                'status':status
-            }))
+       
 
 
 
