@@ -190,7 +190,7 @@ class ChatConsumer(WebsocketConsumer):
                 try:
                     room = ''
 
-                    if type == '' and user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
+                    if  user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
                         print('First If done')
                         room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
 
