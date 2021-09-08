@@ -127,18 +127,50 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        user    = text_data_json['user']
-        print(user)
-        # Send message to room group
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'time': str(timezone.now().strftime("%I:%M:%S %p")),
-                'user': user
-            }
-        )
+        user_channel    = text_data_json['user']
+        room    = text_data_json['room']
+
+        str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
+        session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
+        if Session.objects.filter(session_key=session_key).count() == 1:
+            session = Session.objects.get(session_key=session_key)
+            uid = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=uid)
+
+
+            try:
+                room = ''
+
+                if TwoGroup.objects.filter(channel_name = room, prof = user).count() != 0:
+                    room = TwoGroup.objects.get(channel_name = room,  prof = user)
+
+                elif TwoGroup.objects.filter(channel_name = room, fresher = user).count() != 0:
+                    room = TwoGroup.objects.get(channel_name = room, fresher = user)
+
+                Messages(
+                message    = message,
+                sender     = user,
+                chatgroup  = room
+                ).save()
+
+                # Save data to database 
+                
+
+
+                # Send message to room group
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': 'chat_message',
+                        'message': message,
+                        'time': str(timezone.now().strftime("%I:%M:%S %p")),
+                        'user': user
+                    }
+                )
+            except:
+                return
+        
+        return
 
     # Receive message from room group
     def chat_message(self, event):
