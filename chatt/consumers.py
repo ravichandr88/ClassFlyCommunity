@@ -167,7 +167,7 @@ class ChatConsumer(WebsocketConsumer):
                         'type': 'chat_message',
                         'message': message,
                         'time': str(timezone.now().strftime("%I:%M:%S %p")),
-                        'user': user
+                        'user': user_channel
                     }
                     )
             except:
