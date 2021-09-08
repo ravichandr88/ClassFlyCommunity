@@ -194,8 +194,9 @@ class ChatConsumer(WebsocketConsumer):
                     self.room_group_name,
                     {
                         'type': type,
-                        'status':status
-                    })
+                        'status': status
+                    }
+                    )
             # this is for chatting
             
             elif type == 'chat_message':
