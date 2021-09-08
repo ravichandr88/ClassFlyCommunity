@@ -129,6 +129,7 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         user_channel    = text_data_json['room']
+        user_position   = text_data_json['user']
 
         str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
         session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
@@ -167,7 +168,7 @@ class ChatConsumer(WebsocketConsumer):
                         'type': 'chat_message',
                         'message': message,
                         'time': str(timezone.now().strftime("%I:%M:%S %p")),
-                        'user': user_channel
+                        'user': user_position
                     }
                     )
             except:
