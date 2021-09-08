@@ -172,7 +172,7 @@ class ChatConsumer(WebsocketConsumer):
         except:
             print('Status relate call')
 
-        print(message,status,user_channel,user_position)
+        print('All values : ',type,message,status,user_channel,user_position)
 
         str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
         session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
@@ -227,6 +227,7 @@ class ChatConsumer(WebsocketConsumer):
 
             # Send status for room group
             elif type == 'status':
+                print('Elif entered')
                 async_to_sync(self.channel_layer.group_send)(
                     self.room_group_name,
                     {
@@ -243,8 +244,9 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from room group
     def chat_message(self, event):
+        print('event',event)
         type    =  event['type']
-        
+        print(type)
         if type == 'chat_message':
             message = event['message']
             user    = event['user']
@@ -259,12 +261,12 @@ class ChatConsumer(WebsocketConsumer):
             }))
 
         elif type == 'status':
-            status  = event['status']        
-
-             # Send message to WebSocket
+                    
+            status  = event['status']
+            # Send message to WebSocket
             self.send(text_data=json.dumps({
-                'type':'chat_message',
-                'status':'online'
+                'type':type,
+                'status':status
             }))
 
 
