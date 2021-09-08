@@ -31,10 +31,12 @@ def student(request, edit = 0):
     """
     
     student = StudentForm()    #preparing an empty form
-
+    fresher = Fresher() if Fresher.objects.filter(user__username = request.user).count() == 0 else Fresher.objects.get(user__username = request.user)
+      
+    
     # If the function called for editing
-    if edit == 1:
-        fresher  = Fresher.objects.get(user__username = request.user)
+    if Fresher.objects.filter(user__username = request.user).count() == 1:
+        
         student.initial['college']          =  fresher.college    
         student.initial['branch']           =  fresher.branch    
         student.initial['passout_year']     = fresher.passout_year  
@@ -90,10 +92,10 @@ def student(request, edit = 0):
 
 
     if request.method == 'POST':
-        student = StudentForm(request.POST)
-
+        
         if student.is_valid() and len(request.POST.getlist('skills')) != 0:
-          fresher = Fresher()
+          
+          
           fresher.user             = User.objects.get(username = request.user)
           fresher.college          = student.cleaned_data['college']
           fresher.branch           = student.cleaned_data['branch']
@@ -105,7 +107,7 @@ def student(request, edit = 0):
           fresher.about_yourself   = student.cleaned_data['about_yourself']
           fresher.pre_passout      = student.cleaned_data['pre_passout']
           fresher.master_passout   = 0000 if student.cleaned_data['master_passout'] == '' else student.cleaned_data['master_passout']
-          fresher.total_experience = int(student.cleaned_data['total_experience'])
+          fresher.total_experience = int(student.cleaned_data['total_experience'].split('.')[0])
           fresher.skills           = str(request.POST.getlist('skills'))[1:][:-1]
           fresher.language_spoken  = student.cleaned_data['language_spoke']
           fresher.save() 

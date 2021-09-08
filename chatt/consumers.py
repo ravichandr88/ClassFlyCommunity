@@ -111,7 +111,7 @@ class ChatConsumer(WebsocketConsumer):
         self.room_group_name = 'chat_%s' % self.room_name
         # print(str(self.scope['headers']).split('sessionid=')[1].split("'")[0])
         session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
-        if Session.objects.filter(session_key=session_key).count() == 1:
+        if Session.objects.filter(session_key=session_key).count() !=  0:
             session = Session.objects.get(session_key=session_key)
             uid = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=uid)
@@ -158,6 +158,7 @@ class ChatConsumer(WebsocketConsumer):
         status = ''
         user_channel = ''
         user_position = ''
+        
         try:
             message = text_data_json['message']
         except:
@@ -180,55 +181,59 @@ class ChatConsumer(WebsocketConsumer):
             print(user)
 
             # this is for chatting
-            try:
-                room = ''
+            if type == 'chat_message':
+                try:
+                    room = ''
 
-                if user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
-                    print('First If done')
-                    room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
+                    if type == '' and user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
+                        print('First If done')
+                        room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
 
-                elif user_position == 'fresher' and TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
-                    print("Second If done")
-                    room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
-                else:
-                    print('No user room match with user_position')
+                    elif user_position == 'fresher' and TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
+                        print("Second If done")
+                        room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
+                    else:
+                        print('No user room match with user_position')
+                        return
+
+                        
+                    print('If and elif done')
+                    # Save data to database 
+                    Messages(
+                    message    = message,
+                    sender     = user,
+                    chatgroup  = room
+                    ).save()
+                    print('Message saved successfully')
+                    
+                except:
+                    print('Try not found ')
                     return
 
-                    
-                print('If and elif done')
-                # Save data to database 
-                Messages(
-                message    = message,
-                sender     = user,
-                chatgroup  = room
-                ).save()
-                print('Message saved successfully')
-                
-                
                 # Send message to room group
-                if type == 'chat_message':
-                    async_to_sync(self.channel_layer.group_send)(
-                        self.room_group_name,
-                        {
-                            'type': type,
-                            'message': message,
-                            'user': user_position
-                        }
-                        )
-                # Send status for room group
-                elif type == 'status':
-                    async_to_sync(self.channel_layer.group_send)(
-                        self.room_group_name,
-                        {
-                            'type': type,
-                            'status':status
-                        }
-                        )
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': type,
+                        'message': message,
+                        'user': user_position
+                    }
+                    )
 
-            except:
-                print('Tr function failed')
-                return
-        print('If condition fails, no session found')
+            # Send status for room group
+            elif type == 'status':
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': type,
+                        'status':status
+                    }
+                    )
+            else:
+                print('')
+        else:    
+            print('If condition fails, no session found')
+            
         return
 
     # Receive message from room group

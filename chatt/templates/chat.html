@@ -483,15 +483,7 @@
 <div class="chat-content">
 <p>{{i.message}}</p>
 <span class="chat-time">{{i.created_on}}</span>
-</div>
-<!-- <div class="chat-action-btns">
-<ul>
-<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-<li><a href="#" class="edit-msg"><i class="fa fa-pencil"></i></a></li>
-<li><a href="#" class="del-msg"><i class="fa fa-trash-o"></i></a></li>
-</ul>
-</div> -->
-</div>
+</div></div>
 </div>
 </div>
 
@@ -504,13 +496,6 @@
 <p>{{i.message}}</p>
 <span class="chat-time">{{i.created_on}}</span>
 </div>
-<!-- <div class="chat-action-btns">
-<ul>
-<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-<li><a href="#" class="edit-msg"><i class="fa fa-pencil"></i></a></li>
-<li><a href="#" class="del-msg"><i class="fa fa-trash-o"></i></a></li>
-</ul>
-</div> -->
 </div>
 </div>
 </div>
@@ -1273,6 +1258,7 @@ dashboard.png
 <script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/dropfiles.js ' %}"></script>
 <script src="{% static 'hrdash/smarthr-laravel/html-template/light/assets/js/app.js' %}"></script>
 
+
 <script>
 
     
@@ -1281,7 +1267,13 @@ dashboard.png
     const user_id  =  '{{user_id}}';
 
      let image_src = '';
-     
+
+// <!-- initial code for scroling down the chsat -->
+// code for auto scroll when a new message is added.
+var element = document.getElementById("chatdiv");
+element.scrollTop = element.scrollHeight - element.clientHeight;;
+        
+
     // console.log(user_id);
          // function to add chat recived
          function received(data)
@@ -1319,7 +1311,7 @@ dashboard.png
         }
 
         // code for auto scroll when a new message is added.
-         var element = document.getElementById("chatdiv");
+        var element = document.getElementById("chatdiv");
         element.scrollTop = element.scrollHeight - element.clientHeight;;
         
         }
@@ -1380,15 +1372,13 @@ dashboard.png
         */
 
 
+ {% if img_url != '' %}
         // load the profile picture of the oponent
     $(document).ready(async function(){
 
     console.log('{{img_url}}');
-    
-    
-   
-
   // Note the await keyword
+
   await fetch("{{img_url}}")
     .then((response) => response.text())
     .then((result) => {
@@ -1401,7 +1391,7 @@ dashboard.png
     
     });
 
-
+{% endif %}
 
     function online(status)
     {
@@ -1412,7 +1402,7 @@ dashboard.png
     }
 
 
-    
+
 
 </script>
 

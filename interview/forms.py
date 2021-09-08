@@ -39,7 +39,7 @@ class StudentForm(BootstrapModelForm):
     pre_college = forms.CharField(label='Pre University/ Diploma College',required = True,max_length=40)
     pre_branch  = forms.CharField(label='PreUniversity/Diploma Branch',required = True,max_length = 50)
     city_1       = forms.CharField(label="Place of study", max_length = 30, required = True)
-    pre_passout = forms.CharField(label='PreUniversity/Diploma Passout Year',required = False, widget=forms.TextInput(attrs={'min':2016,'max': 2030,'type': 'number'}))
+    pre_passout = forms.CharField(label='PreUniversity/Diploma Passout Year',required = False, widget=forms.TextInput(attrs={'min':2010,'max': 2030,'type': 'number'}))
     college = forms.CharField(max_length=40,required = True)
     city_2       = forms.CharField(label="Place of study", max_length = 30, required = True)
     branch = forms.CharField(max_length = 50,required = False)
