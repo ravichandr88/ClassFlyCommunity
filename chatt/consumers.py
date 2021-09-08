@@ -128,7 +128,7 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        user_channel    = text_data_json['user']
+        user_channel    = text_data_json['room']
 
         str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
         session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
@@ -149,6 +149,7 @@ class ChatConsumer(WebsocketConsumer):
                 elif TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
                     print("Second If done")
                     room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
+               
                 print('If and elif done')
                 # Save data to database 
                 Messages(

@@ -1316,7 +1316,8 @@ dashboard.png
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'message': message,
-                'user':'{{user_id}}'
+                'user':'{{user_id}}',
+                'room':roomName
             }));
             messageInputDom.value = '';
 
