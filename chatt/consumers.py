@@ -128,7 +128,6 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         user_channel    = text_data_json['user']
-        room    = text_data_json['room']
 
         str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
         session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
