@@ -435,42 +435,54 @@
 <span class="chat-date">October 8th, 2018</span>
 </div>
 
+{% for i in messages %}
 
+<!-- current user if fresher, and these messages belong to professional, we place it on left -->
+{% if i.sender == room.prof and user_id == 'fresher' %}
 <div class="chat chat-left">
 <div class="chat-avatar">
-<a href="../../../smarthr-laravel/html-template/light/profile.html" class="avatar">
-<img alt="" src="../../../smarthr-laravel/html-template/light/assets/img/profiles/avatar-05.jpg">
+<a href="#" class="avatar">
+<img alt="" id="oppo_id"  src="#">
 </a>
 </div>
 <div class="chat-body">
 <div class="chat-bubble">
 <div class="chat-content">
-<p>I'm just looking around.</p>
-<p>Will you tell me something about yourself? </p>
-<span class="chat-time">8:35 am</span>
+<p>{{i.message}} </p>
+<span class="chat-time">{{i.created_on}}</span>
 </div>
-
-<!-- <div class="chat-action-btns">
-
-<ul>
-<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-<li><a href="#" class="edit-msg"><i class="fa fa-pencil"></i></a></li>
-<li><a href="#" class="del-msg"><i class="fa fa-trash-o"></i></a></li>
-</ul>
-
-</div> -->
-
 </div>
-
 </div>
 </div>
 
+<!-- current user is professional and message belong to fresher chat on left -->
+{% elif i.sender == room.fresher and user_id == 'prof' %}
+<div class="chat chat-left">
+<div class="chat-avatar">
+<a href="#" class="avatar">
+<img alt="" id="oppo_id"  src="#">
+</a>
+</div>
+<div class="chat-body">
+<div class="chat-bubble">
+<div class="chat-content">
+<p>{{i.message}} </p>
+<span class="chat-time">{{i.created_on}}</span>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<!-- if current user is fresher and messages belong to fresher, messages on right -->
+{% elif i.sender == room.fresher and user_id == 'fresher' %}
 <div class="chat chat-right">
 <div class="chat-body">
 <div class="chat-bubble">
 <div class="chat-content">
-<p>Where?</p>
-<span class="chat-time">8:35 am</span>
+<p>{{i.message}}</p>
+<span class="chat-time">{{i.created_on}}</span>
 </div>
 <!-- <div class="chat-action-btns">
 <ul>
@@ -482,6 +494,30 @@
 </div>
 </div>
 </div>
+
+<!-- current user is professional and messages belong to professional -->
+{% elif i.sender == room.prof and user_id == 'prof' %}
+<div class="chat chat-right">
+<div class="chat-body">
+<div class="chat-bubble">
+<div class="chat-content">
+<p>{{i.message}}</p>
+<span class="chat-time">{{i.created_on}}</span>
+</div>
+<!-- <div class="chat-action-btns">
+<ul>
+<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
+<li><a href="#" class="edit-msg"><i class="fa fa-pencil"></i></a></li>
+<li><a href="#" class="del-msg"><i class="fa fa-trash-o"></i></a></li>
+</ul>
+</div> -->
+</div>
+</div>
+</div>
+
+{% endif %}
+
+{% endfor %}
 
 
 
@@ -773,10 +809,10 @@ Opposite person
 </div>
 
 <!-- this divsion is just outside the messages possible -->
-<div class="chat chat-left">
+<!-- <div class="chat chat-left">
 <div class="chat-avatar">
-<a href="../../../smarthr-laravel/html-template/light/profile.html" class="avatar">
-<img alt="" src="#">
+<a href="#" class="avatar">
+<img alt="" id="oppo_id"  src="">
 </a>
 </div>
 <div class="chat-body">
@@ -786,7 +822,7 @@ Opposite person
 </div>
 </div>
 </div>
-</div>
+</div> -->
 
 </div>
 </div>
@@ -1243,12 +1279,14 @@ dashboard.png
     const roomName =  '{{ room_name }}';
     
     const user_id  =  '{{user_id}}';
+
+     let image_src = '';
      
-    console.log(user_id);
+    // console.log(user_id);
          // function to add chat recived
          function received(data)
         {
-            console.log(data, user_id);
+            // console.log(data, user_id);
 
 
          if( data.user == user_id)
@@ -1269,7 +1307,7 @@ dashboard.png
         document.getElementById("chatbox").innerHTML +=       '<div class="chat chat-left">'+
                                         '<div class="chat-avatar">'+
                                         '<a href="#" class="avatar">'+
-                                        '<img alt="" src="#">'+
+                                        '<img alt="" src="' + image_src + '">'+
                                         '</a>'+
                                         '</div>'+
                                         '<div class="chat-body">'+
@@ -1301,13 +1339,14 @@ dashboard.png
 
        
         chatSocket.onclose = function(e) {
+            alert('Chatting Disconnected');
             console.error('Chat socket closed unexpectedly');
         };
 
         document.querySelector('#chat-message-input').focus();
         document.querySelector('#chat-message-input').onkeyup = function(e) {
             if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
+                document.querySelector('#send-message').click();
             }
         };
 
@@ -1328,6 +1367,29 @@ dashboard.png
         /*
         received({'message':'Good Morning','time':'2:30 pm','user':'fresher'})
         */
+
+
+        // load the profile picture of the oponent
+    $(document).ready(async function(){
+
+    console.log('{{img_url}}');
+    
+    
+   
+
+  // Note the await keyword
+  await fetch("{{img_url}}")
+    .then((response) => response.text())
+    .then((result) => {
+        // console.log(image_src);
+        image_src = result;
+    })
+    .catch((error) => console.log("error", error));
+    
+    $("img[id*='oppo_id']").attr({src:image_src});
+    
+    });
+    
 </script>
 
 </body>
