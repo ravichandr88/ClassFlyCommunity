@@ -143,14 +143,18 @@ class ChatConsumer(WebsocketConsumer):
             try:
                 room = ''
 
-                if TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
+                if user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
                     print('First If done')
                     room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
 
-                elif TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
+                elif user_position == 'fresher' and TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
                     print("Second If done")
                     room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
-               
+                else:
+                    print('No user room match with user_position')
+                    return
+
+                    
                 print('If and elif done')
                 # Save data to database 
                 Messages(
