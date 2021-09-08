@@ -1423,7 +1423,7 @@ dashboard.png
 
         function good()
         {
-            chatSocket.send(JSON.stringify({
+            statusSocket.send(JSON.stringify({
                 'text': 'text data',
                 'user':'{{user_id}}',
                 'room':roomName
