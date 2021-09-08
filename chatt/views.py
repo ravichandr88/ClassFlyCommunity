@@ -45,7 +45,7 @@ def chatting(request, room_name):
     user_id = ''
     img_url = ''
     oppo_user = ''  #opposite user, later get the img_url
-    messages = room.chats.all().order_by('-created_on')[:20]
+    messages = room.chats.all().order_by('created_on')[:20]
 # user position
 # try to get the profile pic url for opposite chat
   
