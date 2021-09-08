@@ -112,6 +112,7 @@ class ChatConsumer(WebsocketConsumer):
     # h7sc90o8n7buen965ydqrq2uspggy4nf
             self.accept()
 
+            return
         # if user object is not found return
         print('User not found')
         return 
@@ -136,26 +137,28 @@ class ChatConsumer(WebsocketConsumer):
             uid = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=uid)
 
+            print(user)
 
             try:
                 room = ''
 
                 if TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
+                    print('First If done')
                     room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
 
                 elif TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
+                    print("Second If done")
                     room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
-
+                print('If and elif done')
+                # Save data to database 
                 Messages(
                 message    = message,
                 sender     = user,
                 chatgroup  = room
                 ).save()
-
-                # Save data to database 
+                print('Message saved successfully')
                 
-
-
+                
                 # Send message to room group
                 async_to_sync(self.channel_layer.group_send)(
                     self.room_group_name,
@@ -165,7 +168,7 @@ class ChatConsumer(WebsocketConsumer):
                         'time': str(timezone.now().strftime("%I:%M:%S %p")),
                         'user': user
                     }
-                )
+                    )
             except:
                 print('Tr function failed')
                 return
