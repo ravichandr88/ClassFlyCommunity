@@ -1,68 +1,91 @@
-# import json
+# Someons sample code for refrence
+# https://stackoverflow.com/questions/56096886/one-django-channels-websocket-consumer-used-across-whole-site
+# class ChatConsumer(AsyncConsumer):
+#     async def websocket_connect(self, event):
 
-# from asgiref.sync import async_to_sync
-# from channels.generic.websocket import WebsocketConsumer
+#         other_user = self.scope['url_route']['kwargs']['username']
+#         me = self.scope['user']
+#         thread_obj = await self.get_thread(me, other_user)
+#         self.thread_obj = thread_obj
+#         chat_room = f"thread_{thread_obj.id}"
+#         self.chat_room = chat_room
+#         # below creates the chatroom
+#         await self.channel_layer.group_add(
+#             chat_room,
+#             self.channel_name
+#         )
 
-# from . import tasks
+#         await self.send({
+#             "type": "websocket.accept"
+#         })
 
+#     async def websocket_receive(self, event):
+#         # when a message is recieved from the websocket
+#         print("receive", event)
 
+#         message_type = json.loads(event.get('text','{}')).get('type')
+#         if message_type == "notification_read":
+#             user = self.scope['user']
+#             username = user.username if user.is_authenticated else 'default'
+#             # Update the notification read status flag in Notification model.
+#             notification = Notification.objects.filter(notification_user=user).update(notification_read=True)
+#             print("notification read")
+#             return
 
+#         front_text = event.get('text', None)
+#         if front_text is not None:
+#             loaded_dict_data = json.loads(front_text)
+#             msg =  loaded_dict_data.get('message')
+#             user = self.scope['user']
+#             username = user.username if user.is_authenticated else 'default'
+#             notification_id = 'default'
+#             myResponse = {
+#                 'message': msg,
+#                 'username': username,
+#                 'notification': notification_id,
+#             }
+#             print(myResponse)
+#             await self.create_chat_message(user, msg)
+#             other_user = self.scope['url_route']['kwargs']['username']
+#             other_user = User.objects.get(username=other_user)
+#             await self.create_notification(other_user, msg)
 
-
-
-
-# COMMANDS = {
-#     'help': {
-#         'help': 'Display help message.',
-#     },
-#     'sum': {
-#         'args': 2,
-#         'help': 'Calculate sum of two integer arguments. Example: `sum 12 32`.',
-#         'task': 'add'
-#     },
-#     'status': {
-#         'args': 1,
-#         'help': 'Check website status. Example: `status twitter.com`.',
-#         'task': 'url_status'
-#     },
-# }
-
-
-
-# class ChatConsumer(WebsocketConsumer):
-#     def receive(self, text_data):
-#         text_data_json = json.loads(text_data)
-#         message = text_data_json['message']
-
-#         response_message = 'Please type `help` for the list of the commands.'
-#         message_parts = message.split()
-#         if message_parts:
-#             command = message_parts[0].lower()
-#             if command == 'help':
-#                 response_message = 'List of the available commands:\n' + '\n'.join([f'{command} - {params["help"]} ' for command, params in COMMANDS.items()])
-#             elif command in COMMANDS:
-#                 if len(message_parts[1:]) != COMMANDS[command]['args']:
-#                     response_message = f'Wrong arguments for the command `{command}`.'
-#                 else:
-#                     getattr(tasks, COMMANDS[command]['task']).delay(self.channel_name, *message_parts[1:])
-#                     response_message = f'Command `{command}` received.'
-        
-#         async_to_sync(self.channel_layer.send)(
-#                 self.channel_name,
+#             # broadcasts the message event to be sent, the group send layer
+#             # triggers the chat_message function for all of the group (chat_room)
+#             await self.channel_layer.group_send(
+#                 self.chat_room,
 #                 {
 #                     'type': 'chat_message',
-#                     'message': response_message
+#                     'text': json.dumps(myResponse)
 #                 }
 #             )
 
-#     def chat_message(self, event):
-#         message = event['message']
+#     # chat_method is a custom method name that we made
+#     async def chat_message(self, event):
+#         # sends the actual message
+#         await self.send({
+#                 'type': 'websocket.send',
+#                 'text': event['text']
+#         })
 
-#         # Send message to WebSocket
-#         self.send(text_data=json.dumps({
-#             'message': f'[bot]: {message}'
-#         }))
+#     async def websocket_disconnect(self, event):
+#         # when the socket disconnects
+#         print('disconnected', event)
 
+#     @database_sync_to_async
+#     def get_thread(self, user, other_username):
+#         return Thread.objects.get_or_new(user, other_username)[0]
+
+#     @database_sync_to_async
+#     def create_chat_message(self, me, msg):
+#         thread_obj = self.thread_obj
+#         return ChatMessage.objects.create(thread=thread_obj, user=me, message=msg)
+
+#     @database_sync_to_async
+#     def create_notification(self, other_user, msg):
+#         last_chat = ChatMessage.objects.latest('id')
+#         created_notification = Notification.objects.create(notification_user=other_user, notification_chat=last_chat)
+#         return created_notification
 
 # chat/consumers.py
 import json
@@ -77,23 +100,6 @@ from datetime import datetime
 
 # To keep the user online
 
-class EchoConsumer(SyncConsumer):
-
-    def websocket_connect(self, event):
-        print(event)
-
-        self.send({
-            "type": "websocket.accept",
-        })
-
-    def websocket_receive(self, event):
-
-        print(event)
-        
-        self.send({
-            "type": "websocket.send",
-            "text": event["text"],
-        })
 
 
 
@@ -148,9 +154,21 @@ class ChatConsumer(WebsocketConsumer):
     # Receive message from WebSocket
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        user_channel    = text_data_json['room']
-        user_position   = text_data_json['user']
+        message = ''
+        status = ''
+        user_channel = ''
+        user_position = ''
+        try:
+            message = text_data_json['message']
+        except:
+            status = text_data_json['status']
+
+        type    = text_data_json['type']
+        try:
+            user_channel    = text_data_json['room']
+            user_position   = text_data_json['user']
+        except:
+            print('Status')
 
         str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
         session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
@@ -161,6 +179,7 @@ class ChatConsumer(WebsocketConsumer):
 
             print(user)
 
+            # this is for chatting
             try:
                 room = ''
 
@@ -187,15 +206,25 @@ class ChatConsumer(WebsocketConsumer):
                 
                 
                 # Send message to room group
-                async_to_sync(self.channel_layer.group_send)(
-                    self.room_group_name,
-                    {
-                        'type': 'chat_message',
-                        'message': message,
-                        'time': str(timezone.now().strftime("%I:%M:%S %p")),
-                        'user': user_position
-                    }
-                    )
+                if type == 'chat_message':
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name,
+                        {
+                            'type': type,
+                            'message': message,
+                            'user': user_position
+                        }
+                        )
+                # Send status for room group
+                elif type == 'status':
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.room_group_name,
+                        {
+                            'type': type,
+                            'status':status
+                        }
+                        )
+
             except:
                 print('Tr function failed')
                 return
@@ -204,20 +233,30 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from room group
     def chat_message(self, event):
-        message = event['message']
-        user    = event['user']
+        type    =  event['type']
+        
+        if type == 'chat_message':
+            message = event['message']
+            user    = event['user']
+            
 
-        # Send message to WebSocket
-        self.send(text_data=json.dumps({
-            'message': message,
-            'time': str(timezone.now().strftime("%I:%M:%S %p")),
-            'user': user
-        }))
+            # Send message to WebSocket
+            self.send(text_data=json.dumps({
+                'type':'chat_message',
+                'message': message,
+                'time': str(timezone.now().strftime("%I:%M:%S %p")),
+                'user': user
+            }))
+
+        elif type == 'status':
+            status  = event['status']        
+
+             # Send message to WebSocket
+            self.send(text_data=json.dumps({
+                'type':'chat_message',
+                'status':'online'
+            }))
 
 
-
-
-
-class StatusConsumer(WebsocketConsumer):
 
 

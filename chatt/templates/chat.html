@@ -1338,7 +1338,13 @@ dashboard.png
 // <!-- Code to recive message from others -->
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
+            if (data.type == 'chat_message')
+            {
             received(data);
+            }
+            else{
+                console.log(data);
+            }
         };
 
        
@@ -1358,6 +1364,7 @@ dashboard.png
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
+                'type': 'chat_message',
                 'message': message,
                 'user':'{{user_id}}',
                 'room':roomName
@@ -1395,41 +1402,18 @@ dashboard.png
     });
 
 
-    // ws/online/
 
-    var wss_protocol = (window.location.protocol == 'https:') ? 'wss://': 'ws://';
-        
-    const statusSocket = new WebSocket(
-            wss_protocol 
-            + window.location.host
-            + 'ws/online/'
-            + roomName
-            + '/'
-        );
-
-
-        
-// <!-- Code to recive message from others -->
-        statusSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            console.log(data);
-        };
-
-       
-       statusSocket.onclose = function(e) {
-            alert('Chatting Disconnected');
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        function good()
-        {
-            statusSocket.send(JSON.stringify({
-                'text': 'text data',
-                'user':'{{user_id}}',
-                'room':roomName
+    function online(status)
+    {
+        chatSocket.send(JSON.stringify({
+                'type': 'status',
+                'status':status
             }));
-        }
+    }
+
+
     
+
 </script>
 
 </body>
