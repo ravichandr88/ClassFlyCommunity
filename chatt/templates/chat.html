@@ -1412,7 +1412,7 @@ dashboard.png
 // <!-- Code to recive message from others -->
         statusSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            received(data);
+            console.log(data);
         };
 
        
