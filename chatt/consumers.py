@@ -185,8 +185,20 @@ class ChatConsumer(WebsocketConsumer):
             print('Type: ',type)
             print("type == 'chat_message'",type == 'chat_message')
             print("type == 'status'",type == 'status')
+            
+            # Send status for room group
+            if type == 'status':
+                print('Elif entered')
+
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': type,
+                        'status':status
+                    })
             # this is for chatting
-            if type == 'chat_message':
+            
+            elif type == 'chat_message':
                 try:
                     room = ''
 
@@ -225,16 +237,6 @@ class ChatConsumer(WebsocketConsumer):
                     }
                     )
 
-            # Send status for room group
-            elif type == 'status':
-                print('Elif entered')
-
-                async_to_sync(self.channel_layer.group_send)(
-                    self.room_group_name,
-                    {
-                        'type': type,
-                        'message':status
-                    }) 
             else:
                 print('Wrong type of status data recived')
         else:    
@@ -263,7 +265,7 @@ class ChatConsumer(WebsocketConsumer):
 
         elif type == 'status':
                     
-            status  = event['message']
+            status  = event['status']
             # Send message to WebSocket
             self.send(text_data=json.dumps({
                 'type':type,
