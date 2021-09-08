@@ -35,7 +35,7 @@ def student(request, edit = 0):
       
     
     # If the function called for editing
-    if Fresher.objects.filter(user__username = request.user).count() == 1:
+    if (Fresher.objects.filter(user__username = request.user).count() == 1 and request.method == 'GET') or edit == 1:
         
         student.initial['college']          =  fresher.college    
         student.initial['branch']           =  fresher.branch    
