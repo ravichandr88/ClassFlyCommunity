@@ -68,11 +68,32 @@
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from channels.consumer import SyncConsumer
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from .models import TwoGroup,Messages
 from django.utils import timezone
 from datetime import datetime
+
+# To keep the user online
+
+class EchoConsumer(SyncConsumer):
+
+    def websocket_connect(self, event):
+        print(event)
+
+        self.send({
+            "type": "websocket.accept",
+        })
+
+    def websocket_receive(self, event):
+
+        print(event)
+        
+        self.send({
+            "type": "websocket.send",
+            "text": event["text"],
+        })
 
 
 
@@ -196,5 +217,7 @@ class ChatConsumer(WebsocketConsumer):
 
 
 
+
+class StatusConsumer(WebsocketConsumer):
 
 

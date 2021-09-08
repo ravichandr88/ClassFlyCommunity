@@ -407,8 +407,8 @@
 </div>
 <div class="chat-contents">
 <div class="chat-content-wrap">
-<div class="chat-wrap-inner">
-<div class="chat-box">
+<div class="chat-wrap-inner" id="chatdiv">
+<div class="chat-box" >
 <div class="chats" >
 <div id="chatbox">
     
@@ -1317,6 +1317,10 @@ dashboard.png
                                         '<span class="chat-time">' + data.time + '</span>'
                                         '</div>';
         }
+
+        // code for auto scroll when a new message is added.
+         var element = document.getElementById("chatdiv");
+        element.scrollTop = element.scrollHeight - element.clientHeight;;
         
         }
 
@@ -1389,6 +1393,42 @@ dashboard.png
     $("img[id*='oppo_id']").attr({src:image_src});
     
     });
+
+
+    // ws/online/
+
+    var wss_protocol = (window.location.protocol == 'https:') ? 'wss://': 'ws://';
+        
+    const statusSocket = new WebSocket(
+            wss_protocol 
+            + window.location.host
+            + 'ws/online/'
+            + roomName
+            + '/'
+        );
+
+
+        
+// <!-- Code to recive message from others -->
+        statusSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            received(data);
+        };
+
+       
+       statusSocket.onclose = function(e) {
+            alert('Chatting Disconnected');
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        function good()
+        {
+            chatSocket.send(JSON.stringify({
+                'text': 'text data',
+                'user':'{{user_id}}',
+                'room':roomName
+            }));
+        }
     
 </script>
 
