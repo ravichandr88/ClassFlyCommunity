@@ -140,11 +140,11 @@ class ChatConsumer(WebsocketConsumer):
             try:
                 room = ''
 
-                if TwoGroup.objects.filter(channel_name = room, prof = user).count() != 0:
-                    room = TwoGroup.objects.get(channel_name = room,  prof = user)
+                if TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
+                    room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
 
-                elif TwoGroup.objects.filter(channel_name = room, fresher = user).count() != 0:
-                    room = TwoGroup.objects.get(channel_name = room, fresher = user)
+                elif TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
+                    room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
 
                 Messages(
                 message    = message,
@@ -167,8 +167,9 @@ class ChatConsumer(WebsocketConsumer):
                     }
                 )
             except:
+                print('Tr function failed')
                 return
-        
+        print('If condition fails, no session found')
         return
 
     # Receive message from room group
