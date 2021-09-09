@@ -1324,18 +1324,9 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
                 next_count   = data.status;
                 
                 // online
-                if (status_count < next_count)
+                if (status_count == next_count)
                 {
-                    $(document).ready(function(){
-                    $('#online').show();
-                    $('#offline').hide();
                     
-                    });
-                    document.getElementById('last_seen').innerHTML = 'Online';
-
-                }
-                // offline
-                else{
                     $(document).ready(function(){
                     $('#online').hide();
                     $('#offline').show();
@@ -1343,6 +1334,18 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
                     
                     document.getElementById('last_seen').innerHTML = data.last_seen;
                     
+                }
+                // offline
+                else{
+
+                    
+                    $(document).ready(function(){
+                    $('#online').show();
+                    $('#offline').hide();
+                    
+                    });
+                    document.getElementById('last_seen').innerHTML = 'Online';
+
                 }
             }
         };
