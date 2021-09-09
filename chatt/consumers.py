@@ -241,7 +241,7 @@ class ChatConsumer(WebsocketConsumer):
                 elif user_position == 'fresher':
                     try:
                         status_count = room.prof.user_status.status_count
-                        last_seen    = room.prof.user_status.last_seen
+                        last_seen    = str(room.fresher.user_status.last_seenstrftime("%d-%m-%Y  %I:%M:%S %p"))
                     except:
                         status_count = 0
                 
