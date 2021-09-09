@@ -258,7 +258,7 @@
 <li class="nav-item dropdown has-arrow main-drop">
 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 <span class="user-img"><img src="../../../smarthr-laravel/html-template/light/assets/img/profiles/avatar-21.jpg" alt="">
-<span class="status online"></span></span>
+<span class="status offline" ></span></span>
 <span>Admin</span>
 </a>
 <div class="dropdown-menu">
@@ -363,48 +363,24 @@
 <div class="navbar">
  <div class="user-details mr-auto">
 <div class="float-left user-img">
-<a class="avatar" href="../../../smarthr-laravel/html-template/light/profile.html" title="Mike Litorus">
-<img src="../../../smarthr-laravel/html-template/light/assets/img/profiles/avatar-05.jpg" alt="" class="rounded-circle">
-<span class="status online"></span>
+<a class="avatar" href="#" title="Mike Litorus">
+<img id="self_img_url" src="" alt="" class="rounded-circle">
+<span id="online" class="status offline"></span>
+<span id="offline" class="status online"></span>
 </a>
 </div>
 <div class="user-info float-left">
-<a href="#" title="Mike Litorus"><span>Mike Litorus</span> 
+<a href="#" title="Mike Litorus"><span>{{user.first_name}}</span> 
         <!-- <i class="typing-text">Typing...</i> -->
 </a>
-<span class="last-seen">Last seen today at 7:50 AM</span>
+<span class="last-seen" id="last_seen">Last seen today at 7:50 AM</span>
 </div>
 
 </div>
 
-<div class="search-box">
-<div class="input-group input-group-sm">
-<input type="text" placeholder="Search" class="form-control">
-<span class="input-group-append">
-<button type="button" class="btn"><i class="fa fa-search"></i></button>
-</span>
 </div>
 </div>
-<ul class="nav custom-menu">
-<li class="nav-item">
-<a class="nav-link task-chat profile-rightbar float-right" id="task_chat" href="#task_window"><i class="fa fa-user"></i></a>
-</li>
-<li class="nav-item">
-<a href="../../../smarthr-laravel/html-template/light/voice-call.html" class="nav-link"><i class="fa fa-phone"></i></a>
-</li>
-<li class="nav-item">
-<a href="../../../smarthr-laravel/html-template/light/video-call.html" class="nav-link"><i class="fa fa-video-camera"></i></a>
-</li>
-<li class="nav-item dropdown dropdown-action">
-<a aria-expanded="false" data-toggle="dropdown" class="nav-link dropdown-toggle" href=""><i class="fa fa-cog"></i></a>
-<div class="dropdown-menu dropdown-menu-right">
-<a href="javascript:void(0)" class="dropdown-item">Delete Conversations</a>
-<a href="javascript:void(0)" class="dropdown-item">Settings</a>
-</div>
-</li>
-</ul>
-</div>
-</div>
+
 <div class="chat-contents">
 <div class="chat-content-wrap">
 <div class="chat-wrap-inner" id="chatdiv">
@@ -814,7 +790,7 @@ Opposite person
 </div>
 </div>
 </div>
-</div>
+
 
 <div class="chat-footer">
 <div class="message-bar">
@@ -826,6 +802,7 @@ Opposite person
 <span class="input-group-append">
 <button class="btn btn-custom" type="button" id="send-message"><i class="fa fa-send"></i></button>
 </span>
+</div>
 </div>
 </div>
 </div>
@@ -1266,7 +1243,13 @@ dashboard.png
     
     const user_id  =  '{{user_id}}';
 
-     let image_src = '';
+    let image_src = '';
+    let self_images_src = '';
+
+    var status_count = 0;
+    var next_count   = 0;
+
+
 
 // <!-- initial code for scroling down the chsat -->
 // code for auto scroll when a new message is added.
@@ -1334,8 +1317,26 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
             {
             received(data);
             }
+            // message regarding opponent 
             else{
                 console.log(data);
+                status_count = next_count;
+                next_count   = data.status;
+                
+                // online
+                if (status_count <= next_count)
+                {
+                    $('#online').show();
+                    $('#offline').hide();
+                    $('#last_seen').hide();
+                }
+                // offline
+                else{
+                    $('#online').hide();
+                    $('#offline').show();
+                    $('last_seen').show();
+                    document.getElementById('last_seen').innerHTML = data.last_seen;
+                }
             }
         };
 
@@ -1358,7 +1359,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
             chatSocket.send(JSON.stringify({
                 'type': 'chat_message',
                 'message': message,
-                'user':'{{user_id}}',
+                'user':'{{user_id}}',   //professional or fresher
                 'room':roomName
             }));
             messageInputDom.value = '';
@@ -1371,37 +1372,66 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
         received({'message':'Good Morning','time':'2:30 pm','user':'fresher'})
         */
 
+ // load the profile picture of the oponent
+ $(document).ready(async function(){
 
  {% if img_url != '' %}
-        // load the profile picture of the oponent
-    $(document).ready(async function(){
-
-    console.log('{{img_url}}');
+       
+    console.log('Opponent image','{{img_url}}');
   // Note the await keyword
 
-  await fetch("{{img_url}}")
+    await fetch("{{self_img_url}}")
     .then((response) => response.text())
     .then((result) => {
         // console.log(image_src);
+        self_image_src = result;
+    })
+    .catch((error) => console.log("error", error));
+
+    await fetch("{{img_url}}")
+    .then((response) => response.text())
+    .then((result) => {
+        console.log(image_src);
         image_src = result;
     })
     .catch((error) => console.log("error", error));
     
     $("img[id*='oppo_id']").attr({src:image_src});
+    $("img[id*='self_img_url']").attr({src:self_image_src});
+    // 
     
-    });
+    
 
 {% endif %}
 
+$('#online').hide();
+$('#offline').hide();
+$('#last_seen').hide();
+
+    }); //end of jquery code
+    
+
+// <!-- code to keep active -->
     function online(status)
     {
         chatSocket.send(JSON.stringify({
                 'type': 'status',
-                'status':status
+                'status':status,
+                'room':roomName,
+                'user':'{{user_id}}'
             }));
     }
 
 
+
+// <!-- timer function to update the status -->
+setInterval(function() {
+    // your code goes here...
+    online('online');
+}, 20 * 1000); // 60 * 1000 milsec
+
+// <!-- initial retreiving of the information -->
+online('online');
 
 
 </script>

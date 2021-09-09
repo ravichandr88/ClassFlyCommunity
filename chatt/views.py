@@ -29,6 +29,24 @@ def index(request):
 
 
 
+def get_img_url(user):
+    img_url = ''
+
+    # get the img_url for the opposite user
+    if Prfessional.objects.filter(user = user).count() == 1:
+        img_url = Prfessional.objects.get(user = user).profile_pic
+
+    elif Fresher.objects.filter(user = user).count()  == 1:
+        img_url = Fresher.objects.get(user = user).profile_pic
+
+    elif HRaccount.objects.filter(user = user).count() == 1:
+        img_url = HRaccount.objects.get(user = user).profilepic
+    else:
+        return ''
+    
+    return img_url
+
+
 
 # Chating function 
 @login_required
@@ -62,18 +80,10 @@ def chatting(request, room_name):
         print(room.prof, room.fresher, user)
         raise Http404
     
-    # get the img_url for the opposite user
-    if Prfessional.objects.filter(user = oppo_user).count() == 1:
-        img_url = Prfessional.objects.get(user = oppo_user).profile_pic
-
-    elif Fresher.objects.filter(user = oppo_user).count()  == 1:
-        img_url = Fresher.objects.get(user = oppo_user).profile_pic
-
-    elif HRaccount.objects.filter(user = oppo_user).count() == 1:
-        img_url = HRaccount.objects.get(user = oppo_user).profilepic
-
+    img_url = get_img_url(oppo_user)    # opponent image url
+    self_img_url = get_img_url(user)    #Self image url
     
-    return render(request, 'chat.html', context={'room_name': room_name,'user_id':user_id,'img_url':img_url,'messages':messages,'room':room})
+    return render(request, 'chat.html', context={'self_img_url':self_img_url,'user':user,'room_name': room_name,'user_id':user_id,'img_url':img_url,'messages':messages,'room':room})
 
 
 

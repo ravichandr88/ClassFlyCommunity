@@ -94,7 +94,7 @@ from channels.generic.websocket import WebsocketConsumer
 from channels.consumer import SyncConsumer
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
-from .models import TwoGroup,Messages
+from .models import TwoGroup, Messages, OnlineStatus 
 from django.utils import timezone
 from datetime import datetime
 
@@ -115,6 +115,12 @@ class ChatConsumer(WebsocketConsumer):
             session = Session.objects.get(session_key=session_key)
             uid = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=uid)
+
+            # Create an online status or get an existing one
+            try:
+                OnlineStatus(user = user).save()
+            except:
+                OnlineStatus.objects.filter(user = user).update(online_status = 0)
 
             # We got the user, now check the chat room availabilty for the user
             if TwoGroup.objects.filter(channel_name = self.room_name).count() == 0:
@@ -146,6 +152,16 @@ class ChatConsumer(WebsocketConsumer):
 
     def disconnect(self, close_code):
         # Leave room group
+        str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
+        session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
+        if Session.objects.filter(session_key=session_key).count() == 1:
+            session = Session.objects.get(session_key=session_key)
+            uid = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=uid)
+            user.user_status.last_seen = timezone.now()
+            user.user_status.save()
+
+
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
@@ -166,12 +182,9 @@ class ChatConsumer(WebsocketConsumer):
             status = text_data_json['status']
 
         type    = text_data_json['type']
-        try:
-            user_channel    = text_data_json['room']
-            user_position   = text_data_json['user']
-        except:
-            print('Status relate call')
-
+        user_channel    = text_data_json['room']
+        user_position   = text_data_json['user']
+        
         print('All values : ',type,message,status,user_channel,user_position)
 
         str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
@@ -180,6 +193,21 @@ class ChatConsumer(WebsocketConsumer):
             session = Session.objects.get(session_key=session_key)
             uid = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=uid)
+
+        
+            room = ''
+
+            if  user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
+                print('First If done')
+                room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
+
+            elif user_position == 'fresher' and TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
+                print("Second If done")
+                room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
+            else:
+                print('No user room match with user_position')
+                return
+
 
             print(user)
             print('Type: ',type)
@@ -190,31 +218,34 @@ class ChatConsumer(WebsocketConsumer):
             if type == 'status':
                 print('Elif entered')
 
+                # update self user online status
+                online_status = OnlineStatus.objects.get(user = user)
+                online_status.status_count += 1
+                online_status.save()
+
+                
+                # fetch the status_count of the opposite user
+                status_count = 0
+
+                if user_position == 'prof':
+                    status_count = room.fresher.user_status.status_count
+                elif user_position == 'fresher':
+                    status_count = room.prof.user_status.status_count
+                
+
                 async_to_sync(self.channel_layer.group_send)(
                     self.room_group_name,
                     {
                         'type': type,
-                        'status': status
+                        'status': status_count,
+                        'last_seen':room.fresher.user_status.last_seen if user_position == 'prof' else room.prof.user_status.last_seen
                     }
                     )
             # this is for chatting
             
             elif type == 'chat_message':
-                try:
-                    room = ''
-
-                    if  user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
-                        print('First If done')
-                        room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
-
-                    elif user_position == 'fresher' and TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
-                        print("Second If done")
-                        room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
-                    else:
-                        print('No user room match with user_position')
-                        return
-
-                        
+                
+                try:        
                     print('If and elif done')
                     # Save data to database 
                     Messages(
@@ -245,10 +276,12 @@ class ChatConsumer(WebsocketConsumer):
             
         return
     
+    # to update the user online status
     def status(self, event):
             self.send(text_data=json.dumps({
                 'type':'status',
-                'status':event['status']
+                'status':event['status'],
+                'last_seen':event['last_seen']
             }))
 
     # Receive message from room group
