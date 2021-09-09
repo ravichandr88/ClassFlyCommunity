@@ -1411,7 +1411,8 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
 
 $('#online').hide();
 $('#offline').hide();
-$('#last_seen').hide();
+
+document.getElementById('last_seen').innerHTML = 'Checking Availability';
 
     }); //end of jquery code
     
