@@ -230,17 +230,21 @@ class ChatConsumer(WebsocketConsumer):
                 
                 # fetch the status_count of the opposite user
                 status_count = 0
+                last_seen = 'Chat Not opened'
 
                 if user_position == 'prof':
                     try:
                         status_count = room.fresher.user_status.status_count
+                        last_seen    = room.fresher.user_status.last_seen
                     except:
                         status_count = 0
                 elif user_position == 'fresher':
                     try:
                         status_count = room.prof.user_status.status_count
+                        last_seen    = room.prof.user_status.last_seen
                     except:
                         status_count = 0
+                
                 
 
                 async_to_sync(self.channel_layer.group_send)(
@@ -248,7 +252,7 @@ class ChatConsumer(WebsocketConsumer):
                     {
                         'type': type,
                         'status': status_count,
-                        'last_seen':room.fresher.user_status.last_seen if user_position == 'prof' else room.prof.user_status.last_seen
+                        'last_seen':last_seen
                     }
                     )
             # this is for chatting
