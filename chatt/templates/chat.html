@@ -1326,16 +1326,21 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
                 // online
                 if (status_count <= next_count)
                 {
+                    $(document).ready(function(){
                     $('#online').show();
                     $('#offline').hide();
-                    $('#last_seen').hide();
+                    document.getElementById('last_seen').innerHTML = 'Online';
+
+                    });
                 }
                 // offline
                 else{
+                    $(document).ready(function(){
                     $('#online').hide();
                     $('#offline').show();
-                    $('last_seen').show();
+                   
                     document.getElementById('last_seen').innerHTML = data.last_seen;
+                    });
                 }
             }
         };
