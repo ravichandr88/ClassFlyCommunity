@@ -120,7 +120,7 @@ class ChatConsumer(WebsocketConsumer):
             try:
                 OnlineStatus(user = user).save()
             except:
-                OnlineStatus.objects.filter(user = user).update(online_status = 0)
+                OnlineStatus.objects.filter(user = user).update(status_count = 0)
 
             # We got the user, now check the chat room availabilty for the user
             if TwoGroup.objects.filter(channel_name = self.room_name).count() == 0:
