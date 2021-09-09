@@ -235,13 +235,13 @@ class ChatConsumer(WebsocketConsumer):
                 if user_position == 'prof':
                     try:
                         status_count = room.fresher.user_status.status_count
-                        last_seen    = str(room.fresher.user_status.last_seenstrftime("%d-%m-%Y  %I:%M:%S %p"))
+                        last_seen    = str(room.fresher.user_status.last_seen.strftime("%d-%m-%Y  %I:%M:%S %p"))
                     except:
                         status_count = 0
                 elif user_position == 'fresher':
                     try:
                         status_count = room.prof.user_status.status_count
-                        last_seen    = str(room.fresher.user_status.last_seenstrftime("%d-%m-%Y  %I:%M:%S %p"))
+                        last_seen    = str(room.fresher.user_status.last_seen.strftime("%d-%m-%Y  %I:%M:%S %p"))
                     except:
                         status_count = 0
                 
