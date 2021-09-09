@@ -119,7 +119,9 @@ class ChatConsumer(WebsocketConsumer):
             # Create an online status or get an existing one
             try:
                 OnlineStatus(user = user).save()
+                print('Online status created')
             except:
+                print('Old object got updated')
                 online = OnlineStatus.objects.get(user = user)
                 online.status_count = 0
                 online.save()
@@ -230,9 +232,15 @@ class ChatConsumer(WebsocketConsumer):
                 status_count = 0
 
                 if user_position == 'prof':
-                    status_count = room.fresher.user_status.status_count
+                    try:
+                        status_count = room.fresher.user_status.status_count
+                    except:
+                        status_count = 0
                 elif user_position == 'fresher':
-                    status_count = room.prof.user_status.status_count
+                    try:
+                        status_count = room.prof.user_status.status_count
+                    except:
+                        status_count = 0
                 
 
                 async_to_sync(self.channel_layer.group_send)(
