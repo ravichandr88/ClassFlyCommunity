@@ -365,8 +365,8 @@
 <div class="float-left user-img">
 <a class="avatar" href="#" title="Mike Litorus">
 <img id="self_img_url" src="" alt="" class="rounded-circle">
-<span id="online" class="status offline"></span>
-<span id="offline" class="status online"></span>
+<span id="online" class="status online"></span>
+<span id="offline" class="status offline"></span>
 </a>
 </div>
 <div class="user-info float-left">
@@ -1324,23 +1324,25 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
                 next_count   = data.status;
                 
                 // online
-                if (status_count <= next_count)
+                if (status_count < next_count)
                 {
                     $(document).ready(function(){
                     $('#online').show();
                     $('#offline').hide();
+                    
+                    });
                     document.getElementById('last_seen').innerHTML = 'Online';
 
-                    });
                 }
                 // offline
                 else{
                     $(document).ready(function(){
                     $('#online').hide();
                     $('#offline').show();
-                   
-                    document.getElementById('last_seen').innerHTML = data.last_seen;
                     });
+                    
+                    document.getElementById('last_seen').innerHTML = data.last_seen;
+                    
                 }
             }
         };
@@ -1412,7 +1414,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
 $('#online').hide();
 $('#offline').hide();
 
-document.getElementById('last_seen').innerHTML = 'Checking Availability';
+document.getElementById('last_seen').innerHTML = 'Checking Availability....';
 
     }); //end of jquery code
     
