@@ -31,15 +31,18 @@ def index(request):
 
 def get_img_url(user):
     img_url = ''
-
+    print(user.id,user)
     # get the img_url for the opposite user
     if Prfessional.objects.filter(user = user).count() == 1:
+        print('pro')
         img_url = Prfessional.objects.get(user = user).profile_pic
 
     elif Fresher.objects.filter(user = user).count()  == 1:
+        print('fresher')
         img_url = Fresher.objects.get(user = user).profile_pic
 
     elif HRaccount.objects.filter(user = user).count() == 1:
+        print('HRaccount')
         img_url = HRaccount.objects.get(user = user).profilepic
     else:
         return ''
@@ -81,9 +84,8 @@ def chatting(request, room_name):
         raise Http404
     
     img_url = get_img_url(oppo_user)    # opponent image url
-    self_img_url = get_img_url(user)    #Self image url
     
-    return render(request, 'chat.html', context={'self_img_url':self_img_url,'user':user,'room_name': room_name,'user_id':user_id,'img_url':img_url,'messages':messages,'room':room})
+    return render(request, 'chat.html', context={'user':user,'oppo_user':oppo_user,'room_name': room_name,'user_id':user_id,'img_url':img_url,'messages':messages,'room':room})
 
 
 

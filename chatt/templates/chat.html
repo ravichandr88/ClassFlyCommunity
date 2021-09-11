@@ -364,16 +364,16 @@
  <div class="user-details mr-auto">
 <div class="float-left user-img">
 <a class="avatar" href="#" title="Mike Litorus">
-<img id="self_img_url" src="" alt="" class="rounded-circle">
+<img id="oppo_id" src="" alt="" class="rounded-circle">
 <span id="online" class="status online"></span>
 <span id="offline" class="status offline"></span>
 </a>
 </div>
 <div class="user-info float-left">
-<a href="#" title="Mike Litorus"><span>{{user.first_name}}</span> 
+<a href="#" title="Mike Litorus"><span>{{oppo_user.first_name}}</span> 
         <!-- <i class="typing-text">Typing...</i> -->
 </a>
-<span class="last-seen" id="last_seen">Last seen today at 7:50 AM</span>
+<span class="last-seen" id="last_seen">Last seen status</span>
 </div>
 
 </div>
@@ -408,7 +408,7 @@
 
 
 <div class="chat-line">
-<span class="chat-date">October 8th, 2018</span>
+<!-- <span class="chat-date">October 8th, 2018</span> -->
 </div>
 
 {% for i in messages %}
@@ -810,7 +810,7 @@ Opposite person
 </div>
 </div>
 
-<div class="col-lg-3 message-view chat-profile-view chat-sidebar" id="task_window">
+<!-- <div class="col-lg-3 message-view chat-profile-view chat-sidebar" id="task_window">
 <div class="chat-window video-window">
 <div class="fixed-header">
 <ul class="nav nav-tabs nav-tabs-bottom">
@@ -924,11 +924,11 @@ Opposite person
 <div class="table-content">
 <div class="chat-profile-img">
 <div class="edit-profile-img">
-<img src="https://yt3.ggpht.com/ytc/AKedOLTSo96IsUs6b1h5wVh6FGahY1OBV-D3iHTZJO9mdQ=s88-c-k-c0x00ffffff-no-rj" alt="">
+<img id="oppo_id" src="" alt="">
 </div>
-<h3 class="user-name m-t-10 mb-0">John Doe</h3>
-<small class="text-muted">Web Designer</small>
-<!-- <a href="javascript:void(0);" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a> -->
+<h3 class="user-name m-t-10 mb-0">{{oppo_user.first_name}}</h3>
+<small class="text-muted"></small>
+<a href="javascript:void(0);" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a>
 </div>
 <div class="chat-profile-info">
 <ul class="user-det-list">
@@ -1006,6 +1006,7 @@ Opposite person
 </div>
 </div>
 </div>
+
 </div>
 </div>
 </div>
@@ -1013,7 +1014,7 @@ Opposite person
 </div>
 </div>
 </div>
-</div>
+</div> -->
 </div>
 </div>
 <div id="drag_files" class="modal custom-modal fade" role="dialog">
@@ -1244,11 +1245,10 @@ dashboard.png
     const user_id  =  '{{user_id}}';
 
     let image_src = '';
-    let self_images_src = '';
 
-    var status_count = 0;
-    var next_count   = 0;
-
+    var status_count = 0;   //user previous minute online staus count
+    var next_count   = 0;   // user current online status count 
+    var repeated  =  0;     //variblae to store user online status based on stat_count and next_count
 
 
 // <!-- initial code for scroling down the chsat -->
@@ -1313,11 +1313,12 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
 // <!-- Code to recive message from others -->
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
+            //if the type is chatting message
             if (data.type == 'chat_message')
             {
             received(data);
             }
-            // message regarding opponent 
+            // status  regarding opponent 
             else{
                 console.log(data);
                 status_count = next_count;
@@ -1326,14 +1327,14 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
                 // online
                 if (status_count == next_count)
                 {
-                    
+                    repeated = repeated + 1;    //if both status_count and next _count is equal for more than once, it means user is offline
+                    if (repeated == 2){
                     $(document).ready(function(){
                     $('#online').hide();
                     $('#offline').show();
                     });
-                    
                     document.getElementById('last_seen').innerHTML = data.last_seen;
-                    
+                    }
                 }
                 // offline
                 else{
@@ -1390,14 +1391,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
     console.log('Opponent image','{{img_url}}');
   // Note the await keyword
 
-    await fetch("{{self_img_url}}")
-    .then((response) => response.text())
-    .then((result) => {
-        // console.log(image_src);
-        self_image_src = result;
-    })
-    .catch((error) => console.log("error", error));
-
+  
     await fetch("{{img_url}}")
     .then((response) => response.text())
     .then((result) => {
@@ -1407,7 +1401,6 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
     .catch((error) => console.log("error", error));
     
     $("img[id*='oppo_id']").attr({src:image_src});
-    $("img[id*='self_img_url']").attr({src:self_image_src});
     // 
     
     
