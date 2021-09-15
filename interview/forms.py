@@ -156,12 +156,12 @@ class DateInput(forms.DateInput):
 
 #Form to get professional initial meeting available timings,
 class ProIntervTime(BootstrapModelForm):
-    meet1_date  = forms.DateTimeField(widget = DateInput, required=False)
-    meet1_time  = forms.TimeField(input_formats=["%H.%M.%S", "%H.%M"], required=False)
-    meet2_date  = forms.DateTimeField(widget = DateInput, required=False)
-    meet2_time  = forms.TimeField(input_formats=["%H.%M.%S", "%H.%M"], required=False)
-    meet3_date  = forms.DateTimeField(widget = DateInput, required=False)
-    meet3_time  = forms.TimeField(input_formats=["%H.%M.%S", "%H.%M"], required=False)
+    meet1_date  = forms.DateTimeField(widget = DateInput, required=True)
+    meet1_time  = forms.TimeField(input_formats=["%H.%M.%S", "%H.%M"], required=True)
+    meet2_date  = forms.DateTimeField(widget = DateInput, required=True)
+    meet2_time  = forms.TimeField(input_formats=["%H.%M.%S", "%H.%M"], required=True)
+    meet3_date  = forms.DateTimeField(widget = DateInput, required=True)
+    meet3_time  = forms.TimeField(input_formats=["%H.%M.%S", "%H.%M"], required=True)
 
     class Meta:
         fields = ('meet1_date','meet1_time','meet2_date','meet2_time','meet3_date','meet3_time')

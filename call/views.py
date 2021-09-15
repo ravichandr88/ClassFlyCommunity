@@ -5,6 +5,7 @@ import json
 from datetime import timedelta
 from django.conf import settings
 from django.core.mail import send_mail
+from .models import RecordingUid
 
 # Create your views here.
 
@@ -69,15 +70,18 @@ Step 11: Show the video once for the Fresher.
 
 # Waiting room
 def video_prepare(request,id=''):
+
     # The first part of id will be the category fresher 'f' or professional 'p'
     categ = id.split('_')[0]
 
     id = id.split('_')[1]
 
     if categ == 'p':
+        print('line 79 It is not time yet')
         request.session['category'] = 'p'
-        waiting_room = False        #Professional should wait unitll it is time
+        waiting_room = False        #Professional should not wait unitll it is time
     else:
+        print('Fresher has to wait till time')
         request.session['category'] = 'f'
         waiting_room = True         #Fresher has to wait untill the Professional joines the meeting
 
@@ -93,6 +97,7 @@ def video_prepare(request,id=''):
     meeting = ProFrehserMeeting.objects.get(id=id)
 
     if Meeting.objects.filter(meeting__id = meeting.id).count() == 0:
+        print('Meetig  details ')
         Meeting( meeting  = meeting).save()
 
 
@@ -148,14 +153,16 @@ def videocall(request):
     
     # If the current time is greater than meeting start time and 
     # less than 2 hours of meeting start time, you can join
-    
-    if not(timezone.now() > meeting.date_time   and timezone.now() < g and not meeting.meeting_details.record_stopped) :
+    print(timezone.now() > meeting.date_time   , timezone.now() > g , not meeting.meeting_details.record_stopped)
+    if not(timezone.now() > meeting.date_time   and not(timezone.now() > g) and not meeting.meeting_details.record_stopped) :
     
         if request.session['category'] == 'f':
-           return redirect('f_dashboard')
+            print('line 159 f_dashboard redirect')
+            return redirect('f_dashboard')
            
         else:
-           return redirect('pro_dashboard')
+            print('line 162from video call views')
+            return redirect('pro_dashboard')
           
 
 
@@ -178,25 +185,29 @@ def videocall(request):
     appID = "e73019d92f714c95b9bc47ea63de404c"
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
     channelName = meeting.channel_name
-    uid = random.randrange(11111111,99999999)
     expireTimeInSeconds = 3600
     currentTimestamp = int(time.time())
     privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
+    uid = random.randrange(22222222,99999999)
+
+    record_uid = RecordingUid.objects.get(meeting = meeting) if RecordingUid.objects.filter(meeting = meeting).count() == 1 else RecordingUid(pro_uid = int(str(uid) + str(meeting.prof.id))%10000000,fresh_uid = int(str(uid) + str(meeting.fresher.id))%10000000,meeting = meeting)
+    record_uid.save()
 
     if user == 'prof':
-        uid = uid + meeting.prof.id
+
+        uid = record_uid.pro_uid
         
         # Create MeetingActive table object
         if MeetingActive.objects.filter(meeting = meeting).count() == 0:
             MeetingActive(meeting = meeting).save()
 
     else: 
-        uid = uid + meeting.fresher.id
-        print('line 193==',10000 * len(meeting.skills.split(',')) )
+        uid =   record_uid.fresh_uid
+        
 
 
 
-    # print(user)
+    print(uid, 'user id  uid')
 
     token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
 
@@ -204,7 +215,7 @@ def videocall(request):
     'token'         : token,
     'appid'         : appID,
     'channel'       : channelName,
-    'meeting_uid'   : uid,
+    'meeting_uid'   : int(uid),
     'uid'           : meeting.prof.id if user == 'prof' else meeting.fresher.id,
     'meet'          : meeting,
     'status'        : meet_details,
@@ -266,7 +277,7 @@ def pro_joined(request,mid,fid):
         return Response(data={'message':'Not valid meeting '}, status = 400)
 
     meeting = ProFrehserMeeting.objects.get(id = mid, fresher__id = fid).meeting_details
-    
+    print('Line 274', meeting.pro_joined, not meeting.record_stopped)
     if meeting.pro_joined and not meeting.record_stopped :
         # Code to get agora record resource ID
         pro_meeting = ProFrehserMeeting.objects.get(id=mid, fresher__id = fid)
@@ -277,6 +288,7 @@ def pro_joined(request,mid,fid):
         print('line 274==','got resource id',resp)
 
         if str(resp.status_code) != '200':
+            print(resp.content, resp)
             return Response(data={'message':resp.json()['reason']})
 
         return Response(data={'message':'joined'})
@@ -319,7 +331,7 @@ def connect_to_call_fresh(request, fid, mid):
             meeting.record_started = True
             meeting.fre_joined = True
             meeting.save()
-
+            print('meeting record started and saved to db')
             # Returning time in seconds for the js to count down
             # print((g - meeting.date_time ).total_seconds())
 
@@ -374,13 +386,18 @@ def record(request,fid=0,mid=0):
         raise Http404
 
     meeting = ProFrehserMeeting.objects.get(id=mid)
+    # recording uid details for prfesional and fresher
+    if RecordingUid.objects.filter(meeting = meeting).count() == 0:
+        raise Http404
+
+    record_uid = RecordingUid.objects.get(meeting = meeting)
 
     
 
     appID = "e73019d92f714c95b9bc47ea63de404c"
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
     channelName = "car"
-    uid = random.randrange(11111111,99999999)
+    uid = random.randrange(10000000,20000000)
     # userAccount = str(uid)
     expireTimeInSeconds = 3600
     currentTimestamp = int(time.time())
@@ -396,10 +413,14 @@ def record(request,fid=0,mid=0):
             'uid': uid,
             'aid':  'r',
             'mid':  meeting.meeting_status.id,  #MeetingActive table id
-            'pfmid': meeting.id #ProFreshMeeting id 
+            'pfmid': meeting.id, #ProFreshMeeting id ,
+            'pro_uid': record_uid.pro_uid,
+            'fresh_uid':record_uid.fresh_uid,
+            'skills':meeting.skills.replace("'",'').split(',')
             }
     
-    return render(request, 'videocall/record.html', context= data)
+    # return render(request, 'videocall/record.html', context= data)
+    return render(request,'recording_update.html', context = data)
 
 
 
@@ -494,7 +515,7 @@ def record_resource_id(pro_meeting):
 
     data = { 
     "cname": pro_meeting.channel_name,
-    "uid": "39690211",
+    "uid": 39690211,
     "clientRequest":{
     "resourceExpiredHour": 24,
     "scene": 1
@@ -547,7 +568,7 @@ def start_record_api(pro_meeting):
     
     data = {
     "cname":"car",
-    "uid":"39690211",
+    "uid":39690211,
     "clientRequest":{
         "token": "006e73019d92f714c95b9bc47ea63de404cIADVMPOGFws086UlSkWOq1HVa79tc6nmik3Gi15gOgZDVJ3mPXeby/NFIgCCVCMBAGbdYAQAAQCQItxgAgCQItxgAwCQItxgBACQItxg",
         "extensionServiceConfig": {

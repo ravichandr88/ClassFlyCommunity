@@ -18,7 +18,7 @@ class ProFrehserMeeting(models.Model):
     actual interview done to students.
     
     '''
- 
+  
     prof         = models.ForeignKey(Prfessional, on_delete = models.CASCADE, related_name = 'interviews_done', null = False)
     fresher      = models.ForeignKey(Fresher, on_delete = models.CASCADE, related_name = 'fresher_interview', null = False) 
     designation  = models.CharField(max_length = 50,default='')
@@ -29,7 +29,7 @@ class ProFrehserMeeting(models.Model):
     created_on   = models.DateTimeField(auto_now=True)
     channel_name = models.CharField(max_length = 100,null = False)
     price        = models.FloatField(null = False)
-    mode         = models.CharField(max_length = 3)
+    mode         = models.CharField(max_length = 3)           #givn by profesnl about the student #Approved by Professional for meeting
     feedback     = models.TextField(max_length = 1000, default='')   #givn by profesnl about the student
     passed       = models.BooleanField(default = False)  #Whether student has passed the exams or not
     approved     = models.BooleanField(default = False) #Approved by Professional for meeting

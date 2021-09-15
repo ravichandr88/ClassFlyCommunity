@@ -131,7 +131,9 @@ def initiate_upload(request):
 @csrf_exempt
 @api_view(['POST'])
 def presigned_url_multipart(request):
+        
         data = dict(request.data)
+        print(data['key'],'keyyyyyyyyyyyy')
         key = data['key']
         part_no = data['part_no']
         upload_id = data['upload_id']
@@ -148,17 +150,19 @@ def presigned_url_multipart(request):
         'UploadId': upload_id, 
         'PartNumber': int(part_no)
         })
+        print(signed_url)
         return Response(data={'url': signed_url})
 
 
 #function to complete multipart upload
+@login_required
 @csrf_exempt
 @api_view(['POST'])
 def complete_upload(request):
         ''' {'upload_id',file_name,'multi_part_etags} '''
         data = request.data
         data['file_name'] = str(data['file_name'].replace(' ','+'))
-
+        print(data['file_name'])
         s3 = boto3.client("s3",region_name="ap-south-1",
                           aws_access_key_id="AKIAS6UIIOP5B476WEOF",
                           aws_secret_access_key="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",
@@ -308,18 +312,18 @@ def classfly_complete_upload(request):
         if Fresher.objects.filter(user__username = data['username']).count() != 0:
                 user = Fresher.objects.get(user__username = data['username'])
                 if len(user.profile_pic) > 4:
-                        s3_client.delete_object(
+                        s3.delete_object(
                         Bucket= 'classfly',
                         Key= user.profile_pic
                         )
 
                 user.profile_pic = 'https://classfly.s3.ap-south-1.amazonaws.com/' + data['file_name']
                 user.save()
-                
+                 
         elif Prfessional.objects.filter(user__username = data['username']).count() != 0:
                 user = Prfessional.objects.get(user__username = data['username'])
                 if len(user.profile_pic) > 4:
-                        s3_client.delete_object(
+                        s3.delete_object(
                         Bucket= 'classfly',
                         Key= user.profile_pic
                         )
@@ -329,7 +333,7 @@ def classfly_complete_upload(request):
         elif HRaccount.objects.filter(user__username = data['username']).count() != 0:
                 user = HRaccount.objects.get(user__username = data['username'])
                 if len(user.profilepic) > 4:
-                        s3_client.delete_object(
+                        s3.delete_object(
                         Bucket= 'classfly',
                         Key= user.profilepic
                         )

@@ -80,7 +80,7 @@ class Prfessional(models.Model):
      
 
     def __str__(self):
-        return "Company {} City {} Designation {}".format(self.company,self.city,self.designation)
+        return "User {} Company {} City {} Designation {}".format(self.user.username,self.company,self.city,self.designation)
 
 class ProExperience(models.Model):
     pro = models.ForeignKey(Prfessional, on_delete = models.CASCADE, related_name='experience')

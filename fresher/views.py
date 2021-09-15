@@ -48,6 +48,10 @@ def search_professional(request,query=''):
 # updated
 @login_required
 def fresher_dash(request):
+
+    if Fresher.objects.filter(user__username = request.user).count() == 0:
+        return HttpResponse('Not signed up for Applicant account')
+        
     p = ProFrehserMeeting.objects.filter(fresher__user__username = request.user)
 
     today = timezone.now()
@@ -104,7 +108,7 @@ def pro_dash(request):
     meetings = approved_meetings | booked_meetings
     # return render(request,'dashboard/dist/dash_pro.html', context = {'meetings':meetings,'self':user,'today':today})
     return render(request,'pro_dash.html', context = {'meetings':meetings,'approved_meetings':approved_meetings,'pending_meetings':booked_meetings,'done_meetings':done_meetings,'reject_meetings':reject_meetings,'self':user,'today':today})
-
+ 
 
 
 def pro_profile(request,pro):

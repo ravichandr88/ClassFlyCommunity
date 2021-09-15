@@ -80,7 +80,7 @@ var remoteUsers = {};
     if (res.message == 'joined')
     {
       console.log('Success',res.message);
-      $("#join").attr("disabled", true);
+      $("#join-form").attr("disabled", true);
     }
     else{
       // the code wont connect when person is rejected for some reason
@@ -132,6 +132,7 @@ async function join() {
   // Play the local video track to the local browser and update the UI with the user ID.
   localTracks.videoTrack.play("local-player");
   $("#local-player-name").text(`localVideo(${option.uid})`);
+   
 
   // Publish the local video and audio tracks to the channel.
   await client.publish(Object.values(localTracks));
@@ -159,7 +160,7 @@ async function leave() {
   await client.leave();
 
   $("#local-player-name").text("");
-  $("#join").attr("disabled", false);
+  $("#join-form").attr("disabled", false);
   $("#leave").attr("disabled", true);
   console.log("client leaves channel success");
 
@@ -180,13 +181,14 @@ async function subscribe(user, mediaType) {
   console.log("subscribe success");
   if (mediaType === 'video') {
     const player = $(`
-      <div id="player-wrapper-${uid}"  style="width:90%;height:100%;margin-left:5%>
+      <div id="player-wrapper-${uid}"  style="width:90%;height:100%;margin-left:5%">
         <p class="player-name">remoteUser(${uid})</p>
         <div id="player-${uid}" style="width:100%;height:100%"></div>
       </div>
     `);
     $("#remote-playerlist").append(player);
     user.videoTrack.play(`player-${uid}`);
+    
   }
   if (mediaType === 'audio') {
     user.audioTrack.play();
@@ -201,6 +203,7 @@ async function subscribe(user, mediaType) {
  */
 function handleUserPublished(user, mediaType) {
   const id = user.uid;
+  console.log(user)
   remoteUsers[id] = user;
   subscribe(user, mediaType);
 }
@@ -221,12 +224,12 @@ function handleUserUnpublished(user) {
 
 // Code to connect if he has disconnected in between the meeting
 // this code will connect them autmatically
-if(auto_connect == 'True')
-{
-  let element = document.getElementById('join');
-  element.click();
-  console.log('Auto connect');
-}
+// if(auto_connect == 'True')
+// {
+//   let element = document.getElementById('join');
+//   element.click();
+//   console.log('Auto connect');
+// }
 
 
 // Code to get the meeting status from everyone
@@ -259,7 +262,7 @@ async function meeting_status()
         get_time = 0;
       }
 
-      
+       
       // check whether the status of profesional or fresher has changed or not
       if (pro_count == res.pro )
       {
@@ -271,6 +274,9 @@ async function meeting_status()
       }
       else if( rec_count == res.record ) 
       {
+        
+        // code to stop videocall moving away for feedback if it is localhost
+        if(JSON.stringify(window.location).split('feedback').slice(0,1)[0].split(':')[2].slice(2,) != 'localhost')
         chance = chance + 1;
       }
       else{

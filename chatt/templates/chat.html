@@ -1017,7 +1017,7 @@ Opposite person
 </div> -->
 </div>
 </div>
-<div id="drag_files" class="modal custom-modal fade" role="dialog">
+<!-- <div id="drag_files" class="modal custom-modal fade" role="dialog">
 <div class="modal-dialog modal-dialog-centered modal-md" role="document">
 <div class="modal-content">
 <div class="modal-header">
@@ -1226,6 +1226,8 @@ dashboard.png
 </div>
 </div>
 </div>
+ -->
+
 </div>
 </div>
 <script data-cfasync="false" src="{% static 'hrdash/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script>
@@ -1254,7 +1256,7 @@ dashboard.png
 // <!-- initial code for scroling down the chsat -->
 // code for auto scroll when a new message is added.
 var element = document.getElementById("chatdiv");
-element.scrollTop = element.scrollHeight - element.clientHeight;;
+element.scrollTop = element.scrollHeight - element.clientHeight;
         
 
     // console.log(user_id);
@@ -1333,7 +1335,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;;
                     $('#online').hide();
                     $('#offline').show();
                     });
-                    document.getElementById('last_seen').innerHTML = data.last_seen;
+                    document.getElementById('last_seen').innerHTML ='Last seen  ' +  data.last_seen;
                     }
                 }
                 // offline

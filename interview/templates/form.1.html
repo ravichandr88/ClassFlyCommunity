@@ -211,12 +211,12 @@
 			var chunksize = 6000000;
 			var x = 0;
 			while (x < size) {
-				//
+				
 				try { 
 				let res = await timeoutPromise(10*60*1000, fetch("/url_multi", {
 						method: 'POST',
 						body:  JSON.stringify({
-							'key':'{{user.username}}'+file.name,
+							'key':'{{user.id}}'+file.name,
 							'part_no':part_no,
 							'upload_id':uploadID
 							}),

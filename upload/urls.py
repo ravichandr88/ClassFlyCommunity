@@ -8,11 +8,11 @@ urlpatterns = [
     path('fileurl',views.fileupload),
     path('api/imgurl',views.fileupload),
     path('upload',views.upload),
-    path('initiate_upload',views.initiate_upload),
-    path('initiate',csrf_exempt(views.initiate)),
-    path('url_multi/<int:key>',views.presigned_url_multipart),
+    path('initiate_upload',views.initiate_upload),  #Step 1 -> initaite upload
+    path('initiate',csrf_exempt(views.initiate)),  
+    path('url_multi',views.presigned_url_multipart),  #Step 2 -> url for uploading by parts
     path('upload_raw',views.upload_raw),
-    path('complete_upload',views.complete_upload),
+    path('complete_upload',views.complete_upload),  #Step 3 -> complete upload
     path('signurl/<str:filename>',views.classfly_create_presigned_url),
     path('classfly/initiate_upload',views.classfly_initiate_upload),
     path('classfly/url_multi',views.classfly_presigned_url_multipart), 

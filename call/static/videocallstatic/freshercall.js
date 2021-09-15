@@ -3,7 +3,7 @@
  *  These procedures use Agora Video Call SDK for Web to enable local and remote
  *  users to join and leave a Video Call channel managed by Agora Platform.
  */
-
+  
 /*
  *  Create an {@link https://docs.agora.io/en/Video/API%20Reference/web_ng/interfaces/iagorartcclient.html|AgoraRTCClient} instance.
  *
@@ -79,7 +79,7 @@ var remoteUsers = {};
   Then connect to the meeting
  */
 
- $("#join").click( async function (e) {
+ $("#join-form").click( async function (e) {
 
   // console.log(option);
 
@@ -107,7 +107,7 @@ var remoteUsers = {};
       // call the clock to tick
       tick_tock(res.time)
 
-      $("#join").attr("disabled", true);
+      $("#join-form").attr("disabled", true);
 
     }
     else{
@@ -172,6 +172,7 @@ async function join() {
   // Play the local video track to the local browser and update the UI with the user ID.
   localTracks.videoTrack.play("local-player");
   $("#local-player-name").text(`localVideo(${option.uid})`);
+   
 
   // Publish the local video and audio tracks to the channel.
   await client.publish(Object.values(localTracks));
@@ -199,7 +200,7 @@ async function leave() {
   await client.leave();
 
   $("#local-player-name").text("");
-  $("#join").attr("disabled", false);
+  $("#join-form").attr("disabled", false);
   $("#leave").attr("disabled", true);
   console.log("client leaves channel success");
 
@@ -221,13 +222,11 @@ async function subscribe(user, mediaType) {
   if (mediaType === 'video') {
     const player = $(`
       <div id="player-wrapper-${uid}" style="width:90%;height:100%;margin-left:5%">
-        <p >remoteUser(${uid})</p>
-        <div id="player-${uid}" style="width:100%;height:100%"></div>
+      <p class="player-name">remoteUser(${uid})</p>
+        <div id="player-${uid}" class="player"></div>
       </div>
-    `);  
-    console.log(player);
+    `);
     $("#remote-playerlist").append(player);
-    // $("#user-video").append(player);
     user.videoTrack.play(`player-${uid}`);
   }
   if (mediaType === 'audio') {
@@ -243,6 +242,7 @@ async function subscribe(user, mediaType) {
  */
 function handleUserPublished(user, mediaType) {
   const id = user.uid;
+  console.log(user)
   remoteUsers[id] = user;
   subscribe(user, mediaType);
 }
@@ -267,17 +267,17 @@ function handleUserUnpublished(user) {
 Connect to meeting if already connected and disconnected in between 
 */
 console.log('called to join',auto_connect);
-if(auto_connect == 'True' )
-{
-  // document.getElementById('join-form').submit();
-  // let element = document.getElementById('join-form');
-  let element = document.getElementById('join');
+// if(auto_connect == 'True' )
+// {
+//   // document.getElementById('join-form').submit();
+//   // let element = document.getElementById('join-form');
+//   let element = document.getElementById('join-form');
 
-  element.click(); 
-  // element.dispatchEvent(new Event("click"));
-  // $('#join-form').trigger('customEventName', []);
-  console.log('called to join',auto_connect);
-}
+//   element.click(); 
+//   // element.dispatchEvent(new Event("click"));
+//   // $('#join-form').trigger('customEventName', []);
+//   console.log('called to join',auto_connect);
+// }
 
 
 
@@ -313,6 +313,7 @@ async function meeting_status()
       }
       else if( rec_count == res.record ) 
       {
+        if(JSON.stringify(window.location).split('feedback').slice(0,1)[0].split(':')[2].slice(2,) != 'localhost')
         chance = chance + 1;
       }
       else{

@@ -12,12 +12,13 @@ from django.shortcuts import redirect
 @login_required
 def student(request, edit = 0):
 
+    
     if request.method == 'GET' and edit == 0 and Fresher.objects.filter(user__username = request.user).count() == 1:
       return HttpResponse('Please go to dashboard to edit profile information')
 
   # edit = 1 means loading the for editing
     if edit == 1 and Fresher.objects.filter(user__username = request.user).count() == 0:
-        raise Http404
+        return HttpResponse('Please signup for Applicant Account')
 
     """
     form values 
@@ -32,11 +33,32 @@ def student(request, edit = 0):
     
     student = StudentForm()    #preparing an empty form
     fresher = Fresher() if Fresher.objects.filter(user__username = request.user).count() == 0 else Fresher.objects.get(user__username = request.user)
-      
+    skills = ''
     
+        # if this is supposed to be a new form
+    if request.method == 'GET' and edit == 0:
+
+      skills = """
+                    <div id="extra">
+                    </div>
+				<ul class=" wrap-input100 ">
+					<li class="tags-new">
+							<div class="wrap-input100 " >
+								<h5>Skills</h5>
+					  <input class="input100" type="text" placeholder="Skills"> 
+					  </div>
+					  <p style="color:'red'">Enter skills seperated by comma.</p>
+					</li>
+				  </ul>"""
+      return render(request,'form.html',context={'form':student, 'skills':skills})
+
     # If the function called for editing
     if (Fresher.objects.filter(user__username = request.user).count() == 1 and request.method == 'GET') or edit == 1:
         
+        student.initial['city_1']           = fresher.city_1 
+        student.initial['city_2']           = fresher.city_2  
+        student.initial['city_3']           = fresher.city_3  
+        student.initial['city']             = fresher.city
         student.initial['college']          =  fresher.college    
         student.initial['branch']           =  fresher.branch    
         student.initial['passout_year']     = fresher.passout_year  
@@ -74,31 +96,24 @@ def student(request, edit = 0):
                 
               </li>
               </ul>"""
-        
-
-    # skills = """
-    #                 <div id="extra">
-    #                 </div>
-		# 		<ul class=" wrap-input100 ">
-		# 			<li class="tags-new">
-		# 					<div class="wrap-input100 " >
-		# 						<h5>Skills</h5>
-		# 			  <input class="input100" type="text" placeholder="Skills"> 
-		# 			  </div>
-		# 			  <p style="color:'red'">Enter skills seperated by comma.</p>
-		# 			</li>
-		# 		  </ul>"""
+    
 
 
 
     if request.method == 'POST':
-        
+
+        student = StudentForm(request.POST)   
         if student.is_valid() and len(request.POST.getlist('skills')) != 0:
           
-          
+
+          print('City',student.cleaned_data['city'])
           fresher.user             = User.objects.get(username = request.user)
           fresher.college          = student.cleaned_data['college']
-          fresher.branch           = student.cleaned_data['branch']
+          fresher.branch           = student.cleaned_data['branch'] 
+          fresher.city_1           = student.cleaned_data['city_1']
+          fresher.city_2           = student.cleaned_data['city_2']
+          fresher.city_3           = student.cleaned_data['city_3']
+          fresher.city             = student.cleaned_data['city']
           fresher.passout_year     = student.cleaned_data['passout_year']
           fresher.master_college   = student.cleaned_data['master_college']
           fresher.master_branch    = student.cleaned_data['master_branch']
@@ -128,10 +143,14 @@ def student(request, edit = 0):
             exp3.applicant = fresher
             exp3.save()
 
-          return redirect('resume')
+          if edit == 1:
+            return redirect('f_dashboard')
+          else:
+            return redirect('resume')
 
         # if form is not valid
         elif len(request.POST.getlist('skills')) == 0:
+          print('Not valid form, so error')
           skills = """
                     <div id="extra"></div>
 				  <ul class=" wrap-input100 ">
@@ -143,10 +162,11 @@ def student(request, edit = 0):
 					  <p style="color:red">Enter skills seperated by comma.</p>
 					</li>
 				  </ul>"""
-
+        print('start',student.is_valid(),student.errors.as_data(),'end')
+        print('line 157 , out of post condition')
         return render(request,'form.html',context={'form':student, 'skills':skills,'title':'Student Signup'})
 
-
+    print('saved, ')
     return render(request,'form.html',context={'form':student, 'skills':skills})
 
 
@@ -400,13 +420,17 @@ def prof_initial_meet(request):
 
         # print(datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']))
         
+        pro_meet = Professional_Meeting()
+        if request.POST['meet1_date'] != '' and request.POST['meet1_time'] != '':
+          pro_meet.meet1 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time'])
+        if request.POST['meet2_date'] != '' and request.POST['meet2_time'] != '':
+          pro_meet.meet2 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time'])
+        if request.POST['meet3_date'] != '' and request.POST['meet3_time'] != '':
+          pro_meet.meet3 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time'])
+        pro_meet.prof = Prfessional.objects.get(id=5)
+        pro_meet.save()
+
         
-        Professional_Meeting(
-          meet1 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']),
-          meet2 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']),
-          meet3 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']),
-          prof = Prfessional.objects.get(id=5)
-        ).save()
 
         return redirect('pro_waiting')
 

@@ -247,7 +247,7 @@
 				let res = await timeoutPromise(10*60*1000, fetch("/classfly/url_multi", {
 						method: 'POST',
 						body:  JSON.stringify({
-							'key':'{{user.username}}'+file.name,
+							'key':'{{user.id}}'+file.name,
 							'part_no':part_no,
 							'upload_id':uploadID
 							}),

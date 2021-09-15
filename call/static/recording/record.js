@@ -10,7 +10,7 @@
  * @param {string} mode - The {@link https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/clientconfig.html#mode| streaming algorithm} used by Agora SDK.
  * @param  {string} codec - The {@link https://docs.agora.io/en/Voice/API%20Reference/web_ng/interfaces/clientconfig.html#codec| client codec} used by the browser.
  */
-
+ 
 
 
 
@@ -137,8 +137,8 @@ async function join() {
 
   // Play the local video track to the local browser and update the UI with the user ID.
 
-  localTracks.videoTrack.play("local-player");
-  $("#local-player-name").text(`localVideo(${option.uid})`);
+  // localTracks.videoTrack.play("local-player");
+  // $("#local-player-name").text(`localVideo(${option.uid})`);
 
   // Publish the local video and audio tracks to the channel.
 //   await client.publish(Object.values(localTracks));
@@ -198,14 +198,45 @@ async function subscribe(user, mediaType) {
   await client.subscribe(user, mediaType);
   console.log("subscribe success");
   if (mediaType === 'video') {
+    var width = 0;
+    var height = 0;
+    if(uid == pro_uid){
+      width  = '600px';
+      height = '350px';
+    }else if(uid == fresh_uid) 
+    {
+      width  = '400px';
+      height = '280px';
+    }
     const player = $(`
-      <div id="player-wrapper-${uid}">
+      <div id="player-wrapper-${uid}" style="width:100%; height:100%">
         <p class="player-name">remoteUser(${uid})</p>
-        <div id="player-${uid}" class="player"></div>
+        <div id="player-${uid}" class="player"  style="width:${width}; height:${height}"></div>
       </div>
     `);
+    if(uid == pro_uid)
+    {
     $("#remote-playerlist").append(player);
     user.videoTrack.play(`player-${uid}`);
+    
+    }
+    else if(uid == fresh_uid) 
+    {
+      $("#fresher_video").append(player);
+    user.videoTrack.play(`player-${uid}`);
+    }
+    // $(`#player-${uid}`).removeAttr("style"); 
+     
+    document.getElementById(`video_track-video-${uid}`).style['object-fit']="revert"; 
+    document.getElementById(`video_track-video-${uid}`).style['position']="relative";
+    document.getElementById(`agora-video-player-track-video-${uid}`).style['background-color']="silver"; 
+    console.log(document.getElementById(`video_track-video-${uid}`));
+
+
+    // <video id="video_track-video-39924645" class="agora_video_player" style="width: 100%; height: 100%; position: relative; left: 0px; top: 0px; object-fit: revert;" playsinline="" muted=""></video>
+    //position:relative
+    //object-fit:revert
+    //top:15px
   }
   if (mediaType === 'audio') {
     user.audioTrack.play();
@@ -248,7 +279,7 @@ function meeting_active()
   {
   h = h + 1
   setTimeout(meeting_active, interval);
-  document.getElementById('code').innerHTML = h + 'secs';
+  // document.getElementById('code').innerHTML = h + 'secs';
   }
   else 
   {
@@ -296,6 +327,7 @@ async function meeting_status()
       // if not receivd call tick_tock(res.time)
       if (get_time == 1 && typeof res.time != 'undefined' )
       {
+        console.log('recveid');
         tick_tock(res.time)
         get_time = 0;
       }
@@ -387,8 +419,7 @@ var x = setInterval(function() {
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   // Display the result in the element with id="demo"
-  document.getElementById("demo").innerHTML =  hours + ":"
-  + minutes + ":" + seconds ;
+  document.getElementById("demo").innerHTML =  hours + ":" + minutes + ":" + seconds ;
   // console.log('testing');
   // If the count down is finished, write some text
   if (distance < 0) {
