@@ -25,5 +25,6 @@ urlpatterns = [
     path('search',projects.search),     #Dynamic search page for projects
     path('project',projects.project_review),
     path('videoplayer/<int:video_id>',projects.videoplayer),
-    path('dashboard',projects.dashboard)
+    path('dashboard',projects.dashboard),
+    path('selection',views.selection, name='selection')
 ]

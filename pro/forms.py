@@ -92,7 +92,7 @@ class LoginForm(BootstrapModelForm):
         try:
             # print('entered')
             if User.objects.filter(username=phone_number).count() != 0:
-                user = User.objects.get(username=phone_number)
+                user = User.objects.get(username=phone_number) 
             
             elif Phonenumber.objects.filter(phone_number = phone_number).count() != 0:
                 user = Phonenumber.objects.get(phone_number = phone_number).user
@@ -109,11 +109,19 @@ class LoginForm(BootstrapModelForm):
             # print(user,'---------')
              
             # raise forms.ValidationError("Please correct the errors below.")
-
+            
+        self.phone_redirect,self.email_redirect = '',''
         #Check whether user account is active or not
         if user is not None and not user.is_active:
             self.add_error('phone_number', 'OTP not confirmed')
-            self.redirect = True
+            print('redirected for phone otp')
+            self.phone_redirect = True
+
+        elif  user.email == '': 
+            self.add_error('phone_number', 'Email OTP not confirmed')
+            print('redirected for email')
+            self.email_redirect = True
+
         
         else:
             self.user = user    #storing the user object for the form, to access in authenticate funtion in views

@@ -118,19 +118,24 @@ def signup(request,type="student"):
 
 @session
 def otp_verify_view(request):
-    print(request.session.keys())
+    print(request.session['username'])
 
     if request.method == 'POST':
         form = SMSotpForm(request.POST)
         # print(request.session['username'])
         if form.is_valid():
             #Code to activate normal user account activation
-        
             user = User.objects.get(username=request.session['username'])
+                
+            
+
             try:
                 otp = form.cleaned_data['otp']
+                print(form.cleaned_data['otp'])
                 otp = OTP.objects.get(user=user,otp=otp)
-                print('Started')
+                user.is_active = True
+                user.save()
+                print(request.session.keys())
                 #Check the reason for OTP
                 if request.session['reason'] == 'signup':
                     
@@ -208,8 +213,6 @@ def email_otp(request):
     # First check whether the user have requedsted for email otp
     form  = EmailOTPForm()
 
-
-    # request.session['username'] = 'bunny'
     
     if request.method == 'POST':
         form = EmailOTPForm(request.POST)
@@ -236,11 +239,18 @@ def email_otp(request):
                     elif request.session['type'] == 'professional':
                         return redirect('professional')
 
-                    else: 
+                    elif request.session['type'] == 'company': 
                         return redirect('company')
-
+                    else:
+                        return redirect('selection')
 
     return render(request,'signupcopy.html', context={'form':form})
+
+# Selection Function, if they have signed up for the account and not selected any account type
+#  Fresher, Professional, HRaccount
+def selection(request):
+
+    return render(request,'selection.html')
 
 
 # function to resend email otp through REST api
@@ -289,6 +299,8 @@ def resend_otp(request):
 
 def login_view(request): 
     #IF the user is already logged in 
+    
+    form = LoginForm()
 
     if str(request.user) != 'AnonymousUser':
         return redirect('pro_home')
@@ -296,7 +308,7 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-
+            
             user = authenticate(request, username=form.user.username, password=form.cleaned_data['password'])
             
             print(user == None)
@@ -307,15 +319,21 @@ def login_view(request):
             
             #Login the User
             login(request,user)
+
             return redirect('pro_home')  
-
+        
         else:
-            #If usre account is not activated, reirect to OTP page
-            if hasattr(form, 'redirect') and form.redirect:
+            # variables for working with phone and email otp
+            request.session['username'] = request.POST['phone_number']
+            request.session['reason'] = 'signup'
+            # If user account is not activated, reirect to OTP page
+            if form.phone_redirect:
                 return redirect('otp_verify')
-            return render(request,'signupcopy.html',context={'form':form})
+            elif form.email_redirect:
+                return redirect('emailpage')
+            
 
-    form = LoginForm()
+        
     return render(request,'signupcopy.html',context={'form':form,'title':'Login'})
 
 
@@ -338,7 +356,7 @@ def forgot_password(request):
             otp = str(randint(1234,9876)) 
             otp = OTP(user=user,otp=otp)
             otp.save()
-            send_otp.delay(form.cleaned_data['phone_number'],otp.otp)
+            send_otp(form.cleaned_data['phone_number'],otp.otp)
             # requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(form.cleaned_data['phone_number'],otp.otp))
    
 
@@ -394,7 +412,7 @@ def project_detail(request):
 def run_task(request):
     print(request.POST)
     task_type = 1
-    task = get_call.delay(int(task_type))
+    task = get_call(int(task_type))
     return Response(data={'task_id':task.id}, status=202)
     # return Response(data={'caught':'No'})
 
@@ -407,7 +425,7 @@ def temp_otp(request,phone,otp):
     if obj.type > 20:
         return Response(data={'message':'You have exceeded you OTP limit'},status=500)
 
-    send_student_otp.delay(phone,otp)
+    send_student_otp(phone,otp)
     # requests.get("http://sms.textmysms.com/app/smsapi/index.php?key=35FD9ADAC248D5&campaign=0&routeid=13&type=text&contacts={}&senderid=SOFTEC&msg=Welcome+to+ClassFly%2C+Your+otp+is+{}.".format(phone,otp))
     
     return Response(data={'message':'OTP sent'},status=200)

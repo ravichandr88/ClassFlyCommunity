@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 # Create your views here.
 @login_required
 def student(request, edit = 0):
+    request.session['type'] = 'student'
 
     
     if request.method == 'GET' and edit == 0 and Fresher.objects.filter(user__username = request.user).count() == 1:
@@ -198,7 +199,7 @@ def resumeview(request, edit = 0):
 #function to professional signup
 def prosignup(request, edit = 0):
     # edit = 1, refers to update of the curent data, edit = 0 means it is filling a new one
-
+    request.session['type'] == 'company'
 
     #special input field for adding skills
     skills = """
@@ -471,7 +472,7 @@ def profile_pic(request):
 # HR Singup Page-3
 @login_required
 def company_singup(request, edit = 0):
-    
+    request.session['type'] == 'company'
     form = CompanyForm()
     
     

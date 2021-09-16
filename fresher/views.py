@@ -50,7 +50,7 @@ def search_professional(request,query=''):
 def fresher_dash(request):
 
     if Fresher.objects.filter(user__username = request.user).count() == 0:
-        return HttpResponse('Not signed up for Applicant account')
+        return redirect('student')
         
     p = ProFrehserMeeting.objects.filter(fresher__user__username = request.user)
 
@@ -67,6 +67,9 @@ def pro_dash(request):
 # State 2 -> Approved
 # State 3 -> Meeting Done
 # State 4 -> Rejected
+
+    if Prfessional.objects.filter(user__username = request.user).count() == 0:
+        return redirect('professional')
 
 
     if request.method == 'POST':
