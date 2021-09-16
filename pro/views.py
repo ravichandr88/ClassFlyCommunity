@@ -320,6 +320,14 @@ def login_view(request):
             #Login the User
             login(request,user)
 
+            if Fresher.objects.filter(user = user).count() == 1:
+                return redirect('f_dashboard')
+            elif Prfessional.objects.filter(user = user).count() == 1:
+                return redirect('pro_dashboard')
+            elif HRaccount.objects.filter(user = user).count() == 1:
+                return redirect('hrdashboard')
+            
+
             return redirect('pro_home')  
         
         else:
