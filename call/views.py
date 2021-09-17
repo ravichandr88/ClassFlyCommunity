@@ -115,7 +115,7 @@ def videocall(request):
     # If the request is from professional , he can join
     # If the request is from fresher, he can join after the professional has joined
 
-    
+    print(request.session.keys())    
     user = ''
     uid = ''
 
@@ -140,7 +140,7 @@ def videocall(request):
     else:
         raise Http404
     
-    meet_details = meeting.meeting_details
+    meet_details = Meeting.objects.get(meeting_id = meeting.id)
 
 
 # Code to estimate the time with respect to skills
@@ -153,7 +153,7 @@ def videocall(request):
     
     # If the current time is greater than meeting start time and 
     # less than 2 hours of meeting start time, you can join
-    print(timezone.now() > meeting.date_time   , timezone.now() > g , not meeting.meeting_details.record_stopped)
+    # print(timezone.now() > meeting.date_time   , timezone.now() > g , not meeting.meeting_details.record_stopped)
     if not(timezone.now() > meeting.date_time   and not(timezone.now() > g) and not meeting.meeting_details.record_stopped) :
     
         if request.session['category'] == 'f':
@@ -396,7 +396,7 @@ def record(request,fid=0,mid=0):
 
     appID = "e73019d92f714c95b9bc47ea63de404c"
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
-    channelName = "car"
+    channelName = meeting.channel_name
     uid = random.randrange(10000000,20000000)
     # userAccount = str(uid)
     expireTimeInSeconds = 3600
@@ -515,7 +515,7 @@ def record_resource_id(pro_meeting):
 
     data = { 
     "cname": pro_meeting.channel_name,
-    "uid": 39690211,
+    "uid": '39690211',
     "clientRequest":{
     "resourceExpiredHour": 24,
     "scene": 1
@@ -531,11 +531,12 @@ def record_resource_id(pro_meeting):
     resp = requests.post(url=url,data=json.dumps(data),headers=headers)
 
     meeting = pro_meeting.meeting_details
-
+    
+    # For live working production mode uncomment the below line
     meeting.resource_id = resp.json()['resourceId']
+    # meeting.resource_id = 'testingnow'
 
     meeting.save()
-
     return resp
 
 
@@ -580,8 +581,8 @@ def start_record_api(pro_meeting):
                         "url": "https://www.classfly.in/record/" + str( pro_meeting.fresher.id ) + '/' + str( pro_meeting.id ),
                         # "url": "https://www.classfly.in/record",
                         "audioProfile":0,
-                        "videoWidth":1280,
-                        "videoHeight":720,
+                        "videoWidth":1600,
+                        "videoHeight":900,
                         "maxRecordingHour":2,
                         "readyTimeout": 100
                 }

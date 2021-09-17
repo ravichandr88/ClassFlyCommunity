@@ -57,6 +57,7 @@ def startpage(request):
 
 
 def signup(request,type="student"):
+    title = 'Welcome To ClassFly'
 
     # print(request.user)
     #IF the user is already logged in 
@@ -112,12 +113,14 @@ def signup(request,type="student"):
             errors.clear() 
             error_message = error_message.replace('username','phone number',1)
             errors.append(u"" + error_message)
-            return render(request,'signupcopy.html', context={'form':form})
-    return render(request, "signupcopy.html", context={'form':SignupForm()})
+            return render(request,'signupcopy.html', context={'form':form,'title':title})
+    return render(request, "signupcopy.html", context={'form':SignupForm(), 'title':title})
 
 
 @session
 def otp_verify_view(request):
+    title = 'Phone OTP Verification'
+
     print(request.session['username'])
 
     if request.method == 'POST':
@@ -151,18 +154,19 @@ def otp_verify_view(request):
                 errors.clear()
                 error_message = str('OTP did not match')
                 errors.append(u"" + error_message)
-                return render(request,'signupcopy.html', context={'form':form})
+                return render(request,'signupcopy.html', context={'form':form, 'title' : title})
 
            
                 
     otp_form = SMSotpForm()
-    return render(request,'signupcopy.html', context={'form':otp_form})
+    return render(request,'signupcopy.html', context={'form':otp_form, 'title': title})
 
 
 
 # Function to accept  Email from User
 @session
 def email_function(request):
+    title = 'Email is Required'
     print(request.session.keys())
     
     form = EmailForm()
@@ -202,13 +206,14 @@ def email_function(request):
             send_email_otp(user, email_otp.otp)
             return redirect('email_otp_verify')
 
-    return render(request,'signupcopy.html', context={'form':form})
+    return render(request,'signupcopy.html', context={'form':form,'title':title})
 
 
 # Function to recive the email otp from user
 @session
 def email_otp(request):
     print(request.session.keys())
+    title = 'Email OTP please..'
 
     # First check whether the user have requedsted for email otp
     form  = EmailOTPForm()
@@ -233,18 +238,21 @@ def email_otp(request):
                     user.save()
                     login(request,user)
                     #after successful signup, redirect user based on type from request, -> student,professional,company
-                    if request.session['type'] == 'student':
-                        return redirect('student')
-                    
-                    elif request.session['type'] == 'professional':
-                        return redirect('professional')
+                    if 'type' in request.session.keys():
+                        if request.session['type'] == 'student':
+                            return redirect('student')
+                        
+                        elif request.session['type'] == 'professional':
+                            return redirect('professional')
 
-                    elif request.session['type'] == 'company': 
-                        return redirect('company')
+                        elif request.session['type'] == 'company': 
+                            return redirect('company')
+                        else:
+                            return redirect('selection')
                     else:
                         return redirect('selection')
 
-    return render(request,'signupcopy.html', context={'form':form})
+    return render(request,'signupcopy.html', context={'form':form,'title':title})
 
 # Selection Function, if they have signed up for the account and not selected any account type
 #  Fresher, Professional, HRaccount
@@ -299,6 +307,7 @@ def resend_otp(request):
 
 def login_view(request): 
     #IF the user is already logged in 
+    title = 'Please Login'
     
     form = LoginForm()
 
@@ -315,7 +324,7 @@ def login_view(request):
             
             if user == None:
                 form.add_error('password','Incorrect password')
-                return render(request,'signupcopy.html',context={'form':form})
+                return render(request,'signupcopy.html',context={'form':form,'title':title})
             
             #Login the User
             login(request,user)
@@ -342,7 +351,7 @@ def login_view(request):
             
 
         
-    return render(request,'signupcopy.html',context={'form':form,'title':'Login'})
+    return render(request,'signupcopy.html',context={'form':form,'title':title})
 
 
 @login_required

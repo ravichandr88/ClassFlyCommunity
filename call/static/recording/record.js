@@ -201,17 +201,32 @@ async function subscribe(user, mediaType) {
     var width = 0;
     var height = 0;
     if(uid == pro_uid){
-      width  = '600px';
-      height = '350px';
+      // width  = '440px';
+      // height = '260px';
+      // margin_top = '-130px';
+      // margin_right = '687px';
+      
+        width = '500px';
+        height = '350px';
+        margin_top = '-220px';
+        margin_right = '682px';
+    
     }else if(uid == fresh_uid) 
     {
-      width  = '400px';
-      height = '280px';
+      // width  = '440px';
+      // height = '250px';
+      // margin_top = '-122px';
+      // margin_right = '235px';
+      
+          width = "500px";
+    height = '350px';
+    margin_top = '-222px';
+    margin_right = '180px';
+      
     }
     const player = $(`
       <div id="player-wrapper-${uid}" style="width:100%; height:100%">
-        <p class="player-name">remoteUser(${uid})</p>
-        <div id="player-${uid}" class="player"  style="width:${width}; height:${height}"></div>
+        <div id="player-${uid}" class="player"  style="width:${width}; height:${height}; margin-top : ${margin_top}; margin-right: ${margin_right}"></div>
       </div>
     `);
     if(uid == pro_uid)
@@ -229,7 +244,7 @@ async function subscribe(user, mediaType) {
      
     document.getElementById(`video_track-video-${uid}`).style['object-fit']="revert"; 
     document.getElementById(`video_track-video-${uid}`).style['position']="relative";
-    document.getElementById(`agora-video-player-track-video-${uid}`).style['background-color']="silver"; 
+    document.getElementById(`agora-video-player-track-video-${uid}`).style['background-color']="black"; 
     console.log(document.getElementById(`video_track-video-${uid}`));
 
 

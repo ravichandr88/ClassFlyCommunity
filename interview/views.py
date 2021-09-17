@@ -677,11 +677,11 @@ def pro_bank(request, edit = 0):
 
 
 
-# HR account Page-7
+# # HR account Page-7
 
-@login_required
-def hr_dashboard(request):
-    return render(request,'hr_dashboard.html',context={})
+# @login_required
+# def hr_dashboard(request):
+#     return render(request,'hr_dashboard.html',context={})
 
 
 
