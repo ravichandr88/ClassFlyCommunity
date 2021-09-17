@@ -568,8 +568,8 @@ def start_record_api(pro_meeting):
 
     
     data = {
-    "cname":"car",
-    "uid":39690211,
+    "cname":pro_meeting.channel_name,
+    "uid":'39690211',
     "clientRequest":{
         "token": "006e73019d92f714c95b9bc47ea63de404cIADVMPOGFws086UlSkWOq1HVa79tc6nmik3Gi15gOgZDVJ3mPXeby/NFIgCCVCMBAGbdYAQAAQCQItxgAgCQItxgAwCQItxgBACQItxg",
         "extensionServiceConfig": {
