@@ -584,7 +584,7 @@ def start_record_api(pro_meeting):
                         "videoWidth":1280,
                         "videoHeight":720,
                         "maxRecordingHour":2,
-                        "readyTimeout": 100
+                        "readyTimeout": 60
                 }
             }]
         },
