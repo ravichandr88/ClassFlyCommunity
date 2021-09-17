@@ -95,7 +95,13 @@ var remoteUsers = {};
       return ;
     }
 
-    const res = await fetch('/fre_join/' + uid  +'/' + meet)
+    // varibale to decide whether to record the meeting or not 
+    // based on the localhost meeting or on servre meeting
+    var host = 'local'
+    if(JSON.stringify(window.location).split('feedback').slice(0,1)[0].split(':')[2].slice(2,) != 'localhost')
+    host = 'classfly'
+
+    const res = await fetch('/fre_join/' + uid  +'/' + meet + '/' + host)
     .then(res => res.json());
     if (res.message == 'joined')
     { 

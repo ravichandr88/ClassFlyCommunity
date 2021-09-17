@@ -302,7 +302,7 @@ def pro_joined(request,mid,fid):
 # And get the resource id for connecting to video call
 @csrf_exempt
 @api_view(['GET'])
-def connect_to_call_fresh(request, fid, mid):
+def connect_to_call_fresh(request, fid, mid, host=''):
     print("line 291 ==, Start record")
        
     if ProFrehserMeeting.objects.filter(id=mid).count() == 0:
@@ -318,7 +318,7 @@ def connect_to_call_fresh(request, fid, mid):
         pro_meeting.meeting_details.record_start_time = timezone.now() 
         pro_meeting.meeting_details.save()
 
-        if not DEBUG:       #varible to activate and deactivate the code while testing
+        if host == 'classfly':       #varible to activate and deactivate the code while testing
             resp = start_record_api(pro_meeting)
 
             if str(resp.status_code) != '200':
