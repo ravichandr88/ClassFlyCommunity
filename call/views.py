@@ -581,8 +581,8 @@ def start_record_api(pro_meeting):
                         "url": "https://www.classfly.in/record/" + str( pro_meeting.fresher.id ) + '/' + str( pro_meeting.id ),
                         # "url": "https://www.classfly.in/record",
                         "audioProfile":0,
-                        "videoWidth":1600,
-                        "videoHeight":900,
+                        "videoWidth":1280,
+                        "videoHeight":720,
                         "maxRecordingHour":2,
                         "readyTimeout": 100
                 }
