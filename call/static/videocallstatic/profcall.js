@@ -313,12 +313,12 @@ async function meeting_status()
     }
  
     
-    setTimeout(meeting_status, interval);
+    setTimeout(meeting_status, check_interval);
 
 
 }
 
-setTimeout(meeting_status, interval);
+setTimeout(meeting_status, check_interval);
 
 
 
