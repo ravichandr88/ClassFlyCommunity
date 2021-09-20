@@ -1095,7 +1095,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             //if the type is chatting message
-            if (data.type == 'chat_message')
+            if (data.type == 'meet_message')
                 {
                 received(data);
                 }
@@ -1143,7 +1143,8 @@ element.scrollTop = element.scrollHeight - element.clientHeight;
             'time':'Sept. 20, 2021, 5:46 a.m.'})
 
             { type: "meet_message", message: "hello", time: "01:42:04 PM", user: "1" }
-        */
+             { type: "meet_message", message: "hello", time: "01:48:20 PM", user: "1", room: "1_2" }
+            */
     
 </script>
 
