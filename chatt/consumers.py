@@ -327,7 +327,7 @@ class ChatConsumer(WebsocketConsumer):
                     {
                         'type': type,
                         'message': message,
-                        'user': user.id
+                        'user': str(user.id)
                     }
                     )
 
@@ -375,7 +375,7 @@ class ChatConsumer(WebsocketConsumer):
                 'type':'meet_message',
                 'message': message,
                 'time': str(timezone.now().strftime("%I:%M:%S %p")),
-                'user': user
+                'user': str(user)
             }))
 
        
