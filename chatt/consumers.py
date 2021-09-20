@@ -313,7 +313,7 @@ class ChatConsumer(WebsocketConsumer):
                     MeetingMessages(
                     message    = message,
                     sender     = user,
-                    chatgroup  = room
+                    meeting_room  = room
                     ).save()
                     print('Message saved successfully')
                     
