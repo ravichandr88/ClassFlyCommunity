@@ -744,8 +744,17 @@ def after_record(request,pfmid):
 
     if ProFrehserMeeting.objects.filter(id = pfmid).count() == 0:
         raise Http404
-    
+
     pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
+
+    if MeetingChat.objects.filter(meeting = pro_meeting).count() == 0:
+        raise Http404
+    
+    meetingchat = MeetingChat.objects.get(meeting = pro_meeting)
+    meetingchat.locked = True
+    meetingchat.save()
+    
+    
     return render(request,'after_record.html',context={'form':{},'pfmid':pfmid})
 
 

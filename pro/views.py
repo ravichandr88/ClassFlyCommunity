@@ -64,13 +64,15 @@ def signup(request,type="student"):
     if request.user is  not 'AnonymousUser':
         # print(request.user)
         if Fresher.objects.filter(user__username = request.user).count() == 1:
-            return redirect('jobsearh')
+            return redirect('f_dashboard')
          
         elif Prfessional.objects.filter(user__username = request.user).count() == 1:
             return redirect('pro_dashboard')
         
         elif HRaccount.objects.filter(user__username = request.user).count() == 1:
             return redirect('hrdashboard')
+        else:
+            return redirect('selection')
 
         
 

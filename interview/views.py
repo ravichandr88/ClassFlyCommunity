@@ -416,11 +416,20 @@ import datetime
 def prof_initial_meet(request):
     form = ProIntervTime()
 
+
+
     if request.method == 'POST':
         # print(request.POST['meet1_date'],request.POST['meet1_time'])
 
         # print(datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']))
         
+        user = User.objects.get(username = request.user)
+        
+        if Prfessional.objects.filter(user = user).count() == 0:
+          return HttpResponse('Please signup as Professional First')
+
+        prof = Prfessional.objects.get(user = user)
+
         pro_meet = Professional_Meeting()
         if request.POST['meet1_date'] != '' and request.POST['meet1_time'] != '':
           pro_meet.meet1 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time'])
@@ -428,7 +437,7 @@ def prof_initial_meet(request):
           pro_meet.meet2 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time'])
         if request.POST['meet3_date'] != '' and request.POST['meet3_time'] != '':
           pro_meet.meet3 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time'])
-        pro_meet.prof = Prfessional.objects.get(id=5)
+        pro_meet.prof = prof
         pro_meet.save()
 
         

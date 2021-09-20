@@ -424,7 +424,7 @@
 
 <div class="chat-contents">
 <div class="chat-content-wrap">
-<div  class="user-video" id="chatdiv">
+<div  class="user-video" >
    
     <div id="remote-playerlist" style="width:100%;height:100%" ></div> 
 <!-- <img src="{% static 'videocall/smarthr-laravel/html-template/light/assets/img/video-call.jpg' %}" alt=""> -->
@@ -516,12 +516,12 @@
 </div>
 </div>
 <div class="content-full tab-pane" id="chats_tab">
-<div class="chat-window" id="chatdiv">
+<div class="chat-window" >
 <div class="chat-contents">
 <div class="chat-content-wrap">
-<div class="chat-wrap-inner">
+<div class="chat-wrap-inner" id="chatdiv">
 <div class="chat-box">
-<div class="chats" id="chatbox"> 
+<div class="chats"  id="chatbox"> 
 
 {% for i in chats %}
 
@@ -1076,7 +1076,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;
 
         // code for auto scroll when a new message is added.
         var element = document.getElementById("chatdiv");
-        element.scrollTop = element.scrollHeight - element.clientHeight;;
+        element.scrollTop = element.scrollHeight - element.clientHeight;
         
         }
 
