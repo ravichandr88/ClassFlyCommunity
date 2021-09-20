@@ -430,6 +430,7 @@ def prof_initial_meet(request):
 
         prof = Prfessional.objects.get(user = user)
 
+        print(datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time']))
         pro_meet = Professional_Meeting()
         if request.POST['meet1_date'] != '' and request.POST['meet1_time'] != '':
           pro_meet.meet1 = datetime.datetime.fromisoformat(request.POST['meet1_date'] +' ' + request.POST['meet1_time'])
