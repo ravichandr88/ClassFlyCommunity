@@ -136,7 +136,7 @@ class ChatConsumer(WebsocketConsumer):
             if TwoGroup.objects.filter(channel_name = self.room_name).count() == 1 :
                 chat_room = TwoGroup.objects.get(channel_name = self.room_name)
 
-            elif MeetingChat.objects.filter(channel_name = self.room_name).count() == 0:
+            elif MeetingChat.objects.filter(channel_name = self.room_name).count() == 1:
                 chat_room = MeetingChat.objects.get(channel_name = self.room_name)
                 meeting_room = True
 
