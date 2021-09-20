@@ -327,7 +327,8 @@ class ChatConsumer(WebsocketConsumer):
                     {
                         'type': type,
                         'message': message,
-                        'user': str(user.id)
+                        'user': str(user.id),
+                        'room': room.channel_name
                     }
                     )
 
@@ -368,14 +369,15 @@ class ChatConsumer(WebsocketConsumer):
         
             message = event['message']
             user    = event['user']
-            
+            room    = event['room']
 
             # Send message to WebSocket
             self.send(text_data=json.dumps({
                 'type':'meet_message',
                 'message': message,
                 'time': str(timezone.now().strftime("%I:%M:%S %p")),
-                'user': str(user)
+                'user': str(user),
+                'room': room
             }))
 
        
