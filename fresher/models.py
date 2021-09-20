@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 # Create your models here.
 
@@ -52,8 +53,17 @@ class ProFrehserMeeting(models.Model):
         }
     
     def skills_count(self):
-        return len(self.skills.split(','))    
+        return len(self.skills.split(','))   
 
+    def skills_split(self):
+        
+        g = self.skills.split(',')
+        return  g
+
+    def skills_js_list(self):
+        j = json.dumps(self.skills.replace(' ','').split(','))
+        print(j)
+        return j
  
 # video calling detailas table
 

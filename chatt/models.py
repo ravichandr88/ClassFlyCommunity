@@ -36,15 +36,23 @@ class OnlineStatus(models.Model):
 
 
 class MeetingChat(models.Model):
-    meeting     = models.OneToOneField(ProFrehserMeeting, on_delete = models.CASCADE, related_name = 'meeting_chatt')
-    created_on  = models.DateTimeField(auto_now = True)
-    locked      = models.BooleanField(default = False)
-    views       = models.IntegerField(default=0)
+    meeting         = models.OneToOneField(ProFrehserMeeting, on_delete = models.CASCADE, related_name = 'meeting_chatt')
+    channel_name    = models.CharField(max_length = 20,default = True)
+    created_on      = models.DateTimeField(auto_now = True)
+    locked          = models.BooleanField(default = False)
+    views           = models.IntegerField(default=0)
 
 
     def __str__(self):
-        return "Meeting {} locked {} views {}".format(self.meeting,self.locked, self.views)
+        return "Meeting {} locked {} views {} channelviews  {}".format(self.meeting,self.locked, self.views, self.channel_name)
 
+    def get_user(self,user):
+        # check wehther the user is avaiblle or not,
+        # if not available return false
+        if self.meeting.prof.user == user or self.meeting.fresher.user == user:
+            return self
+        
+        return False
 
 class MeetingMessages(models.Model):
     sender      = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'user_meet_chats')

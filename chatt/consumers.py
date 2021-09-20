@@ -97,6 +97,7 @@ from django.contrib.sessions.models import Session
 from .models import TwoGroup, Messages, OnlineStatus 
 from django.utils import timezone
 from datetime import datetime
+from .models import MeetingChat,MeetingMessages
 
 # To keep the user online
 
@@ -125,22 +126,34 @@ class ChatConsumer(WebsocketConsumer):
                 online = OnlineStatus.objects.get(user = user)
                 online.status_count = 0
                 online.save()
+            
+            # predfine of chat_roo object
 
+            chat_room = ''
+            # variable to check whether the chats is for normal chatting or meeting chating
+            meeting_room = False
             # We got the user, now check the chat room availabilty for the user
-            if TwoGroup.objects.filter(channel_name = self.room_name).count() == 0:
+            if TwoGroup.objects.filter(channel_name = self.room_name).count() == 1 :
+                chat_room = TwoGroup.objects.get(channel_name = self.room_name)
+
+            elif MeetingChat.objects.filter(channel_name = self.room_name).count() == 0:
+                chat_room = MeetingChat.objects.get(channel_name = self.room_name)
+                meeting_room = True
+
+            else:
                 # If no chat room is found, return the user request
                 print('No chat room found')
                 return
-             
-            chat_room = TwoGroup.objects.get(channel_name = self.room_name)
-
+            
+            
             # now, we have the chat room, see whether the user is Professional or Fresher
             # If the user is not present in any of the uses, return empty
-            if chat_room.prof.id != user.id and chat_room.fresher.id != user.id:
-                print('Not found',chat_room.prof.id,chat_room.fresher.id,user.id)
-                return
-            else:
-                print('Chat joined')
+            if not meeting_room:
+                if chat_room.prof.id != user.id and chat_room.fresher.id != user.id:
+                    print('Not found',chat_room.prof.id,chat_room.fresher.id,user.id)
+                    return
+                else:
+                    print('Chat joined')
 
             async_to_sync(self.channel_layer.group_add)(
                 self.room_group_name,
@@ -200,20 +213,30 @@ class ChatConsumer(WebsocketConsumer):
 
         
             room = ''
+            if type == 'chat_message' or type == 'status':
+                if  user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
+                    print('First If done')
+                    room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
 
-            if  user_position == 'prof' and TwoGroup.objects.filter(channel_name = user_channel, prof = user).count() != 0:
-                print('First If done')
-                room = TwoGroup.objects.get(channel_name = user_channel,  prof = user)
+                elif user_position == 'fresher' and TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
+                    print("Second If done")
+                    room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
+                else:
+                    print('line 225,No user room match with user_position')
+                    return
 
-            elif user_position == 'fresher' and TwoGroup.objects.filter(channel_name = user_channel, fresher = user).count() != 0:
-                print("Second If done")
-                room = TwoGroup.objects.get(channel_name = user_channel, fresher = user)
+            elif type == 'meet_message' and MeetingChat.objects.filter(channel_name = user_channel).count() == 1:
+                print('line 229, meeting found')
+                room = MeetingChat.objects.get(channel_name = user_channel).get_user(user)
+                if not room:
+                    print('No user room match with user_position')
+                    return
+
+
             else:
                 print('No user room match with user_position')
                 return
 
-
-            print(user)
             print('Type: ',type)
             print("type == 'chat_message'",type == 'chat_message')
             print("type == 'status'",type == 'status')
@@ -283,6 +306,32 @@ class ChatConsumer(WebsocketConsumer):
                     }
                     )
 
+            elif type == 'meet_message':
+                try:        
+                    print('If and elif done')
+                    # Save data to database 
+                    MeetingMessages(
+                    message    = message,
+                    sender     = user,
+                    chatgroup  = room
+                    ).save()
+                    print('Message saved successfully')
+                    
+                except:
+                    print('Try not found ')
+                    return
+
+                # Send message to room group
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': type,
+                        'message': message,
+                        'user': user.id
+                    }
+                    )
+
+             
             else:
                 print('Wrong type of status data recived')
         else:    
@@ -308,6 +357,22 @@ class ChatConsumer(WebsocketConsumer):
             # Send message to WebSocket
             self.send(text_data=json.dumps({
                 'type':'chat_message',
+                'message': message,
+                'time': str(timezone.now().strftime("%I:%M:%S %p")),
+                'user': user
+            }))
+
+
+    # Receive message from room group
+    def meet_message(self, event):
+        
+            message = event['message']
+            user    = event['user']
+            
+
+            # Send message to WebSocket
+            self.send(text_data=json.dumps({
+                'type':'meet_message',
                 'message': message,
                 'time': str(timezone.now().strftime("%I:%M:%S %p")),
                 'user': user

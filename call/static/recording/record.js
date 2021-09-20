@@ -201,27 +201,32 @@ async function subscribe(user, mediaType) {
     var width = 0;
     var height = 0;
     if(uid == pro_uid){
-      // width  = '440px';
-      // height = '260px';
-      // margin_top = '-130px';
-      // margin_right = '687px';
+     
+      /*
+width: 500px;
+height: 350px;
+margin-top: -220px;
+margin-right: 582px;
+      */
       
         width = '500px';
         height = '350px';
         margin_top = '-220px';
-        margin_right = '682px';
+        margin_right = '582px';
     
     }else if(uid == fresh_uid) 
     {
-      // width  = '440px';
-      // height = '250px';
-      // margin_top = '-122px';
-      // margin_right = '235px';
+//          width: 500px;
+//     height: 350px;
+//     margin-top: -222px;
+//     margin-right: 105px;
+// }
+
       
           width = "500px";
     height = '350px';
     margin_top = '-222px';
-    margin_right = '180px';
+    margin_right = '105px';
       
     }
     const player = $(`

@@ -6,7 +6,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.core.mail import send_mail
 from .models import RecordingUid
-
+from chatt.models import MeetingChat, MeetingMessages
 # Create your views here.
 
 from django.contrib.auth.models import User
@@ -203,13 +203,12 @@ def videocall(request):
 
     else: 
         uid =   record_uid.fresh_uid
-        
-
-
-
-    print(uid, 'user id  uid')
 
     token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
+
+# check meetingchat , and create chat if does not exists , or get the one
+    meetchat    = MeetingChat.objects.get_or_create(meeting = meeting, channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0] 
+    chats       = meetchat.meeting_chats.all()
 
     data = {
     'token'         : token,
@@ -225,7 +224,16 @@ def videocall(request):
     'mid'           : meeting.meeting_status.id,
     'pfmid'         : meeting.id,
     #Code the auto connect the user, if disconnected for any reason 
-    'auto_connect'  : True if   meeting.meeting_details.record_stop_time != None and timezone.now() < meeting.meeting_details.record_stop_time else False 
+    'auto_connect'  : False ,
+    # attributes related to chatting
+    'room_name'     : meetchat.channel_name,
+    'user_id'       : meeting.prof.user.id if user == 'prof' else meeting.fresher.user.id,
+    'user_name'     : meeting.prof.user.first_name if user == 'prof' else meeting.fresher.user.first_name,
+    'oppo_user_name' : meeting.prof.user.first_name if user == 'fresher' else meeting.fresher.user.first_name, 
+    'oppo_user_id'  : meeting.prof.user.id if user == 'fresher' else meeting.fresher.user.id,
+    'user_pic'      : meeting.prof.profile_pic if user == 'prof' else meeting.fresher.profile_pic,
+    'oppo_user_pic' : meeting.prof.profile_pic if user != 'fresher' else meeting.fresher.profile_pic,
+    'chats'   : chats
     }
 
     print('line 218===',data['auto_connect'])
