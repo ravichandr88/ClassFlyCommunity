@@ -65,19 +65,21 @@ class Experience(models.Model):
 
  
 class Prfessional(models.Model):
-    user            = models.OneToOneField(User,on_delete=models.CASCADE, related_name = 'proaccount')
-    company         = models.CharField(max_length=70, null=False)
-    designation     = models.CharField(max_length=60, null=False) 
-    city            = models.CharField(max_length=60, null=False)
-    stream          = models.CharField(max_length = 60,null=False)
-    college         = models.CharField(max_length=80, null=False)
-    language_spoke  = models.CharField(max_length = 150, null=False)
-    about_yourself  = models.TextField(max_length = 500)
-    total_exp_year  = models.FloatField()
-    resume_url      = models.URLField()
-    profile_pic     = models.URLField()
-    skills          = models.CharField(max_length = 500)
-     
+    user                = models.OneToOneField(User,on_delete=models.CASCADE, related_name = 'proaccount')
+    company             = models.CharField(max_length=70, null=False)
+    designation         = models.CharField(max_length=60, null=False) 
+    city                = models.CharField(max_length=60, null=False)
+    stream              = models.CharField(max_length = 60,null=False)
+    college             = models.CharField(max_length=80, null=False)
+    language_spoke      = models.CharField(max_length = 150, null=False)
+    about_yourself      = models.TextField(max_length = 500)
+    total_exp_year      = models.FloatField()
+    resume_url          = models.URLField()
+    profile_pic         = models.URLField()
+    skills              = models.CharField(max_length = 500)
+    approved            = models.BooleanField(default = False)
+    meeting_time_updated = models.BooleanField(default = False)
+    
 
     def __str__(self):
         return "User {} Company {} City {} Designation {}".format(self.user.username,self.company,self.city,self.designation)

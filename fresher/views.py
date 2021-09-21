@@ -26,7 +26,7 @@ def search_professional(request,query=''):
 
 
     if request.method == 'GET':
-        profs = Prfessional.objects.all()[:10]
+        profs = Prfessional.objects.filter(approved = True,meeting_time_updated = True)[:10]
 
         return render(request,'searchpage.html',context={'profs':profs})
         # return render(request,'search_pro/pro_search.html',context={'profs':profs})
@@ -39,7 +39,7 @@ def search_professional(request,query=''):
 
 
         
-        profs = list(Prfessional.objects.filter(city__icontains = city).filter( skills__icontains = skill).filter(company__icontains = company).filter(designation__icontains = designation))
+        profs = list(Prfessional.objects.filter(city__icontains = city,approved = True,meeting_time_updated = True).filter( skills__icontains = skill).filter(company__icontains = company).filter(designation__icontains = designation))
             
         return render(request,'searchpage.html',context={'profs':profs,'skill':skill,'city':city,'company':company,'designation':designation})
 
@@ -146,7 +146,7 @@ def fresher_profile(request,fre):
 
 def book_interview(request, prof = 0):  # page 22
  
-    if prof == '' or Prfessional.objects.filter(user__id = prof).count() == 0:
+    if prof == '' or Prfessional.objects.filter(user__id = prof, approved = True, meeting_time_updated = True).count() == 0:
         raise Http404
 
     prof = Prfessional.objects.get(user__id = prof)
