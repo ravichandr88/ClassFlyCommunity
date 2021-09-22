@@ -37,7 +37,7 @@ class OnlineStatus(models.Model):
 
 class MeetingChat(models.Model):
     meeting         = models.OneToOneField(ProFrehserMeeting, on_delete = models.CASCADE, related_name = 'meeting_chatt')
-    channel_name    = models.CharField(max_length = 20,default = True)
+    channel_name    = models.CharField(max_length = 20,default = True)  #profid_fresherid
     created_on      = models.DateTimeField(auto_now = True)
     locked          = models.BooleanField(default = False)
     views           = models.IntegerField(default=0)

@@ -411,6 +411,7 @@ def record(request,fid=0,mid=0):
     currentTimestamp = int(time.time())
     privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
 
+    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0]
 
     token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
 
@@ -425,7 +426,8 @@ def record(request,fid=0,mid=0):
             'pro_uid': record_uid.pro_uid,
             'fresh_uid':record_uid.fresh_uid,
             'skills':meeting.skills.replace("'",'').split(','),
-            'meet':meeting
+            'meet':meeting,
+            'chat_room_name': meetchat.channel_name
             }
     
     # return render(request, 'videocall/record.html', context= data)
