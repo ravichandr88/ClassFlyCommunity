@@ -125,6 +125,7 @@ class ChatConsumer(WebsocketConsumer):
                 return
             else:
                 print('No chat room found')
+                return
 
         if Session.objects.filter(session_key=session_key).count() !=  0:
             session = Session.objects.get(session_key=session_key)
