@@ -482,13 +482,18 @@ def profile_pic(request):
 # HR Singup Page-3
 @login_required
 def company_singup(request, edit = 0):
+
+    if edit == 1 and Company.objects.filter(created_by__username = request.user).count() == 0:
+        raise Http404
+
+    
     request.session['type'] == 'company'
     form = CompanyForm()
     
     
 
     if edit == 1 and request.method == 'GET':
-      comp = Company(created_by__username = request.user)
+      comp = Company.objects.get(created_by__username = request.user)
 
       form.initial['about'] = comp.about
       form.initial['city']  = comp.city

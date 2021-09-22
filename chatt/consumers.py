@@ -111,6 +111,7 @@ class ChatConsumer(WebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
         # print(str(self.scope['headers']).split('sessionid=')[1].split("'")[0])
+        
         session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
         if Session.objects.filter(session_key=session_key).count() !=  0:
             session = Session.objects.get(session_key=session_key)
@@ -159,10 +160,21 @@ class ChatConsumer(WebsocketConsumer):
                 self.room_group_name,
                 self.channel_name
             )
-    # h7sc90o8n7buen965ydqrq2uspggy4nf
+    
             self.accept()
 
             return
+        
+        # If there is no session, then it should be regarding session ID 
+        else:
+            if MeetingChat.objects.filter(channel_name = self.room_name, locked = False).count() == 1:
+                async_to_sync(self.channel_layer.group_add)(
+                self.room_group_name,
+                self.channel_name
+                )
+            self.accept()
+            return
+            
         # if user object is not found return
         print('User not found')
         return 

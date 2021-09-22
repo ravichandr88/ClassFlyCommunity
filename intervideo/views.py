@@ -51,6 +51,26 @@ def hraccount(function):
 
     return inner
 
+
+def user_type(username):
+
+    # fre,  pro, hra, frepro, prohra, frehra, freprohra
+    
+    u_type = ''
+
+    if Fresher.objects.filter(user__username = username).count() == 1:
+        u_type = 'fre'
+
+    if Prfessional.objects.filter(user__username = username).count() == 1:
+        u_type+='pro'
+
+    if HRaccount.objects.filter(user__username = username).count() == 1:
+        u_type+='hra'
+
+    return u_type
+
+
+
 # Function to check whether the skills are 90% similar or not
 def skillsmatch(job,fresher):
     j_list = job.split(',')         #skills in job
@@ -71,7 +91,8 @@ def skillsmatch(job,fresher):
 @login_required
 def video_player(request,pfmid = 0, prof=False):
 # pfmid = ProFresherMeeting ID, prof
-
+# user type -> pro,fre,hra
+    user_type = 'none'
 
     if request.method == 'GET' and pfmid == 0:
         meetings = ProFrehserMeeting.objects.filter(~Q(feedback = ''),approved = True)[:10]
@@ -79,7 +100,7 @@ def video_player(request,pfmid = 0, prof=False):
         if len(meetings) == 0:
             message = 'Sorry, No interviews found'
 
-        return render(request,'videoplayer_now.html', context={'message':message,'video':False,'meetings':meetings})
+        return render(request,'videoplayer_now.html', context={'message':message,'video':False,'meetings':meetings,'user_type':user_type})
 
 
     
@@ -315,10 +336,41 @@ def applicants_search(request,id=0,skill = ''):
 
 @login_required
 @hraccount
-def jobpost(request):
+def jobpost(request,job_id = 0,edit = 0):
     
     form = JobPostForm()
     hr = HRaccount.objects.get(user = User.objects.get(username = request.user))
+
+    if request.method == 'GET' and edit == 1:
+        
+        if Jobpost.objects.filter(id = job_id).count() == 0:
+            return HttpResponse('Job with that ID not found')
+
+        jobpost = Jobpost.objects.get(id = job_id)
+
+        form.initial['designation'] = jobpost.designation 
+        form.initial['role'] = jobpost.role            
+        form.initial['industry_type'] = jobpost.industry_type 
+        form.initial['employment_type'] = jobpost.employment_type  
+        form.initial['edu_ug'] = jobpost.edu_ug    
+        form.initial['edu_pg'] = jobpost.edu_pg        
+        form.initial['edu_doc'] = jobpost.edu_doc      
+        form.initial['skills'] = jobpost.skills
+        form.initial['city'] = jobpost.city   
+        form.initial['description'] = jobpost.description    
+        form.initial['requirement'] = jobpost.requirement     
+        form.initial['min_salary'] = jobpost.min_salary 
+        form.initial['max_salary'] = jobpost.max_salary   
+        form.initial['min_experience'] = jobpost.min_exp   
+        form.initial['max_experience'] = jobpost.max_exp       
+        form.initial['question1'] = jobpost.qu1   
+        form.initial['question2'] = jobpost.qu2   
+        form.initial['question3'] = jobpost.qu3   
+
+        data = {'form':form,
+            'title':'Post a Job'}
+        return render(request, 'formpage.html', context=data)
+        
 
 
     if request.method == 'POST':

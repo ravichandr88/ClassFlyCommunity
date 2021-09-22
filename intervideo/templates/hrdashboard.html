@@ -263,21 +263,27 @@
 <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 <span class="user-img"><img src="smarthr-laravel/html-template/light/assets/img/profiles/avatar-21.jpg" alt="">
 <span class="status online"></span></span>
-<span>Admin</span>
+<span>Settings</span>
 </a>
 <div class="dropdown-menu">
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/profile.html">My Profile</a>
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/settings.html">Settings</a>
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/login.html">Logout</a>
+<a class="dropdown-item" href="/hraccount/1">HR Details</a>
+<a class="dropdown-item" href="/hridcard">ID Card</a>
+<a class="dropdown-item" href="/hrprofile">My Profile</a>
+<a class="dropdown-item" href="/company/1">Company Details</a>
+<a class="dropdown-item" href="/logout">Logout</a>
 </div>
 </li>
 </ul>
 <div class="dropdown mobile-user-menu">
 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 <div class="dropdown-menu dropdown-menu-right">
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/profile.html">My Profile</a>
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/settings.html">Settings</a>
-<a class="dropdown-item" href="smarthr-laravel/html-template/light/login.html">Logout</a>
+
+		<a class="dropdown-item" href="/hraccount/1">HR Details</a>
+		<a class="dropdown-item" href="/hridcard">ID Card</a>
+		<a class="dropdown-item" href="/hrprofile">My Profile</a>
+		<a class="dropdown-item" href="/company/1">Company Details</a>
+		<a class="dropdown-item" href="/logout">Logout</a>
+
 </div>
 </div>
 </div>
@@ -286,31 +292,11 @@
 <div id="sidebar-menu" class="sidebar-menu">
 <ul>
 <li class="menu-title">
-<span>Main</span>
+<span>Options</span>
 </li>
-<li class="submenu">
-<a href="#"><i class="la la-dashboard"></i> <span> Dashboard</span> <span class="menu-arrow"></span></a>
-<ul style="display: none;">
-<li><a href="smarthr-laravel/html-template/light/index.html">Admin Dashboard</a></li>
-<li><a href="smarthr-laravel/html-template/light/employee-dashboard.html">Employee Dashboard</a></li>
-</ul>
-</li>
-
-<li class="submenu">
-<a href="#"><i class="la la-cube"></i> <span> Apps</span> <span class="menu-arrow"></span></a>
-<ul style="display: none;">
-<li><a href="smarthr-laravel/html-template/light/chat.html">Chat</a></li>
-<li class="submenu">
-<a href="#"><span> Calls</span> <span class="menu-arrow"></span></a>
-<ul style="display: none;">
-<li><a href="smarthr-laravel/html-template/light/voice-call.html">Voice Call</a></li>
-<li><a href="smarthr-laravel/html-template/light/video-call.html">Video Call</a></li>
-<li><a href="smarthr-laravel/html-template/light/outgoing-call.html">Outgoing Call</a></li>
-<li><a href="smarthr-laravel/html-template/light/incoming-call.html">Incoming Call</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="submenu"><a href="/hr_dash"><i class="la la-dashboard"></i> <span> Dashboard </span> <span class="menu-arrow"></span></a></li>
+<li class="submenu"><a href="/jobpost/{{job.id}}/1"><i class="la la-dashboard"></i> <span> Post a Job </span> <span class="menu-arrow"></span></a></li>
+<li class="submenu"><a href="/player_now"><i class="la la-dashboard"></i> <span> Interview Videos </span> <span class="menu-arrow"></span></a></li>
 
 {% if job %}
 <li><a href="/applicants/{{job.id}}">Browse Candidates <span class="menu-arrow"></span></a></li>
@@ -373,7 +359,7 @@
 <div class="dropdown dropdown-action">
 		<button class="btn btn-sm btn-primary">Job Post Options</button><a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 		<div class="dropdown-menu dropdown-menu-right">
-		<a href="#" class="dropdown-item" data-toggle="modal" data-target="#edit_job"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+		<a href="#" class="dropdown-item" data-toggle="modal" onclick="move({{job.id}})"><i class="fa fa-pencil m-r-5"></i> Edit</a>
 		<a href="#" class="dropdown-item" data-toggle="modal" onclick="delete_job_id({{job.id}})" data-target="#delete_job"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
 		</div>
 </div>
@@ -462,10 +448,10 @@
 			{% for a in i.fresher.fresher_interview.all %}
 			{% if a.passed == True %}
 			<a href="/player_now/{{a.id}}" class="btn btn-sm btn-primary" target="_blank"><i class="fa fa-play mr-1"></i> Video</a></td>
-			
-			{% endif %}
-			
-			{% endfor %}
+			{{ "<!--" }}
+				{%endif%} 
+			  {%endfor%}     
+			  {{ "-->" }}
 			
 
 <tr id='{{i.id}}'>
@@ -900,6 +886,12 @@ var url = "{{j.fresher.profile_pic}}";
 
 //varibaelt o do query
 window.job_id = '{{job_id}}';
+
+
+function move(id)
+{
+	window.location = '/jobpost/'+ id +'/1';
+}
 
 
 </script>

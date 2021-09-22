@@ -11,7 +11,8 @@ urlpatterns = [
     path('hr_dash/<int:id>/<str:skill>',views.hr_dashboard),
     path('hr_dash/<int:id>/<str:skill>/<int:status>',views.hr_dashboard), 
     path('hr_dash',views.hr_dashboard, name='hrdashboard'),
-    path('jobpost',views.jobpost) ,
+    path('jobpost',views.jobpost),
+    path('jobpost/<int:job_id>/<int:edit>',views.jobpost),
     path('job/<int:id>',views.jobdetails),
     path('jobs/search',views.job_search, name='jobsearh'),   #Job Search
     path('jobs/search/<str:desig>/<str:city>/<str:salary>',views.job_search),

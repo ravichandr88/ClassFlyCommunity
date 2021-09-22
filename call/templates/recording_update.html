@@ -24,28 +24,29 @@
 	</div>
 	<div class="courses" style="border: 4px solid rgba(0, 0, 0, 0.3);background-color: rgba(87, 87, 87, 0.4);">
 		{% for i in skills %}
-		<h5  style="text-transform: uppercase;color:white; background-color: black">{{i}}</h5>
+		<h5 id="skill{{forloop.counter0}}" style="text-transform: uppercase;color:white; background-color: black">{{i}}</h5>
 		{% endfor %}
 	</div>
 	<div>
-	<div class="designation1"  style="top: -280px;left: 100px;width: max-content; background-color: black; color:white" ><h3>Professional</h3></div>
-	<div class="designation1"  style="top: -280px;left: 100px;width: max-content; background-color: black; color:white"><h3>JaneethReddy,Intern</h3></div>
-</div>
+	<div class="designation1"  style="top: -280px;left: 100px;width: max-content; background-color: black; color:white"><h3>{{meet.prof.user.first_name}}</h3></div>
+	<div class="designation1"  style="top: -280px;left: 100px;width: max-content; background-color: black; color:white" ><h3>({{meet.prof.designation}})</h3></div>
+	</div>
 <div>
-	<div class="designation2" style="top: -340px;left: 600px;width: max-content; background-color: black; color:white"><h3>RaviChandra,Developer</h3></div>
-	<div class="designation2" style="top: -340px;left: 600px;width: max-content; background-color: black; color:white"><h3>RaviChandra,Developer</h3></div>
+	<div class="designation2" style="top: -340px;left: 600px;width: max-content; background-color: black; color:white"><h3>{{meet.fresher.user.first_name}}</h3></div>
+	<div class="designation2" style="top: -340px;left: 600px;width: max-content; background-color: black; color:white"><h3>({{meet.designation}})</h3></div>
 	
 </div>
 	<!-- <div class="visiting_card" id="image-background" style="font-size: 25px;color: black;background-image: url('https://www.mandlpaints.com/wp-content/uploads/2018/09/Pearl-Grey-300x300.jpg');background-size: 100%;">
 		<a href="www.classfly.in" >www.classfly.in</a><br>
 		<h7>PreInterviewed Job Portal</h7>
 	</div> -->
-<div class="main-wrapper">
+<!-- text-shadow: 0 0 2px #000; -->
+	<div class="main-wrapper">
 <div class="header">
 <div class="header-left">
-<a href="#" class="logo">
-<img src="#" width="40" height="40" alt="">
-</a>
+<a href="#" class="logo" style="margin-left: -160px;color:#4266f5; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">
+<h1><img src="{% static 'recording/classfly-record.png' %}" width="40" height="40" alt=""><b>CLASSFLY</b>
+</h1></a>
 
 </div>
 <div class="page-title-box">
@@ -83,85 +84,11 @@
 	<div class="chat-contents">
 	<div class="chat-content-wrap">
 	<div class="chat-wrap-inner">
-	<div class="chat-box">
-	<div class="chats">
+	<div class="chat-box" style="overflow: scroll;height: 550px;" id="chatdiv">
+	<div class="chats" id="chatbox">
 	
-		<div class="chat chat-left">
-	<div class="chat-avatar">
-	<a href="smarthr-laravel/html-template/light/profile.html" class="avatar">
-	<img alt="" src="smarthr-laravel/html-template/light/assets/img/profiles/avatar-09.jpg">
-	</a>
-	</div>
-	<div class="chat-body">
-	<div class="chat-bubble">
-	<div class="chat-content">
-	<span class="task-chat-user">John Doe</span> <span class="chat-time">8:35 am</span>
-	<p>I'm just looking around.</p>
-	<p>Will you tell me something about yourself? </p>
-	</div>
-	</div>
-	</div>
-	</div>
 	
-	<div class="chat chat-left">
-	<div class="chat-avatar">
-	<a href="smarthr-laravel/html-template/light/profile.html" class="avatar">
-	<img alt="" src="smarthr-laravel/html-template/light/assets/img/profiles/avatar-09.jpg">
-	</a>
-	</div>
-	<div class="chat-body">
-	<div class="chat-bubble">
-	<div class="chat-content">
-	<span class="task-chat-user">John Doe</span> <span class="file-attached">attached 3 files <i class="fa fa-paperclip"></i></span> <span class="chat-time">Feb 17, 2019 at 4:32am</span>
-	<ul class="attach-list">
-	<li><i class="fa fa-file"></i> <a href="#">project_document.avi</a></li>
-	<li><i class="fa fa-file"></i> <a href="#">video_conferencing.psd</a></li>
-	<li><i class="fa fa-file"></i> <a href="#">landing_page.psd</a></li>
-	</ul>
-	</div>
-	</div>
-	</div>
-	</div>
-	<div class="chat-line">
-	<span class="chat-date">January 29th, 2019</span>
-	</div>
-	<div class="chat chat-left">
-	<div class="chat-avatar">
-	<a href="smarthr-laravel/html-template/light/profile.html" class="avatar">
-	<img alt="" src="smarthr-laravel/html-template/light/assets/img/profiles/avatar-16.jpg">
-	</a>
-	</div>
-	<div class="chat-body">
-	<div class="chat-bubble">
-	<div class="chat-content">
-	<span class="task-chat-user">Jeffery Lalor</span> <span class="file-attached">attached file <i class="fa fa-paperclip"></i></span> <span class="chat-time">Yesterday at 9:16pm</span>
-	<ul class="attach-list">
-	<li class="pdf-file"><i class="fa fa-file-pdf-o"></i> <a href="#">Document_2016.pdf</a></li>
-	</ul>
-	</div>
-	</div>
-	</div>
-	</div>
-	<div class="chat chat-left">
-	<div class="chat-avatar">
-	<a href="smarthr-laravel/html-template/light/profile.html" class="avatar">
-	<img alt="" src="smarthr-laravel/html-template/light/assets/img/profiles/avatar-16.jpg">
-	</a>
-	</div>
-	<div class="chat-body">
-	<div class="chat-bubble">
-	<div class="chat-content">
-	<span class="task-chat-user">Jeffery Lalor</span> <span class="file-attached">attached file <i class="fa fa-paperclip"></i></span> <span class="chat-time">Today at 12:42pm</span>
-	<ul class="attach-list">
-	<li class="img-file">
-	<div class="attach-img-download"><a href="#">avatar-1.jpg</a></div>
-	<div class="task-attach-img"><img src="smarthr-laravel/html-template/light/assets/img/user.jpg" alt=""></div>
-	</li>
-	</ul>
-	</div>
-	</div>
-	</div>
-	</div>
+
 	</div>
 	</div>
 	</div>
@@ -226,5 +153,178 @@
         <div id="player-8651765" class="player" style="width:600px; height:350px"><div id="agora-video-player-track-video-8651765" style="width: 100%; height: 100%; position: relative; overflow: hidden; background-color: silver;"><video id="video_track-video-8651765" class="agora_video_player" style="width: 100%; height: 100%; position: relative; left: 0px; top: 0px; object-fit: revert;" playsinline="" muted=""></video></div></div>
       </div>
  -->
+ <!-- code to work with highlighting topics based on time -->
+<script>
+
+var skills = '{{meet.skills}}'.split(',');
+var total_seconds = (skills.length * 600) + 1;
+var temp_seconds = 0;
+var time = "";
+var past_id = 0; 
+var id  = 0;
+window.setInterval(update, 1000);
+
+function update(){
+  // setInterval(update, 1000);
+  id = skills.length - parseInt(total_seconds / 600 ) - 1;
+  total_seconds -= 1;
+  if (total_seconds > 0){
+    total_seconds = total_seconds-1;
+    minutes = parseInt( ( total_seconds - (skills.length-id - 1) * 600) / 60, 10);  
+    seconds = parseInt(( total_seconds - (skills.length-id - 1) * 600) % 60, 10);  
+    minutes = minutes < 10 ? "0" + minutes : minutes; 
+    seconds = seconds < 10 ? "0" + seconds : seconds; 
+    time = minutes + ":" + seconds ;  
+    document.getElementById("skill"+id).innerHTML = skills[id] + ":"+time;
+    console.log('id',id,'pastid',past_id);
+    if(id > 0 && id != past_id){
+      
+      var tmp = past_id;
+      past_id = id ;
+      while(tmp >= 0)
+      {
+      document.getElementById("skill"+tmp).innerHTML=skills[tmp] ;
+      document.getElementById("skill"+tmp).style.color = "rgba(189, 189, 255)";
+      tmp -= 1;  
+    }
+    } 
+  }
+  else{
+    document.getElementById("skill"+id).innerHTML=skills[id] ;
+      document.getElementById("skill"+id).style.color = "rgba(237, 237, 255)";
+      
+  }
+  
+}
+ 
+ </script>
+
+
+<script>
+
+	var fresher_image_src = '';
+	var prof_image_src = '';
+	
+	//variable for professional
+	var user = '{{user}}' ;
+	
+	var oppo_user_name = '{{meet.prof.user.first_name}}';
+	var oppo_user_id = '{{meet.prof.user.id}}';
+	var user_name ='{{meet.fresher.user.first_name}}'
+	var user_id = '{{meet.fresher.user.id}}'
+	const roomName =  '{{room_name}}';
+        
+
+	 $(document).ready(async function(){
+
+ {% if meet.prof.profile_pic != '' %}
+       
+  // Note the await keyword
+
+  
+    await fetch("{{meet.prof.profile_pic}}")
+    .then((response) => response.text())
+    .then((result) => {
+        prof_image_src = result;
+    })
+    .catch((error) => console.log("error", error));
+
+    
+    {% endif %}
+
+    {% if meet.fresher.profile_pic != '' %}
+
+    await fetch("{{meet.fresher.profile_pic}}")
+    .then((response) => response.text())
+    .then((result) => {
+        fresher_image_src = result;
+    })
+    .catch((error) => console.log("error", error));
+    // 
+    
+
+    {% endif %}
+
+
+    $("img[id*='profpic']").attr({src:prof_image_src});
+    
+    $("img[id*='fresherpic']").attr({src:fresher_image_src});
+    
+    
+
+    }); //end of jquery code
+
+
+
+	         function received(data)
+        {
+            // console.log(data, user_id);
+			var chat_content = '<div class="chat chat-left">'
+			+'<div class="chat-avatar">'
+			+'<a href="#" class="avatar">'
+			
+			if('{{meet.prof.user.id}}' == data.user )
+			{
+				chat_content += '<img alt="" src="' + prof_image_src + '" >';
+			}
+			else if('{{meet.fresher.user.id}}' == data.user){
+				chat_content += '<img alt="" src="' + fresher_image_src + '" >';
+			} 
+
+			chat_content += '</a></div><div class="chat-body"><div class="chat-bubble"><div class="chat-content"><span class="task-chat-user">';
+
+			// <!-- check which user has sent the message -->
+			if (data.user == oppo_user_id)
+			{
+				console.log('oppo user',oppo_user_id,oppo_user_name)
+				chat_content +=  oppo_user_name ;
+			}
+			else if(data.user == user_id)
+			{
+				console.log('xxxxxxxxxxxx',user_id,user_name)
+				chat_content += user_name;
+			}
+			chat_content += '</span> <span class="chat-time">' + data.time + '</span><p>' + data.message + '</p></div></div></div></div>'
+			document.getElementById("chatbox").innerHTML += chat_content;
+
+			
+
+			// code for auto scroll when a new message is added.
+			var element = document.getElementById("chatdiv");
+			element.scrollTop = element.scrollHeight - element.clientHeight;
+			
+        }
+
+
+
+        var wss_protocol = (window.location.protocol == 'https:') ? 'wss://': 'ws://';
+        
+        const chatSocket = new WebSocket(
+            wss_protocol 
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+// <!-- Code to recive message from others -->
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            //if the type is chatting message
+            if (data.type == 'meet_message')
+                {
+                received(data);
+                }
+            else{
+				console.log(data);
+			}
+		};
 		
+		chatSocket.onclose = function(e) {
+			// alert('Chatting Disconnected');
+            console.error('Chat socket closed unexpectedly');
+        };
+</script>
+
+
 </html>

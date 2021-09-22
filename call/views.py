@@ -424,7 +424,8 @@ def record(request,fid=0,mid=0):
             'pfmid': meeting.id, #ProFreshMeeting id ,
             'pro_uid': record_uid.pro_uid,
             'fresh_uid':record_uid.fresh_uid,
-            'skills':meeting.skills.replace("'",'').split(',')
+            'skills':meeting.skills.replace("'",'').split(','),
+            'meet':meeting
             }
     
     # return render(request, 'videocall/record.html', context= data)
