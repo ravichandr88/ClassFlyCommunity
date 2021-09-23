@@ -4,12 +4,14 @@ from django.contrib.auth.decorators import login_required
 from .models import Fresher, Professinal_Interview_Time, HRaccount,Company,Experience,Professinal_Account_Details ,Prfessional,ProExperience, Professional_Meeting
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from chatt.views import usertype
 
 
 
 # Fresher Singup Page-3
 # Create your views here.
 @login_required
+@usertype
 def student(request, edit = 0):
     request.session['type'] = 'student'
 
@@ -175,6 +177,7 @@ def student(request, edit = 0):
 # Fresher Page-4
 
 @login_required
+@usertype
 def resumeview(request, edit = 0):
 # edit = 1 means updating previuos resume
     next = 'notFound'
@@ -195,8 +198,9 @@ def resumeview(request, edit = 0):
 # Professional Signup Page-3
 
 
-@login_required
 #function to professional signup
+@login_required
+@usertype
 def prosignup(request, edit = 0):
     # edit = 1, refers to update of the curent data, edit = 0 means it is filling a new one
     request.session['type'] == 'company'
@@ -312,8 +316,9 @@ def prosignup(request, edit = 0):
 # Professional Signup to acquire experience details of the professional
 # Professional Signup Page-5
 
-@login_required
 #function to professional signup
+@login_required
+@usertype
 def proexp(request,edit=0):
     # edit = 0 is new form, edit = 1 is update of the same form
 
@@ -413,6 +418,7 @@ def proexp(request,edit=0):
 import datetime
 
 @login_required
+@usertype
 def prof_initial_meet(request):
     form = ProIntervTime()
 
@@ -462,6 +468,7 @@ def prof_initial_meet(request):
 # Fresher Signup Page-5
 
 @login_required
+@usertype
 def profile_pic(request):
     
     next = ''
@@ -481,6 +488,7 @@ def profile_pic(request):
 
 # HR Singup Page-3
 @login_required
+@usertype
 def company_singup(request, edit = 0):
 
     if edit == 1 and Company.objects.filter(created_by__username = request.user).count() == 0:
@@ -535,6 +543,7 @@ def company_singup(request, edit = 0):
 # HR- account creatoin Page-4
 
 @login_required
+@usertype
 def hr_account_creation(request,edit = 0):
     
     form = HRForm()
@@ -566,6 +575,7 @@ def hr_account_creation(request,edit = 0):
 # HR account creation Page-5
 
 @login_required
+@usertype
 def hr_id_card(request):
     
     # value for the change in title of this page
@@ -580,6 +590,7 @@ def hr_id_card(request):
 # HR account creation Page-6
 
 @login_required
+@usertype
 def hr_profile_pic(request):
 
 
@@ -591,6 +602,7 @@ def hr_profile_pic(request):
 # Professioinal Page-11
 
 @login_required 
+@usertype
 def pro_timetable(request,edit=0):
 # edit = 0 is dont want to edit, 1 to edit
 
@@ -649,6 +661,7 @@ def pro_timetable(request,edit=0):
 # Professional Page-12
 
 @login_required
+@usertype
 def pro_bank(request, edit = 0):
     # edit = 1 is for updating the bank details
     form = ProfessionalBankForm()
@@ -709,6 +722,7 @@ def pro_bank(request, edit = 0):
 # professional Page-13
 
 @login_required
+@usertype
 def prof_dashboard(request):
   return HttpResponse('Professional Dashboard')
 
@@ -717,6 +731,7 @@ def prof_dashboard(request):
 # Professional Page-9
 
 @login_required
+@usertype
 def pro_waiting(request):
 
     js_code = '''
@@ -729,6 +744,7 @@ def pro_waiting(request):
 
 
 @login_required
+@usertype
 def hr_waiting(request):
 
     js_code = '''

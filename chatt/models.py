@@ -9,7 +9,10 @@ class TwoGroup(models.Model):
     prof = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'pro_chats')
     fresher = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'fre_chat')
     channel_name = models.CharField(max_length = 20, default = '')
+    prof_lastseen = models.DateTimeField(auto_now=True)
+    fresher_lastseen = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now = True)
+
 
     def __str__(self):
         return "Prof {} Fresher {} Channel Name {}".format(self.prof.first_name, self.fresher.first_name, self.channel_name)

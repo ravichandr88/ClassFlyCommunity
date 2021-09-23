@@ -30,5 +30,6 @@ urlpatterns = [
     path('video_buy/<int:vdo_id>',views.video_buying),
     path('interview_buy/<int:pfmid>',views.purchase_interview) ,
     path('resume_buy/<int:skills>',views.resume_purchase),
-    path('paid_service',views.paid_services)
+    path('paid_service',views.paid_services),
+    path('oldsearch',views.old_job_search)
 ]

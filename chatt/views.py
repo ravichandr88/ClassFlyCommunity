@@ -4,6 +4,7 @@ from django.shortcuts import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.db.models import Q
 from interview.models import Prfessional, Fresher, HRaccount
+from django.utils import timezone
 
 
 # chat/views.py
@@ -72,11 +73,18 @@ def chatting(request, room_name):
   
     if room.prof == user:
         user_id = 'prof'
+        room.prof_lastseen = timezone.now()
+        room.save()
+
         # get the img_url of the opposite person
         oppo_user = room.fresher
         
     elif room.fresher == user:
         user_id = 'fresher'
+        room.fresher_lastseen = timezone.now()
+        room.save()
+
+        # get the img_url of the opposite person
         oppo_user = room.prof
         
     else:
@@ -93,3 +101,67 @@ def room(request, room_name):
     return render(request, 'chat/room.html', {
         'room_name': room_name
     })
+
+
+
+
+def chats(username):
+    p_chats = TwoGroup.objects.filter(prof__username = username) 
+    f_chats = TwoGroup.objects.filter(fresher__username = username)
+    
+    # An empty list of Twogroups models
+    chats = []
+
+    for i in p_chats:
+        last_chat = i.chats.filter(sender = i.fresher).latest("created_on")
+        if i.prof_lastseen < last_chat.created_on:
+            chats.append({
+                'first_name'    : last_chat.sender.first_name,
+                'message'       : last_chat.message[:40],
+                'time'          : last_chat.created_on,
+                'channel_name'  : last_chat.chatgroup.channel_name
+            })
+
+# messages sent by opposite person(Professional) when you are Fresher, 
+# check whether fresher_lastseen is less than any message sent by professional
+    for i in f_chats:
+        last_chat = i.chats.filter(sender = i.prof).latest("created_on")
+        if i.fresher_lastseen < last_chat.created_on:
+            chats.append({
+                'first_name'    : last_chat.sender.first_name,
+                'message'       : last_chat.message[:40],
+                'time'          : last_chat.created_on,
+                'channel_name'  : last_chat.chatgroup.channel_name
+            })
+
+    return chats
+
+
+
+# function header to check whether username belongs to fresher , profesional and hr for respective navbar options
+def usertype(function):
+    # @wraps(function)
+    def inner(request, *args, **kwargs):
+            try:
+                # fre,  pro, hra, frepro, prohra, frehra, freprohra
+
+                u_type = ''
+
+                if Fresher.objects.filter(user__username = request.user).count() == 1:
+                    u_type = 'fre'
+
+                if Prfessional.objects.filter(user__username = request.user).count() == 1:
+                    u_type+='pro'
+
+                if HRaccount.objects.filter(user__username = request.user).count() == 1:
+                    u_type+='hra'
+                
+                request.session['usertype'] = u_type
+
+            except:
+                print('Not logged in')
+
+            return function(request, *args,  **kwargs)
+            
+
+    return inner

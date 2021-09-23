@@ -25,7 +25,7 @@ from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect,H
 
 import json
 
-
+from chatt.views import usertype
 
 
 
@@ -52,23 +52,6 @@ def hraccount(function):
     return inner
 
 
-def user_type(username):
-
-    # fre,  pro, hra, frepro, prohra, frehra, freprohra
-    
-    u_type = ''
-
-    if Fresher.objects.filter(user__username = username).count() == 1:
-        u_type = 'fre'
-
-    if Prfessional.objects.filter(user__username = username).count() == 1:
-        u_type+='pro'
-
-    if HRaccount.objects.filter(user__username = username).count() == 1:
-        u_type+='hra'
-
-    return u_type
-
 
 
 # Function to check whether the skills are 90% similar or not
@@ -86,9 +69,11 @@ def skillsmatch(job,fresher):
     
     return False
 
+
 # Create your views here.
 # REST API
 @login_required
+@usertype
 def video_player(request,pfmid = 0, prof=False):
 # pfmid = ProFresherMeeting ID, prof
 # user type -> pro,fre,hra
@@ -157,7 +142,6 @@ def video_player(request,pfmid = 0, prof=False):
             video.save()
 
         try:
-            print(pro_meeting.meeting_details.vdo_id)
             resp = get_video_otp(pro_meeting.meeting_details.vdo_id)
             print(resp)
             if str(resp.status_code) != '200':
@@ -201,6 +185,7 @@ def get_video_otp(id):
 
 
 @login_required
+@usertype
 @hraccount
 def hr_dashboard(request, id = '', skill='', status = 0):
 # status -> 1 -> select, 2 -> shortlist, 3 -> reject
@@ -276,6 +261,7 @@ def hr_dashboard(request, id = '', skill='', status = 0):
 # Code for HR to search for applicants in ClassFly Interviewed candidates Database
 @login_required
 @hraccount
+@usertype
 def applicants_search(request,id=0,skill = ''):
 # First get the skills and filter the freshers data for those skills for the respective job posted
 #id -> is for querying from Jobpost model
@@ -319,7 +305,7 @@ def applicants_search(request,id=0,skill = ''):
     applicant_city = set([i.city for i in applicants]) 
 
     data={
-        'jobs':jobs,
+        'jobs_posted':jobs,
         'applicant_skills':applicant_skills,
         'applicant_branch':applicant_branch,
         'applicant_city': applicant_city,
@@ -336,6 +322,7 @@ def applicants_search(request,id=0,skill = ''):
 
 @login_required
 @hraccount
+@usertype
 def jobpost(request,job_id = 0,edit = 0):
     
     form = JobPostForm()
@@ -422,6 +409,7 @@ def delete_jobpost(request,id):
 
 #  to see the posted job in detail
 @login_required
+@usertype
 def jobdetails(request,id = 0):
 
     if id == 0:
@@ -496,7 +484,7 @@ def jobdetails(request,id = 0):
     return render(request, 'formpage.html', context=data)
 
 
-
+@usertype
 def job_search(request,desig = '',city = '',salary = ''):
 
     jobs = []
@@ -524,7 +512,45 @@ def job_search(request,desig = '',city = '',salary = ''):
         jobs = jobs.filter(city__icontains = city)
 
             
+    return render(request, 'new_job_search.html', context={'jobs':jobs,'designation':desig,'city':city})
+
+
+
+@usertype
+def old_job_search(request,desig = '',city = '',salary = ''):
+
+    jobs = []
+
+    if city == '' and desig == '' and salary == '':
+        jobs =    Jobpost.objects.all()
+    else:
+        ''' we have added '-' symbols to catch the url parameters when empty,
+        remove the, before query  '''
+        desig=desig[:-1]
+        city=city[:-1]
+        salary=salary[:-1]
+
+        designation = desig.split(',')
+
+        jobs = Jobpost.objects.filter(designation__icontains = designation[0])
+        jobs = jobs | Jobpost.objects.filter(skills__icontains = designation[0])
+
+        for i in designation[1:]:
+        
+            jobs = jobs | Jobpost.objects.filter(designation__icontains=i)
+            print(jobs)
+            jobs = jobs | Jobpost.objects.filter(skills__icontains=i)
+
+        jobs = jobs.filter(city__icontains = city)
+
+            
     return render(request, 'job_search.html', context={'jobs':jobs,'designation':desig,'city':city})
+
+
+
+
+
+
 
 # jobs input auto complete REST API
 @api_view(['GET'])
@@ -610,6 +636,7 @@ def error_email(error):
 
 
 @login_required
+@usertype
 def jobs_applied(request):
     
     if Fresher.objects.filter(user__username = request.user).count() == 0:
@@ -631,6 +658,7 @@ def jobs_applied(request):
 
 
 @login_required
+@usertype
 def video_buying(request, vdo_id = 0):
     #1 check whether vdo exists
     if vdo_id == 0 or ProFrehserMeeting.objects.filter(id = vdo_id).count() == 0:
@@ -713,6 +741,7 @@ def video_buying(request, vdo_id = 0):
 
 # function for booking the meetings
 @login_required
+@usertype
 def purchase_interview(request, pfmid = 0):
 
     meeting = '' #ProFreshermeeting object
@@ -868,9 +897,11 @@ def payment(request):
 
 # Complete bought services by anyone.
 @login_required
+@usertype
 def paid_services(request):
 
     payments = Payment.objects.filter(~Q(razorpay_signature = ''),user__username = request.user)
     
     return render(request, 'paid_services.html',context={'payments':payments})
+
 

@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from chatt.models import TwoGroup
+from chatt.views import chats,usertype
 
 # Create your views here.
 
@@ -20,6 +22,7 @@ from rest_framework.response import Response
 
 # Homepage for searching professionals
 # updated
+@usertype
 def search_professional(request,query=''):
     
     profs = set()
@@ -45,22 +48,37 @@ def search_professional(request,query=''):
 
     # return render(request,'search_pro/pro_search.html',context={'profs':profs,'skill':skill,'city':city,'company':company,'designation':designation})
 
+
+
 # updated
 @login_required
+@usertype
 def fresher_dash(request):
 
     if Fresher.objects.filter(user__username = request.user).count() == 0:
         return redirect('student')
-        
+
+    # Meetings
     p = ProFrehserMeeting.objects.filter(fresher__user__username = request.user)
 
     today = timezone.now()
     user = Fresher.objects.get(user__username = request.user)
+
+
     
+
+    data = {'meetings':p,
+            'today':today,
+            'self':user,
+            'chats': chats(request.user)
+            }
+
     # return render(request,'dashboard/dist/dash_fresher.html', context={'meetings':p,'today':today,'self':user})
-    return render(request,'fresher_dash.html',context={'meetings':p,'today':today,'self':user})
+    return render(request,'fresher_dash.html',context=data)
 
 
+@login_required
+@usertype
 def pro_dash(request):
 # Types   of meeting states possible
 # State 1 -> Booked
@@ -87,7 +105,7 @@ def pro_dash(request):
             meeting.approved = True
 
         meeting.save()
-    
+
     # Stae 1 -> Booked
     booked_meetings     =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = False, rejected = False)
     # State 2-> Approved
@@ -113,7 +131,8 @@ def pro_dash(request):
     return render(request,'pro_dash.html', context = {'meetings':meetings,'approved_meetings':approved_meetings,'pending_meetings':booked_meetings,'done_meetings':done_meetings,'reject_meetings':reject_meetings,'self':user,'today':today})
  
 
-
+@login_required
+@usertype
 def pro_profile(request,pro):
     
 
@@ -129,6 +148,8 @@ def pro_profile(request,pro):
     return render(request,'professional_profile.html', context={'prof':prof,'exps':exps,'pro_user':pro_user})
    
 
+@login_required
+@usertype
 def fresher_profile(request,fre):
     
     if Fresher.objects.filter(user__id = fre).count() == 0:
@@ -143,7 +164,8 @@ def fresher_profile(request,fre):
     return render(request,'fresher_profile.html', context={'fresher':fres,'exps':exps,'pro_user':fresher_user})
    
 
-
+@login_required
+@usertype
 def book_interview(request, prof = 0):  # page 22
  
     if prof == '' or Prfessional.objects.filter(user__id = prof, approved = True, meeting_time_updated = True).count() == 0:
@@ -204,6 +226,7 @@ def book_interview(request, prof = 0):  # page 22
 
 # function to reject the interview by professional
 @login_required
+@usertype
 @api_view(['GET'])
 def reject_meeting(request,mid):
     if ProFrehserMeeting.objects.filter(id = mid).count() == 0:
