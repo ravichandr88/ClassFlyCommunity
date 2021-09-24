@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from interview.models import Prfessional, Fresher, HRaccount
 from django.utils import timezone
+from fresher.models import ProFrehserMeeting
+from intervideo.models import MeetingPurchase
 
 
 # chat/views.py
@@ -19,9 +21,10 @@ from .models import TwoGroup, Messages
 @login_required
 def index(request):
     user = User.objects.get(username = request.user)
-    print(request.session.session_key)
     # Check wether the user is have an Chat group , If not redirect user for professional search page
+
     if TwoGroup.objects.filter(Q(prof__username = user.username) | Q(fresher__username = user.username)).count() == 0:
+        # Check if 
         return HttpResponse('No chatting account found')
 
     groups = TwoGroup.objects.filter(prof__id = user.id) | TwoGroup.objects.filter(fresher__id = user.id)
@@ -60,7 +63,27 @@ def chatting(request, room_name):
     
     
     if TwoGroup.objects.filter(channel_name = room_name).count() == 0:
-        raise Http404
+        # If chat room has not been created, check the profid and fresher_id 
+        # Get the meeting booked, check if paid
+        #  and create the room.
+        found_meet = False
+    #Step 1
+        profid      = int(room_name.split('_')[0])
+        fresherid   = int(room_name.split('_')[1])
+        print(profid, fresherid)
+    #Step 2
+        for i in ProFrehserMeeting.objects.filter(prof__user__id = profid, fresher__user__id = fresherid,paid=True):
+            print('loop',i)
+            try:
+                if i.paid:
+                    TwoGroup(prof = i.prof.user, fresher = i.fresher.user,channel_name = room_name).save()
+                    found_meet = True
+                    break
+            except:
+                continue
+
+        if not found_meet:
+            raise Http404
 
     room = TwoGroup.objects.get(channel_name = room_name)
 
@@ -113,14 +136,17 @@ def chats(username):
     chats = []
 
     for i in p_chats:
-        last_chat = i.chats.filter(sender = i.fresher).latest("created_on")
-        if i.prof_lastseen < last_chat.created_on:
-            chats.append({
-                'first_name'    : last_chat.sender.first_name,
-                'message'       : last_chat.message[:40],
-                'time'          : last_chat.created_on,
-                'channel_name'  : last_chat.chatgroup.channel_name
-            })
+        try:
+            last_chat = i.chats.filter(sender = i.fresher).latest("created_on")
+            if i.prof_lastseen < last_chat.created_on:
+                chats.append({
+                    'first_name'    : last_chat.sender.first_name,
+                    'message'       : last_chat.message[:40],
+                    'time'          : last_chat.created_on,
+                    'channel_name'  : last_chat.chatgroup.channel_name
+                })
+        except:
+            continue
 
 # messages sent by opposite person(Professional) when you are Fresher, 
 # check whether fresher_lastseen is less than any message sent by professional

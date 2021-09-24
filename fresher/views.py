@@ -73,6 +73,7 @@ def fresher_dash(request):
     # Meetings
     p = ProFrehserMeeting.objects.filter(fresher__user__username = request.user, paid = True)
 
+    
     today = timezone.now()
     user = Fresher.objects.get(user__username = request.user)
 
@@ -134,14 +135,16 @@ def pro_dash(request):
 
 
     # Stae 1 -> Booked
-    booked_meetings     =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = False, rejected = False)
+    booked_meetings     =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = False, rejected = False,paid= True)
+    
     # State 2-> Approved
-    approved_meetings   =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = True, rejected = False)
+    approved_meetings   =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = True, rejected = False ,paid= True)
+    
     # State 3 -> Meeting Done
     # need an empty query list
     done_meetings       =   ProFrehserMeeting.objects.filter(id=0)
     
-    for i in ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = True, rejected = False):
+    for i in ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = True, rejected = False ,paid= True):
         try:
             if i.meeting_details.record_stopped:
                 done_meetings = done_meetings | i
@@ -149,7 +152,7 @@ def pro_dash(request):
             pass
     
     # State 4 -> Rejected
-    reject_meetings     =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = False, rejected = True)
+    reject_meetings     =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = False, rejected = True,paid= True)
 
     user = Prfessional.objects.get(user__username = request.user)
     today = timezone.now()

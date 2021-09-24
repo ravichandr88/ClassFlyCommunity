@@ -87,7 +87,7 @@
 <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.company}}</a></h4>
 <h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.user.first_name}}</a></h5>
 <div class="small text-muted">{{meeting.date_time}}</div>
-<a href="#" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
+<a href="chatting/{{meeting.prof.user.id}}_{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
 <a href="/fresher/{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #56f5fc">View Profile</a>
 <!-- button to join meeting -->
 <a href="#" class="btn btn-white btn-sm m-t-10" style="background-color: #f5f2b5" id="{{meeting.id}}"></a>
@@ -115,7 +115,7 @@
 <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.company}}</a></h4>
 <h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.user.first_name}}</a></h5>
 <div class="small text-muted">{{meeting.date_time}}</div>
-<a href="#" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
+<a href="chatting/{{meeting.prof.user.id}}_{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
 <a href="/fresher/{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #56f5fc">View Profile</a>
 <!-- button to join meeting -->
 <a href="#" class="btn btn-white btn-sm m-t-10" onclick="update({{meeting.id}})" data-toggle="modal" data-target="#add_client" id="{{meeting.id}}"> Approve</a>
@@ -147,7 +147,7 @@
 <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.company}}</a></h4>
 <h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.user.first_name}}</a></h5>
 <div class="small text-muted">{{meeting.date_time}}</div>
-<a href="#" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
+<a href="chatting/{{meeting.prof.user.id}}_{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
 <a href="/fresher/{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #56f5fc">View Profile</a>
 <!-- button to join meeting -->
 <a href="#" class="btn btn-white btn-sm m-t-10" data-toggle="modal" data-target="#add_client" id="{{meeting.id}}"> Approve</a>
