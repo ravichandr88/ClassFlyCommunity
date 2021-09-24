@@ -32,10 +32,10 @@
 <div class="page-header">
 <div class="row align-items-center">
 <div class="col">
-<h3 class="page-title">Interviews</h3>
+<h3 class="page-title">Fresher</h3>
 <ul class="breadcrumb">
-<li class="breadcrumb-item"><a href="smarthr-laravel/html-template/light/index.html">Dashboard</a></li>
-<li class="breadcrumb-item active">Interviews</li>
+<li class="breadcrumb-item"><a href="#">Interview</a></li>
+<li class="breadcrumb-item active">Videos</li>
 </ul>
 
 {% if video %}
@@ -71,9 +71,7 @@
      
     <a href="/fresher/{{meeting.fresher.user.id}}" class="avatar" ><img alt="" id="fresh_pic" src="#"></a>
   </div>
-  <a href="/video_buy/{{meeting.id}}" class="btn btn-white btn-sm m-t-10" style="background-color:aqua">BUY</a>
   <br><p></p>
-
 </div>
 </div>
 </center>
@@ -86,7 +84,7 @@
 </div>
 </div>
 
-<form method="POST" >
+<!-- <form method="POST" >
 <div class="row filter-row">
   
 <div class="col-sm-6 col-md-3">
@@ -106,35 +104,74 @@
 <input type="text" name="skills" class="form-control floating">
 <label class="focus-label">Skills (seperated by ',' comma)</label>
 </div>
-</div>
-<!-- <div class="col-sm-6 col-md-3">
-<div class="form-group form-focus select-focus">
-<select class="select floating">
-<option>Select Category</option>
-<option>Passed</option>
-<option>Failed</option>
-</select>
-<label class="focus-label">Company</label>
-</div>
-</div> -->
-<div class="col-sm-6 col-md-3">
+</div><div class="col-sm-6 col-md-3">
 <button class="btn btn-success btn-block" type="submit"> Search </button>
 </div>
 </div>
 
 {% csrf_token %}
 
-</form>
+</form> -->
 
+<h4>Active Videos</h4>
 
 <div class="row staff-grid-row">
 
-  {% for meet in meetings %}
+        {% for meet in meetings_available %}
+      <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
+      <div class="profile-widget">
+      <center>
+      <div class="profile-img" style=" width:100% ; ">
+          <a href="/pro/{{meet.prof.user.id}}" class="avatar"><img alt="" src="" id="prof{{meet.id}}"></a>
+          <a href="/fresher/{{meet.fresher.user.id}}" class="avatar" ><img alt="" src="" id="fresher{{meet.id}}"></a>
+        </div>
+      </center>
+      
+      
+      <!-- <div class="dropdown profile-action">
+      <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+      <div class="dropdown-menu dropdown-menu-right">
+      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_client"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+      <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_client"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+      </div>
+      </div> -->
+      
+      <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meet.prof.designation}}</a></h4>
+      <h6 class="user-name m-t-10 mb-0 text-ellipsis">Interview</h6>
+      <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meet.designation}}</a></h4>
+      
+      
+      {% if meet.passed %}
+      <div class="small text-muted">Passed</div>
+      {% else %}
+      
+      <div class="small text-muted">Failed</div>
+      {% endif %}
+      
+      <a href="/paid_videos/{{meet.id}}" class="btn btn-white btn-sm m-t-10">Watch</a>
+      <!-- <a href="#" class="btn btn-white btn-sm m-t-10">Details</a> -->
+      </div>
+      </div> 
+      {% endfor %}
+      
+      
+      
+      </div>
+
+      <br>
+      <br>
+      <br>
+
+    
+<h4>History</h4>
+<div class="row staff-grid-row">
+
+  {% for meet in meetings_expired %}
 <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
 <div class="profile-widget">
 <center>
 <div class="profile-img" style=" width:100% ; ">
-    <a href="/pro/{{meet.prof.user.id}}" class="avatar"><img alt="" src="" id="pro{{meet.id}}"></a>
+    <a href="/pro/{{meet.prof.user.id}}" class="avatar"><img alt="" src="" id="prof{{meet.id}}"></a>
     <a href="/fresher/{{meet.fresher.user.id}}" class="avatar" ><img alt="" src="" id="fresher{{meet.id}}"></a>
   </div>
 </center>
@@ -160,8 +197,8 @@
 <div class="small text-muted">Failed</div>
 {% endif %}
 
-<a href="/player_now/{{meet.id}}" class="btn btn-white btn-sm m-t-10">Watch</a>
-<a href="#" class="btn btn-white btn-sm m-t-10">Details</a>
+<a href="/paid_videos/{{meet.id}}" class="btn btn-white btn-sm m-t-10">Watch</a>
+<!-- <a href="#" class="btn btn-white btn-sm m-t-10">Details</a> -->
 </div>
 </div> 
 {% endfor %}
@@ -184,10 +221,25 @@
 	
 	
 <!-- code to oload all the profile pictures of the professional -->
-<!-- 
+
 <script>
 
-'{% for i in meetings %}'
+'{% for i in meetings_expired %}'
+console.log('{{i.prof.profile_pic}}');
+var url = "{{i.prof.profile_pic}}";
+
+// console.log(url);
+
+ fetch(url).then(function(response) {
+   response.text().then(function(text)
+    {document.getElementById('prof{{i.id}}').src = text;});});
+
+'{% endfor %}'
+
+
+
+
+'{% for i in meetings_available %}'
 
 var url = "{{i.prof.profile_pic}}";
 
@@ -199,7 +251,8 @@ var url = "{{i.prof.profile_pic}}";
 
 '{% endfor %}'
 
-</script> -->
+
+</script>
 
 
 
@@ -241,7 +294,39 @@ console.log(pro_url);
 {% endif %}
 
 
-    {% for i in meetings %}
+{% for i in meetings_expired %}
+
+var fre_url = "{{i.fresher.profile_pic}}";
+
+console.log(fre_url)
+// console.log(url);
+
+ fetch(fre_url).then(function(response) {
+   response.text().then(function(text)
+    {
+        console.log('Called fresher fresher{{i.id}}')
+        document.getElementById('fresher{{i.id}}').src = text;
+    });});
+
+    
+var pro_url = "{{i.prof.profile_pic}}"
+
+console.log(pro_url);
+
+ fetch(pro_url).then(function(response) {
+   response.text().then(function(text)
+    {
+        console.log('Called')
+        document.getElementById('prof{{i.id}}').src = text;
+    });});
+
+
+
+    {% endfor %}
+
+
+
+{% for i in meetings_available %}
 
 var fre_url = "{{i.fresher.profile_pic}}";
 
@@ -264,12 +349,13 @@ console.log(pro_url);
    response.text().then(function(text)
     {
         console.log('Called')
-        document.getElementById('pro{{i.id}}').src = text;
+        document.getElementById('prof{{i.id}}').src = text;
     });});
 
 
 
     {% endfor %}
+
 
     });
 </script>

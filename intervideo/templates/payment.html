@@ -116,7 +116,7 @@
 			
                 <p>Total Price</p>
 					<div class="wrap-input100 validate-input" data-validate = "Password is required">
-						<input class="input100" type="number" value="{{payment.razorpay_amount}}" readonly="readonly" name="con-pass" placeholder="Confirm Password">
+						<input class="input100" type="number" value="{% widthratio payment.razorpay_amount 100 1 %}" readonly="readonly" name="con-pass" placeholder="Confirm Password">
 				
 						<span class="focus-input100"><br><br>				
 						</span>

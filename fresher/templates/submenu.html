@@ -190,13 +190,20 @@
     <li><a href="/player_now/1">Videos</a></li> 
     <li><a href="/jobs/search">Jobs Search</a></li>
     <li><a href="/jobs_applied">Jobs Applied/Invited</a></li>
+    <li><a href="/paid_videos">Purchased Videos</a></li>
+    <li><a href="/pricing">Buy</a></li>
+    <li><a href="/paid_service">Purchases</a></li>
     <!-- End Fresher Options -->
     {% endif %}
 
     {% if 'pro' in request.session.usertype %}
     <!-- Professional Options -->
     <li><a href="/searchpage">Professionals</a></li>
+    <li><a href="/pro_dashboard">Dashboard</a></li> 
     <li><a href="/player_now">Interview Videos</a></li>
+    <li><a href="/paid_videos">Purchased Videos</a></li>
+    <li><a href="/pricing">Buy</a></li>
+    <li><a href="/paid_service">Purchases</a></li>
     <li><a href="#">Analytics</a></li>
 
     <!-- End of Professional Options -->

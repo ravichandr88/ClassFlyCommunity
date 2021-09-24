@@ -103,6 +103,14 @@ class InterviewVideo(models.Model):
     def __str__(self):
         return "User {} Video {}".format(self.user.first_name,self.video.designation)
 
+    def watch(self):
+
+        for i in self.video_purchase.all():
+            if i.valid():
+                return True
+        
+        return False
+        
 
 class Payment(models.Model):
     user                    = models.ForeignKey(User, related_name='user_pay', on_delete=models.CASCADE)
@@ -152,10 +160,10 @@ class VideoPurchase(models.Model):
         # Video cannot be played when user has paid and ist been 5 days
         # check with payment created_on date and return true or false based on number of days pased
         
-        if self.payment.created_on > (self.payment.created_on + timezone.timedelta(days = 5)):
-            return False
+        if timezone.now() <= (self.payment.created_on + timezone.timedelta(days = 5)):
+            return True
         
-        return True
+        return False
 
 
 class ResumePurchase(models.Model):
@@ -172,6 +180,9 @@ class ResumePurchase(models.Model):
 
         self.download_count += 1
         self.save()
+
+        if self.payment.razorpay_signature == '':
+            return False
 
         if  self.skills_count >= len(prof.skills.split(',')) and self.download_count < 31 and timezone.now() < (self.payment.created_on + timezone.timedelta(days = 30) ) :    
             return prof.resume_url
@@ -193,7 +204,12 @@ class MeetingPurchase(models.Model):
     def __str__(self):
         return " meeting {} payment {}".format(self.meeting, self.payment.amount)
 
-
+    #  to check whether the user has paid for the meeting or not
+    def activate_meeting(self):
+        if self.payment.razorpay_signature == '':
+            return False
+        return True
+        
 
 
 

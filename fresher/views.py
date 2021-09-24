@@ -8,6 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from chatt.models import TwoGroup
 from chatt.views import chats,usertype
+from intervideo.models import MeetingPurchase
 
 # Create your views here.
 
@@ -57,9 +58,20 @@ def fresher_dash(request):
 
     if Fresher.objects.filter(user__username = request.user).count() == 0:
         return redirect('student')
+    
+    # Check with the meetings that are paid , and turn the paid boolean value to True
+    pending_paid_meetings = ProFrehserMeeting.objects.filter(fresher__user__username = request.user, paid = False)
+
+    for i in pending_paid_meetings:
+        try:
+            if MeetingPurchase.objects.get(id=i.id).activate_meeting():
+                i.paid = True
+                i.save()
+        except:
+            continue
 
     # Meetings
-    p = ProFrehserMeeting.objects.filter(fresher__user__username = request.user)
+    p = ProFrehserMeeting.objects.filter(fresher__user__username = request.user, paid = True)
 
     today = timezone.now()
     user = Fresher.objects.get(user__username = request.user)
@@ -86,6 +98,7 @@ def pro_dash(request):
 # State 3 -> Meeting Done
 # State 4 -> Rejected
 
+
     if Prfessional.objects.filter(user__username = request.user).count() == 0:
         return redirect('professional')
 
@@ -105,6 +118,20 @@ def pro_dash(request):
             meeting.approved = True
 
         meeting.save()
+    
+    # Activate the meetings, if paid
+    # Check with the meetings that are paid , and turn the paid boolean value to True
+    pending_paid_meetings = ProFrehserMeeting.objects.filter(fresher__user__username = request.user, paid = False)
+
+    # go after each meeting and chekc paid or not
+    for i in pending_paid_meetings:
+        try:
+            if MeetingPurchase.objects.get(id=i.id).activate_meeting():
+                i.paid = True
+                i.save()
+        except:
+            continue
+
 
     # Stae 1 -> Booked
     booked_meetings     =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = False, rejected = False)
@@ -129,7 +156,7 @@ def pro_dash(request):
     meetings = approved_meetings | booked_meetings
     # return render(request,'dashboard/dist/dash_pro.html', context = {'meetings':meetings,'self':user,'today':today})
     return render(request,'pro_dash.html', context = {'meetings':meetings,'approved_meetings':approved_meetings,'pending_meetings':booked_meetings,'done_meetings':done_meetings,'reject_meetings':reject_meetings,'self':user,'today':today})
- 
+
 
 @login_required
 @usertype
@@ -187,22 +214,24 @@ def book_interview(request, prof = 0):  # page 22
         date_time = request.POST.get('date_time')
         # price will also be calculated on server side after this.
         
-        price = request.POST.get('price')
         technologies = ','.join(request.POST.getlist('technologies'))
 
         
-        ProFrehserMeeting(
+        meeting = ProFrehserMeeting(
         prof         = prof,
         fresher      = Fresher.objects.get(user__username = request.user),
         designation  = request.POST.get('designation'),
         date_time    = timezone.datetime.fromisoformat(date_time),
         skills       = technologies,
         channel_name = 'car',
-        price        = 100,
+        price        = len(technologies.split(','))*128,
         mode         = 'PRI'   #givn by profesnl about the student #Approved by Professional for meeting
-        ).save()
+        )
+
+        meeting.save()
                
-        return  redirect('f_dashboard') 
+        
+        return  redirect('interview_buying',pfmid = meeting.id) 
 
 
     form = ClassFlyInterviewForm(skills = skills, dates = dates)

@@ -7,6 +7,7 @@ from .forms import JobPostForm, JobApplyForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
+from itertools import chain
 
 from django.core.mail import send_mail
 from django.conf import settings
@@ -133,13 +134,12 @@ def video_player(request,pfmid = 0, prof=False):
         pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
 
         # Code to record the video viewing count for the user and meeting
-        if InterviewVideo.objects.filter(video = pro_meeting,user = User.objects.get(username = request.user)).count() == 0:
-
-            video = InterviewVideo(
+        
+        video = InterviewVideo.objects.get_or_create(
                 video = pro_meeting,
                 user = User.objects.get(username = request.user)
-            )
-            video.save()
+            )[0]
+        
 
         try:
             resp = get_video_otp(pro_meeting.meeting_details.vdo_id)
@@ -666,7 +666,7 @@ def video_buying(request, vdo_id = 0):
     
     #2 Check if the meeting is done or not
     meeting = ProFrehserMeeting.objects.get(id = vdo_id)
-    intervideo = '' #assigning the intervideo object
+    
     try:
         if not meeting.meeting_details.record_stopped:
             return HttpResponse('Meeting not yet done')
@@ -674,16 +674,11 @@ def video_buying(request, vdo_id = 0):
         return HttpResponse('Meeting not yet done')
     
     #3 If User has not watched video, then create InterviewVideo row and add user
-    if InterviewVideo.objects.filter(user__username = request.user,video__id = vdo_id).count() == 0:
-        intervideo = InterviewVideo(
+    intervideo = InterviewVideo.objects.get_or_create(
             user    = User.objects.get(username = request.user),
             video   = meeting
-        )
-        intervideo.save()
-
-    else:
-        intervideo = InterviewVideo.objects.get(user__username = request.user,video__id = vdo_id)
-    
+        )[0]
+        
     #4 Now create payment object for transaction
     
     # 4a We need current Payment id for recipt, so if there are no rows in tbale, get the id = 1
@@ -724,8 +719,10 @@ def video_buying(request, vdo_id = 0):
         error_email(message)
 
         return HttpResponse('Sorry, Payment not done, Situation is reported. Please start again. Message {}'.format(resp.json()['error']['description']))
-
+    print(resp.json())
 # 4c prepare receipt id
+    payment.razor_order_id = resp.json()['id']
+
     payment.save()
 
     video = VideoPurchase(
@@ -766,10 +763,9 @@ def purchase_interview(request, pfmid = 0):
         receipt                 = 'INT000' + str(reciept_id) + '_0' + str(meeting.id) ,
         user                    = User.objects.get(username = request.user),
         service                 = meeting.prof.designation + '| interview for |' + meeting.designation +' | position.',
-        amount                  = (len(meeting.skills.split(','))*111),
+        amount                  = (len(meeting.skills.split(','))*128),
         service_type            = 'INT',
         )
-
     payment.tax             = round((payment.amount)*0.18,2)
     payment.total_amount    =  round(payment.tax + payment.amount )
     payment.save()
@@ -798,22 +794,27 @@ def purchase_interview(request, pfmid = 0):
 
     meeting_payed = ''
     try:
+        print('inisede try')
         meeting_payed = MeetingPurchase(
         meeting  = meeting,
         payment  = payment
-        ).save()
+        )
+
+        meeting_payed.save()
     except:
+        print('inside exception')
         meeting_payed = MeetingPurchase.objects.get(meeting__id = meeting.id)
         meeting_payed.payment = payment
+        
         meeting_payed.save()
 
+    print(meeting_payed,payment) 
     return render(request, 'payment.html',context={'meeting':meeting_payed,'payment':payment})
 
 
 # Function to buy resume subscription
 @login_required
 def resume_purchase(request,skills = 0):
-    print(skills)
 
     if skills == 0 and skills != 6 and skills != 16 and skills != 25:
         raise Http404
@@ -880,11 +881,15 @@ def resume_purchase(request,skills = 0):
 @login_required
 @csrf_exempt
 def payment(request):
-    data = request.POST.dict()
 
-    # Check if order id is present int the table
-    if Payment.objects.filter(razor_order_id = data['razorpay_order_id']).count() == 0:
-        return HttpResponse('Payment was not placed, ')
+    data = request.POST.dict()
+    print(data)
+    try:
+        # Check if order id is present int the table
+        if Payment.objects.filter(razor_order_id = data['razorpay_order_id']).count() == 0:
+            return HttpResponse('Payment was not placed, ')
+    except:
+        raise Http404
 
     payment = Payment.objects.get(razor_order_id = data['razorpay_order_id'])
     payment.razorpay_signature = data['razorpay_signature']
@@ -904,4 +909,103 @@ def paid_services(request):
     
     return render(request, 'paid_services.html',context={'payments':payments})
 
+# All purchasing options
+@login_required
+@usertype
+def pricing(request):
+
+    return render(request,'pricing.html')
+
+
+
+
+@login_required
+@usertype
+def purchased_videos(request, pfmid = 0, prof=False):
+    # pfmid = ProFresherMeeting ID, prof
+    # user type -> pro,fre,hra
+    user_type = 'none'
+
+    # if request.method == 'GET' and pfmid == 0:
+    #     meetings = ProFrehserMeeting.objects.filter(~Q(feedback = ''),approved = True)[:10]
+    #     message = 'New Interview Videos'
+    #     if len(meetings) == 0:
+    #         message = 'Sorry, No interviews found'
+
+    #     return render(request,'purchased_videos.html', context={'message':message,'video':False,'meetings':meetings,'user_type':user_type})
+
+
+    
+
+  
+    resp = ''
+    pro_meeting = ''
+
+    meetings_available = set()
+
+    meetings_expired   = set()
+    print(request.user)
+    meetings = InterviewVideo.objects.filter(user__username = request.user)
+
+    for i in meetings:
+
+        if i.watch():
+            meetings_available.add(i.video)
+
+        else:
+            meetings_expired.add(i.video)
+        
+
+# Code for watching the video
+    if pfmid != 0:
+
+        if ProFrehserMeeting.objects.filter(id = pfmid).count() == 0:
+                raise Http404 
+        
+        pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
+
+        # Code to record the video viewing count for the user and meeting
+        
+        video = InterviewVideo.objects.get_or_create(
+                video = pro_meeting,
+                user = User.objects.get(username = request.user)
+        )[0]
+
+        #Check wehther user has purchased the video and valid or not 
+        for i in video.video_purchase.all():
+            if i.valid():
+                try:
+                    resp = get_video_otp(pro_meeting.meeting_details.vdo_id)
+                    print(resp)
+                    if str(resp.status_code) != '200':
+                        raise Http404
+                    
+                except:        
+                    # Dummy meeting object queryset
+                    meetings = []
+
+                    for i in InterviewVideo.objects.filter(user__username = request.user):
+                        for j in  i.video_purchase.all():
+                            if j.valid():
+                                meetings.append(i.video)
+        
+                    print(meetings)
+                    return render(request,'purchased_videos.html', context={'message':'Sorry, Video not loaded','video':False,'meetings_available':meetings_available,'meetings_expired':meetings_expired})
+
+        #If the user has not permission to watch the video, return , not allowed
+        if resp == '':
+            print(meetings_available,meetings_expired)
+
+            return render(request,'purchased_videos.html', context={'message':'Sorry,Validity might have expired','video':False,'meetings_available':meetings_available,'meetings_expired':meetings_expired})
+
+
+        
+        
+    else:
+        meetings = ProFrehserMeeting.objects.filter(~Q(feedback = ''),approved = True)[:10]
+
+        return render(request,'purchased_videos.html', context={'message':'Candidate not yet interviewed','video':False,'meetings_available':meetings_available,'meetings_expired':meetings_expired})
+
+
+    return render(request,'purchased_videos.html', context={'video':True,'otp':resp.json()['otp'],'playbackInfo':resp.json()['playbackInfo'],'meeting':pro_meeting,'meetings_available':meetings_available,'meetings_expired':meetings_expired})
 
