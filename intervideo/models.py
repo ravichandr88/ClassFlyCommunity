@@ -114,7 +114,7 @@ class InterviewVideo(models.Model):
 
 class Payment(models.Model):
     user                    = models.ForeignKey(User, related_name='user_pay', on_delete=models.CASCADE)
-    receipt                 = models.CharField(max_length=10,default='')
+    receipt                 = models.CharField(max_length=20,default='')
     service                 = models.CharField(max_length = 80, default = '')
     amount                  = models.FloatField(default = 0)
     tax                     = models.FloatField(default = 0)

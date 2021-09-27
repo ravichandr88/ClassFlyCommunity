@@ -80,7 +80,7 @@ class SMSotpForm(BootstrapModelForm):
 
 
 class LoginForm(BootstrapModelForm):
-    phone_number = forms.CharField(label='Username/PhoneNumber',required = True)
+    phone_number = forms.CharField(label='PhoneNumber/Email',required = True)
     password = forms.CharField(required = True, widget=forms.PasswordInput())
 
     def clean(self):

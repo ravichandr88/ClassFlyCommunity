@@ -768,6 +768,7 @@ def purchase_interview(request, pfmid = 0):
         )
     payment.tax             = round((payment.amount)*0.18,2)
     payment.total_amount    =  round(payment.tax + payment.amount )
+    print(payment.receipt)
     payment.save()
 
     # 4b Get the order_id from the razorpay by getting 
@@ -805,7 +806,7 @@ def purchase_interview(request, pfmid = 0):
         print('inside exception')
         meeting_payed = MeetingPurchase.objects.get(meeting__id = meeting.id)
         meeting_payed.payment = payment
-        
+
         meeting_payed.save()
 
     print(meeting_payed,payment) 
@@ -861,8 +862,6 @@ def resume_purchase(request,skills = 0):
 # 4c prepare receipt id
     payment.razor_order_id = resp.json()['id']
     payment.save()
-
-
     
 
     resume = ResumePurchase(
