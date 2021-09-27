@@ -129,7 +129,7 @@
 					</div>
 				{% else %}
 				<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+						<button class="login100-form-btn" onclick="goback()">
 							Go back
 						</button>
 				</div>
@@ -205,7 +205,12 @@
 	<!-- Code to include js with respcet to form -->
 	{{form.media}}
 
-
+<script>
+function goback()
+{
+	window.history.back()
+}
+</script>
 
 </body>
 </html>
