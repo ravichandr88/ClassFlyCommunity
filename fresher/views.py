@@ -64,7 +64,7 @@ def fresher_dash(request):
 
     for i in pending_paid_meetings:
         try:
-            if MeetingPurchase.objects.get(id=i.id).activate_meeting():
+            if MeetingPurchase.objects.get(meeting__id=i.id).activate_meeting():
                 i.paid = True
                 i.save()
         except:
