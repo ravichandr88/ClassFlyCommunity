@@ -36,8 +36,7 @@
 <li class="breadcrumb-item active">Interviews</li>
 </ul>
 <!-- partial:index.partial.html -->
-<form method="POST" action="">
-    {% csrf_token %}
+<form method="GET" action="">
   <input type="text"  style="padding: 7px 13px;margin: 8px 0;display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -158,14 +157,144 @@
 
 
 
+
+
 </div>
+
+
+
 </div>
+
+<!-- Paginator -->
+<div class="row">
+    <div class="col-sm-12 col-md-5">
+        <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
+            Showing Page {{page}} out of {{pages | length}}.
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+            <ul class="pagination">
+                {% if page == 1 %}
+                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
+                    <a href="#" onclick="previous()" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+                </li>
+                {% else %}
+                <li class="paginate_button page-item previous " id="DataTables_Table_0_previous">
+                        <a href="#" onclick="previous()" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% for i in pages %}
+                    {% if i == page %}
+                <li class="paginate_button page-item active">
+                    <a href="#"  aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                </li>
+                {% else %}
+                <li class="paginate_button page-item ">
+                    <a href="#"  onclick="move({{i}})" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page < pages|length %}
+                <li class="paginate_button page-item next" id="DataTables_Table_0_next">
+                    <a href="#" onclick="next_page()" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">Next</a>
+                </li>
+                {% else %}
+                <li class="paginate_button page-item next disabled" id="DataTables_Table_0_next">
+                        <a href="#" onclick="next_page()" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div></div>
 
 
 
 </div>
 
+
+
+
 </div>
+
+<script>
+
+    
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,    
+    function(m,key,value) {
+      vars[key] = value;
+    });
+    return vars;
+  }
+
+function previous()
+{
+    if('{{page}}' != '1'){
+
+    url = '/searchpage/'+ ({{page}} - 1) + '?' ;
+
+    var Obj = getUrlVars();
+
+    for (let key in Obj) {
+    if (Obj.hasOwnProperty(key)) {
+        value = Obj[key];
+        console.log(key, value);
+        url = url + key + '=' + value + '&';
+        }
+    }
+
+    window.location = url;
+}
+}
+
+function move(page)
+{
+    url = '/searchpage/'+ page + '?' ;
+
+    var Obj = getUrlVars();
+
+    for (let key in Obj) {
+    if (Obj.hasOwnProperty(key)) {
+        value = Obj[key];
+        console.log(key, value);
+        url = url + key + '=' + value + '&';
+        }
+    }
+
+    window.location = url;
+}
+
+function next_page()
+{
+    if('{{page}}' != '{{pages | length'){
+
+url = '/searchpage/'+ ({{page}} - 1) + '?' ;
+
+var Obj = getUrlVars();
+
+for (let key in Obj) {
+if (Obj.hasOwnProperty(key)) {
+    value = Obj[key];
+    console.log(key, value);
+    url = url + key + '=' + value + '&';
+    }
+}
+
+window.location = url;
+}
+
+    
+}
+
+
+
+
+
+</script>
 
 <script
     src="https://cdnjs.cloudflare.com/ajax/libs/js-joda/1.11.0/js-joda.min.js"

@@ -3,12 +3,14 @@ from .models import Prfessional, ProFrehserMeeting, Fresher
 from .forms import ClassFlyInterviewForm
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from chatt.models import TwoGroup
 from chatt.views import chats,usertype
 from intervideo.models import MeetingPurchase
+import math
 
 # Create your views here.
 
@@ -23,29 +25,39 @@ from intervideo.models import MeetingPurchase
 
 # Homepage for searching professionals
 # updated
+
+@csrf_exempt
 @usertype
-def search_professional(request,query=''):
+def search_professional(request,page=1):
     
-    profs = set()
 
+        try:
+            designation = request.GET['designation']
+            city        = request.GET['city']
+            skill       = request.GET['skill']
+            company     = request.GET['company']
 
-    if request.method == 'GET':
-        profs = Prfessional.objects.filter(approved = True,meeting_time_updated = True)[:10]
-
-        return render(request,'searchpage.html',context={'profs':profs})
-        # return render(request,'search_pro/pro_search.html',context={'profs':profs})
-
-    else:
-        designation = request.POST['designation']
-        city        = request.POST['city']
-        skill       = request.POST['skill']
-        company     = request.POST['company']
+        except:
+            profs = Prfessional.objects.filter(approved = True,meeting_time_updated = True)
+            return render(request,'searchpage.html',context={
+                'profs':profs[((page-1)*10):(page*10)],
+                'pages':range(1,math.ceil(len(profs)/10)+1),
+                'page':page
+                })
+     
 
 
         
         profs = list(Prfessional.objects.filter(city__icontains = city,approved = True,meeting_time_updated = True).filter( skills__icontains = skill).filter(company__icontains = company).filter(designation__icontains = designation))
             
-        return render(request,'searchpage.html',context={'profs':profs,'skill':skill,'city':city,'company':company,'designation':designation})
+        return render(request,'searchpage.html',context={'profs':profs,
+                'skill':skill,
+                'city':city,
+                'company':company,
+                'designation':designation,
+                'profs':profs[((page-1)*10):(page*10)],
+                'pages':range(1,math.ceil(len(profs)/10)+1),
+                'page':page,})
 
     # return render(request,'search_pro/pro_search.html',context={'profs':profs,'skill':skill,'city':city,'company':company,'designation':designation})
 
@@ -106,11 +118,11 @@ def pro_dash(request):
 
     if request.method == 'POST':
         data = request.POST.dict()
-
-        if ProFrehserMeeting.objects.filter(id=data['meeting_id']).count() == 0:
+        print(data['meeting_id'])
+        if ProFrehserMeeting.objects.filter(id=int(data['meeting_id'])).count() == 0:
             raise Http404
         
-        meeting = ProFrehserMeeting.objects.get(id=data['meeting_id'])
+        meeting = ProFrehserMeeting.objects.get(id=int(data['meeting_id']))
 
         meeting.date_time =  timezone.datetime.fromisoformat(data['date'] +' '+ data['time'])
         
@@ -219,23 +231,25 @@ def book_interview(request, prof = 0):  # page 22
         
         technologies = ','.join(request.POST.getlist('technologies'))
 
-        
-        meeting = ProFrehserMeeting(
-        prof         = prof,
-        fresher      = Fresher.objects.get(user__username = request.user),
-        designation  = request.POST.get('designation'),
-        date_time    = timezone.datetime.fromisoformat(date_time),
-        skills       = technologies,
-        channel_name = 'car',
-        price        = len(technologies.split(','))*128,
-        mode         = 'PRI'   #givn by profesnl about the student #Approved by Professional for meeting
-        )
+        try:
+            meeting = ProFrehserMeeting(
+            prof         = prof,
+            fresher      = Fresher.objects.get(user__username = request.user),
+            designation  = request.POST.get('designation'),
+            date_time    = timezone.datetime.fromisoformat(date_time),
+            skills       = technologies,
+            channel_name = 'car',
+            price        = len(technologies.split(','))*128,
+            mode         = 'PRI'   #givn by profesnl about the student #Approved by Professional for meeting
+            )
 
-        meeting.save()
-               
-        
-        return  redirect('interview_buying',pfmid = meeting.id) 
+            meeting.save()
+                
+            
+            return  redirect('interview_buying',pfmid = meeting.id) 
 
+        except:
+            return HttpResponse('Sorry, meeting not registered')
 
     form = ClassFlyInterviewForm(skills = skills, dates = dates)
     
