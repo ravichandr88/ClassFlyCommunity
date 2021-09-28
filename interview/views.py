@@ -523,13 +523,13 @@ def company_singup(request, edit = 0):
             if edit == 1:
                comp = Company.objects.get(created_by__username = request.user)
 
-            comp.created_by              = User.objects.get(username = request.user),
-            comp.about                   = form.cleaned_data['about'],
-            comp.company_name            = form.cleaned_data['company_name'],
-            comp.address                 = form.cleaned_data['address'],
-            comp.city                    = form.cleaned_data['city'],
-            comp.state                   = form.cleaned_data['state'],
-            comp.company_linkedin_url    = form.cleaned_data['company_linkedin_url'],
+            comp.created_by              = User.objects.get(username = request.user)
+            comp.about                   = form.cleaned_data['about']
+            comp.company_name            = form.cleaned_data['company_name']
+            comp.address                 = form.cleaned_data['address']
+            comp.city                    = form.cleaned_data['city']
+            comp.state                   = form.cleaned_data['state']
+            comp.company_linkedin_url    = form.cleaned_data['company_linkedin_url']
             comp.save()
 
 
