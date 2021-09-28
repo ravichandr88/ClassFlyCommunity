@@ -71,8 +71,7 @@ def signup(request,type="student"):
         
         elif HRaccount.objects.filter(user__username = request.user).count() == 1:
             return redirect('hrdashboard')
-        else:
-            return redirect('selection')
+        
 
         
 
