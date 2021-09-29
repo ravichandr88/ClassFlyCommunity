@@ -168,7 +168,6 @@ def otp_verify_view(request):
 @session
 def email_function(request):
     title = 'Email is Required'
-    print(request.session.keys())
     
     form = EmailForm()
     
@@ -226,7 +225,7 @@ def email_otp(request):
         if form.is_valid():
             otp = form.cleaned_data['email_otp']
             if EmailOTP.objects.filter(user__username = request.session['username'],otp = otp).count() == 1:
-                # disbale the otp "requested" varibale in "EmailOTP" table 
+                    # disbale the otp "requested" varibale in "EmailOTP" table 
                     
                     emailotp = EmailOTP.objects.get(user__username = request.session['username'])
 

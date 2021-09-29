@@ -5,11 +5,13 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from chatt.models import TwoGroup
 from chatt.views import chats,usertype
 from intervideo.models import MeetingPurchase
+from pro.sample_tasks import send_email
 import math
 
 # Create your views here.
@@ -126,12 +128,21 @@ def pro_dash(request):
 
         meeting.date_time =  timezone.datetime.fromisoformat(data['date'] +' '+ data['time'])
         
-        # If nmeeting is not approved, approve it 
+        # If meeting is not approved, approve it 
         if not meeting.approved:
             meeting.approved = True
+            meeting.save()
 
-        meeting.save()
-    
+            # send email for the fresher saying the meeting is approved.
+
+            send_email(meeting.fresher.user,'ClassFly Interview', 'Your meeting is been approved, for date and time {} for {} designation . All the best'.format(meeting.date_time.strftime("%d %b %Y  %I:%M %p"),meeting.designation))
+
+        else:
+            # send email for the fresher saying the meeting is approved.
+
+            send_email(meeting.fresher.user,'ClassFly Interview', 'Your meeting timings has been updated, for date and time {} for {} designation . Hope you are notified'.format(meeting.date_time.strftime("%d %b %Y  %I:%M %p"),meeting.designation))
+
+
     # Activate the meetings, if paid
     # Check with the meetings that are paid , and turn the paid boolean value to True
     pending_paid_meetings = ProFrehserMeeting.objects.filter(fresher__user__username = request.user, paid = False)
@@ -225,6 +236,12 @@ def book_interview(request, prof = 0):  # page 22
     
     if request.method == 'POST':
         
+        fresher = ''
+
+        try:
+            fresher = Fresher.objects.get(user__username = request.user)
+        except:
+            return HttpResponse('Only Fresher can book meetings')
 
         date_time = request.POST.get('date_time')
         # price will also be calculated on server side after this.
@@ -234,7 +251,7 @@ def book_interview(request, prof = 0):  # page 22
         try:
             meeting = ProFrehserMeeting(
             prof         = prof,
-            fresher      = Fresher.objects.get(user__username = request.user),
+            fresher      = fresher,
             designation  = request.POST.get('designation'),
             date_time    = timezone.datetime.fromisoformat(date_time),
             skills       = technologies,

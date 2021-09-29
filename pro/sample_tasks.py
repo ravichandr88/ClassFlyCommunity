@@ -37,3 +37,16 @@ def send_email_otp(user,otp):
     recipient_list = [user.email, ]
     send_mail( subject, message, email_from, recipient_list )
     return
+
+
+
+@shared_task
+def send_email(user,subject='ClassFly',body='From ClassFly.'):
+
+    message = f'{body}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [user.email, ]
+    send_mail( subject, message, email_from, recipient_list )
+    return
+
+

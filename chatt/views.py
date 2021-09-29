@@ -152,16 +152,23 @@ def chats(username):
 # check whether fresher_lastseen is less than any message sent by professional
     for i in f_chats:
         try:
+            print(i)
+            print(i.fresher_lastseen, 'two group lastseen')
+
             last_chat = i.chats.filter(sender = i.prof).latest("created_on")
+            
+            print(last_chat.created_on,'last_chat.created_on')
+
             if i.fresher_lastseen < last_chat.created_on:
-                chats.append({
-                'first_name'    : last_chat.sender.first_name,
-                'message'       : last_chat.message[:40],
-                'time'          : last_chat.created_on,
-                'channel_name'  : last_chat.chatgroup.channel_name
-                })
+                    chats.append({
+                    'first_name'    : last_chat.sender.first_name,
+                    'message'       : last_chat.message[:40],
+                    'time'          : last_chat.created_on,
+                    'channel_name'  : last_chat.chatgroup.channel_name
+                    })
         except:
             continue
+            
     return chats
 
 

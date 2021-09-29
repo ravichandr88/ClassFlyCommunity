@@ -98,10 +98,32 @@ from .models import TwoGroup, Messages, OnlineStatus
 from django.utils import timezone
 from datetime import datetime
 from .models import MeetingChat,MeetingMessages
+from pro.sample_tasks import send_email
 
 # To keep the user online
 
 
+
+# function to send email for the user if he recid message and offline
+def send_message_notification(sender,group,message):
+    # get the email of the user, is it fresher or professional
+    user = ''
+    last_seen 
+    if sender == group.prof:
+        user = group.fresher
+        last_seen = group.fresher_lastseen
+
+    elif sender == group.fresher:
+        user = group.prof
+        last_seen = group.prof_lastseen
+
+    
+    # check whether the user is offline, if offline send email
+    if last_seen < message.created_on - timezone.timedelta(minutes = 1):
+
+        send_email(user,'ClassFly Message','{} : {}'.format(user.first_name,message.message))
+
+    return
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -274,15 +296,23 @@ class ChatConsumer(WebsocketConsumer):
                 last_seen = 'Chat Not opened'
 
                 if user_position == 'prof':
+                    # if the user position is "prof" then opposite user online status code, last_seen(for chatpage ) and room lastseen value for current position user
                     try:
                         status_count = room.fresher.user_status.status_count
                         last_seen    = str(room.fresher.user_status.last_seen.strftime("%d-%m-%Y  %I:%M:%S %p"))
+                        
+                        room.prof_lastseen = timezone.now()
+                        room.save()
                     except:
                         status_count = 0
+
                 elif user_position == 'fresher':
                     try:
                         status_count = room.prof.user_status.status_count
-                        last_seen    = str(room.fresher.user_status.last_seen.strftime("%d-%m-%Y  %I:%M:%S %p"))
+                        last_seen    = str(room.prof.user_status.last_seen.strftime("%d-%m-%Y  %I:%M:%S %p"))
+                        
+                        room.fresher_lastseen = timezone.now()
+                        room.save()
                     except:
                         status_count = 0
                 
@@ -309,6 +339,8 @@ class ChatConsumer(WebsocketConsumer):
                     chatgroup  = room
                     ).save()
                     print('Message saved successfully')
+
+                    # if the user is not online try to send email
                     
                 except:
                     print('Try not found ')

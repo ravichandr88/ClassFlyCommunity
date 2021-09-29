@@ -95,6 +95,12 @@
 <a href="chatting/{{meeting.prof.user.id}}_{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
 <a href="/pro/{{meeting.prof.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #56f5fc">View Profile</a>
 <!-- button to join meeting -->
+{% if not meeting.approved %}
+<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">Not Approved</a></h4>
+{% else %}
+<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">Approved</a></h4>
+
+{% endif %}
 <a href="#" class="btn btn-white btn-sm m-t-10" style="background-color: #ffccfd" id="{{meeting.id}}"></a>
 
 </div>

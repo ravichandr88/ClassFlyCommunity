@@ -13,7 +13,7 @@ urlpatterns = [
     path('hr_dash',views.hr_dashboard, name='hrdashboard'),
     path('jobpost',views.jobpost),
     path('jobpost/<int:job_id>/<int:edit>',views.jobpost),
-    path('job/<int:id>',views.jobdetails),
+    path('job/<int:id>',views.jobdetails), 
     path('jobs/search',views.job_search, name='jobsearh'),   #Job Search
     path('jobs/search/<str:desig>/<str:city>/<str:salary>',views.job_search),
     path('position/<str:key>',views.autocompleteModel),  #Auto complete api to provide suggesstions for job positions
