@@ -136,8 +136,11 @@ def chats(username):
     chats = []
 
     for i in p_chats:
+        print(i.id,i.prof_lastseen)
+
         try:
             last_chat = i.chats.filter(sender = i.fresher).latest("created_on")
+            print(last_chat.id,last_chat.created_on)
             if i.prof_lastseen < last_chat.created_on:
                 chats.append({
                     'first_name'    : last_chat.sender.first_name,
@@ -168,7 +171,7 @@ def chats(username):
                     })
         except:
             continue
-            
+
     return chats
 
 
