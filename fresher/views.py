@@ -181,7 +181,15 @@ def pro_dash(request):
     today = timezone.now()
     meetings = approved_meetings | booked_meetings
     # return render(request,'dashboard/dist/dash_pro.html', context = {'meetings':meetings,'self':user,'today':today})
-    return render(request,'pro_dash.html', context = {'meetings':meetings,'approved_meetings':approved_meetings,'pending_meetings':booked_meetings,'done_meetings':done_meetings,'reject_meetings':reject_meetings,'self':user,'today':today})
+    return render(request,'pro_dash.html', context = {
+        'meetings':meetings,
+        'approved_meetings':approved_meetings,
+        'pending_meetings':booked_meetings,
+        'done_meetings':done_meetings,
+        'reject_meetings':reject_meetings,
+        'self':user,'today':today,
+        'chats': chats(request.user)
+        })
 
 
 @login_required
