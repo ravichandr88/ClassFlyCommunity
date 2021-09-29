@@ -245,7 +245,7 @@ def hr_dashboard(request, id = '', skill='', status = 0):
                 applicants = applicants.filter(~Q(id=i.id))
                 break
             
-    print(job)
+    
     data={
         'jobs':jobs,
         'pass_applicants':pass_applicants,

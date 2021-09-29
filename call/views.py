@@ -118,14 +118,13 @@ def videocall(request):
     print(request.session.keys())    
     user = ''
     uid = ''
-
+    
     if ProFrehserMeeting.objects.filter(id=request.session['meeting']).count() == 0:
         raise Http404
 
     # print(request.session.get('meeting'))
 
     meeting = ProFrehserMeeting.objects.get(id=request.session['meeting'])
-
 
     
     if Prfessional.objects.filter(id =  meeting.prof.id).count() == 1 and request.session['category'] == 'p':
@@ -189,9 +188,15 @@ def videocall(request):
     currentTimestamp = int(time.time())
     privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
     uid = random.randrange(22222222,99999999)
-
+    
+    # Prepare object for recording, 
     record_uid = RecordingUid.objects.get(meeting = meeting) if RecordingUid.objects.filter(meeting = meeting).count() == 1 else RecordingUid(pro_uid = int(str(uid) + str(meeting.prof.id))%10000000,fresh_uid = int(str(uid) + str(meeting.fresher.id))%10000000,meeting = meeting)
     record_uid.save()
+
+    #Code to create chatting object for interview
+    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0]
+
+
 
     if user == 'prof':
 

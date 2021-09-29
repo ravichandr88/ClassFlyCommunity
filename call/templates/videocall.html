@@ -455,19 +455,21 @@
 <ul class="call-items">
 <li class="call-item">
 <a href="" title="Enable Video" data-placement="top" data-toggle="tooltip">
-<i class="fa fa-video-camera camera"></i>
+<i class="fa fa-video-camera camera"></i>Cam
 </a>
 </li>
 <li class="call-item">
 <a href="" title="Mute Audio" data-placement="top" data-toggle="tooltip">
-<i class="fa fa-microphone microphone"></i>
+<i class="fa fa-microphone microphone"></i>Mic
 </a> 
 </li>
-<li class="call-item" id="join-form" >
+
+<li class="call-item" id="join-form" > 
 <a href="" title="Connect"  type="submit" data-placement="top" data-toggle="tooltip">
-<i class="fa fa-phone phone"></i>
+<i class="fa fa-phone phone"></i>Connect
 </a>
 </li>
+
 
 <!-- 
 <li class="call-item">
@@ -485,8 +487,7 @@
 </ul>
 </form>
 <div class="end-call">
-<a href="#" id="leave">  
-<i class="material-icons">call_end</i>
+<a href="#" id="leave">  End<br><br> Call
 </a>
 </div>
 
@@ -524,7 +525,7 @@
 <div class="chats"  id="chatbox"> 
 
 {% for i in chats %}
-
+ 
 <div class="chat chat-left">
 <div class="chat-avatar">
 <a href="#" class="avatar">
@@ -1028,12 +1029,11 @@ dashboard.png
 
 
 
-
-// <!-- initial code for scroling down the chsat -->
-// code for auto scroll when a new message is added.
-var element = document.getElementById("chatdiv");
-element.scrollTop = element.scrollHeight - element.clientHeight;
-        
+    // <!-- initial code for scroling down the chsat -->
+    // code for auto scroll when a new message is added.
+    var element = document.getElementById("chatdiv");
+    element.scrollTop = element.scrollHeight - element.clientHeight;
+            
 
     // console.log(user_id);
          // function to add chat recived
@@ -1057,7 +1057,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;
         {
             console.log('oppo user',oppo_user_id,oppo_user_name)
             chat_content +=  oppo_user_name ;
-        }
+        } 
         else if(data.user == user_id)
         {
             console.log('xxxxxxxxxxxx',user_id,user_name)
@@ -1126,7 +1126,6 @@ element.scrollTop = element.scrollHeight - element.clientHeight;
 
 
         };
-
 
         /*
         received({ 'type': 'meet_message',

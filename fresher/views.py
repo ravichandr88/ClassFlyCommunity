@@ -4,6 +4,8 @@ from .forms import ClassFlyInterviewForm
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from intervideo.views import hraccount
+from intervideo.models import HRaccount
 
 
 from rest_framework.decorators import api_view
@@ -131,7 +133,7 @@ def pro_dash(request):
         # If meeting is not approved, approve it 
         if not meeting.approved:
             meeting.approved = True
-            meeting.save()
+            
 
             # send email for the fresher saying the meeting is approved.
 
@@ -141,7 +143,8 @@ def pro_dash(request):
             # send email for the fresher saying the meeting is approved.
 
             send_email(meeting.fresher.user,'ClassFly Interview', 'Your meeting timings has been updated, for date and time {} for {} designation . Hope you are notified'.format(meeting.date_time.strftime("%d %b %Y  %I:%M %p"),meeting.designation))
-
+        # after all changes, save the object
+        meeting.save()
 
     # Activate the meetings, if paid
     # Check with the meetings that are paid , and turn the paid boolean value to True
@@ -223,7 +226,23 @@ def fresher_profile(request,fre):
     fresher_user  = fres.user
     
     return render(request,'fresher_profile.html', context={'fresher':fres,'exps':exps,'pro_user':fresher_user})
-   
+
+
+@login_required
+@hraccount
+@usertype
+def hr_fresher_profile(request,fre):
+    
+    if Fresher.objects.filter(user__id = fre).count() == 0:
+        raise Http404
+    
+
+    fres = Fresher.objects.get(user__id = fre)
+    exps = fres.experience.all()
+    fresher_user  = fres.user
+    
+    return render(request,'hr_fresher_profile.html', context={'fresher':fres,'exps':exps,'pro_user':fresher_user})
+
 
 @login_required
 @usertype
@@ -310,7 +329,28 @@ def reject_meeting(request,mid):
 
     return Response(data={'message':'success'})
 
+@login_required
+@hraccount
+def hr_fresher_chat(request,fid):
+    
+    fresher = ''
+    hr_user = ''
 
+    try:
+        fresher = Fresher.objects.get(id=fid)
+        hr_user = HRaccount.objects.get(user__username = request.user)
+
+    except:
+        return HttpResponse('Fresher not found')
+    
+        
+    try:
+        chatroom = TwoGroup.objects.get_or_create(prof = hr_user.user, fresher = fresher.user, channel_name = str(hr_user.user.id) + '_' + str(fresher.user.id))[0]
+        chatroom.save()
+    except:
+        return HttpResponse('Something went wrong')
+
+    return redirect('chatting',room_name = chatroom.channel_name)
 
 
 

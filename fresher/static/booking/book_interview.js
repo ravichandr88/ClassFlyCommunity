@@ -13,13 +13,14 @@ function skill(s){
         skills.push(s)
     }
 
-    if (s === 'java'){
-        
+       
         // document.getElementById('id_price').value = 100;
-        document.getElementById('id_price').value = 100;
-        console.log(document.getElementById('id_price').value);
+        
+       
 
-    }
+        document.getElementById('id_price').value = skills.length  * 128;
+        // console.log(document.getElementById('id_price').value);
+
 
     console.log(skills);
 }

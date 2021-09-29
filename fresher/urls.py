@@ -9,7 +9,9 @@ urlpatterns = [
     path('book/<str:prof>',views.book_interview),
     path('pro_dashboard', views.pro_dash ,name = 'pro_dashboard'),
     path('fresher/<int:fre>',views.fresher_profile),
-    path('reject/<int:mid>',views.reject_meeting)
+    path('reject/<int:mid>',views.reject_meeting),
+    path('chat_now/<int:fid>',views.hr_fresher_chat),
+    path('hr_fresher_profile/<int:fre>',views.hr_fresher_profile)
 	] 
 
 
