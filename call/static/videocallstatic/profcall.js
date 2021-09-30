@@ -102,7 +102,10 @@ var remoteUsers = {};
     console.error(error);
   } finally {
     $("#leave").attr("disabled", false);
+    $("#join-form").attr("disabled", true);
   }
+
+
 })
 
 /*
@@ -321,8 +324,52 @@ async function meeting_status()
 setTimeout(meeting_status, check_interval);
 
 
+// audio muting function 
+function muteaudio()
+{
+  var current_state = localTracks.audioTrack.muted ;
+
+  var muted = '<a href="#" title="Mute Audio" data-placement="top" data-toggle="tooltip" ><i class="fa fa-microphone-slash microphone"></i>Mic</a> ';
+
+  var unmuted = '<a href="#" title="Mute Audio" data-placement="top" data-toggle="tooltip" ><i class="fa fa-microphone microphone"></i>Mic</a> '
+  
+  localTracks.audioTrack.setMuted(!current_state);
+
+  console.log(!current_state);
+
+  if(current_state == true)
+  {
+    document.getElementById('mic_element').innerHTML = unmuted;
+  }
+  else{
+    document.getElementById('mic_element').innerHTML = muted;
+  }
+}
 
 
+
+//function to pause camera 
+function camera_pause()
+{
+
+  var on_camera = '<a href="#" title="Enable Video" data-placement="top" data-toggle="tooltip"><i class="fa fa-video-camera camera"></i>Cam</a>'
+
+  var off_camera = '<a href="#" title="Enable Video" data-placement="top" data-toggle="tooltip"><i class="fa fa-times-circle camera"></i>Cam</a>'
+
+  var current_mode = localTracks.videoTrack.muted ;
+
+  localTracks.videoTrack.setMuted(!current_mode);
+  console.log('Mic is turned on',current_mode);
+
+  if(current_mode == true)
+  {
+    document.getElementById('cam_element').innerHTML = on_camera;
+  }
+  else{
+    document.getElementById('cam_element').innerHTML = off_camera;
+  }
+
+}
 
  }
 
