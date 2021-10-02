@@ -33,7 +33,7 @@ class Messages(models.Model):
 class OnlineStatus(models.Model):
     user            = models.OneToOneField(User, on_delete = models.CASCADE, related_name = 'user_status')
     status_count    = models.IntegerField(default = 0)
-    last_seen       = models.DateTimeField(auto_now = True)
+    last_seen       = models.DateTimeField(default = timezone.now)
 
     def __str__(self):
         return "User {} status count {}".format(self.user.first_name, self.status_count)
