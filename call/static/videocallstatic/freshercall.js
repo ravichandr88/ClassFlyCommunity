@@ -96,7 +96,7 @@ var remoteUsers = {};
     }
 
     // varibale to decide whether to record the meeting or not 
-    // based on the localhost meeting or on servre meeting
+    // based on the localhost meeting or on server meeting
     var host = 'local'
     if(JSON.stringify(window.location).split('feedback').slice(0,1)[0].split(':')[2].slice(2,) != 'localhost')
     host = 'classfly'

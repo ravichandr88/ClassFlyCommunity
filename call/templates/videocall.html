@@ -541,7 +541,7 @@
 <div class="chat-bubble">
 <div class="chat-content">
 <span class="task-chat-user">{{i.sender.first_name}}</span> <span class="chat-time">{{i.created_on}}</span>
-<p>{{i.message}}</p>
+<pre>{{i.message}}</pre>
 </div>
 </div>
 </div>
@@ -1063,7 +1063,7 @@ dashboard.png
             console.log('xxxxxxxxxxxx',user_id,user_name)
             chat_content += user_name;
         }
-        chat_content += '</span> <span class="chat-time">' + data.time + '</span><p>' + data.message + '</p></div></div></div></div>'
+        chat_content += '</span> <span class="chat-time">' + data.time + '</span><pre>' + data.message + '</pre></div></div></div></div>'
         document.getElementById("chatbox").innerHTML += chat_content;
 
 
@@ -1107,21 +1107,23 @@ dashboard.png
         };
 
         document.querySelector('#chat-message-input').focus();
-        // document.querySelector('#chat-message-input').onkeyup = function(e) {
-        //     if (e.keyCode === 13) {  // enter, return
-        //         // document.querySelector('#send-message').click();
-        //     }
-        // };
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#send-message').val
+                console.log(document.querySelector('#chat-message-input').value);
+            }
+        };
 
         document.querySelector('#send-message').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'type': 'meet_message',
-                'message': message,
+                'message': message.replaceAll('\n','<br>'),
                 'user':'{{user_id}}',   //professional or fresher
                 'room':roomName
             }));
+
             messageInputDom.value = '';
 
 

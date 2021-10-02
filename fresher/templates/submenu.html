@@ -252,6 +252,18 @@
     <!-- End of HR Options -->
     {% endif %}
 
+
+    {% if 'hra' not in request.session.usertype and 'fre' not in request.session.usertype and 'pro' not in request.session.usertype %}
+    <li><a href="/startpage">Signup</a></li>
+    <li><a href="/prologin">Login</a></li>
+    <li><a href="/searchpage">Professionals</a></li>
+    <li><a href="/player_now">Interview Videos</a></li>
+    
+
+
+    {% endif %}
+
+
     </ul>
     </div>
     </div>

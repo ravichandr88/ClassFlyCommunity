@@ -73,7 +73,6 @@ def skillsmatch(job,fresher):
 
 # Create your views here.
 # REST API
-@login_required
 @usertype
 def video_player(request,pfmid = 0, prof=False):
 # pfmid = ProFresherMeeting ID, prof
@@ -94,15 +93,17 @@ def video_player(request,pfmid = 0, prof=False):
     if request.method == 'POST':
 
         data = request.POST.dict()
-
-        # Table InterviewSearch, keep record for all the queries done by user
-        InterviewSearch(
-            user =              User.objects.get(username = request.user), 
-            pro_name =          data['pro_name'],
-            pro_designation =   data['pro_designation'],
-            skills =            data['skills']       
-            ).save()
-        
+        try:
+            # Table InterviewSearch, keep record for all the queries done by user
+            InterviewSearch(
+                user =              User.objects.get(username = request.user), 
+                pro_name =          data['pro_name'],
+                pro_designation =   data['pro_designation'],
+                skills =            data['skills']       
+                ).save()
+        except:
+            print('Excepted')
+            return redirect('login_new')
         
         meetings  =   ProFrehserMeeting.objects.filter(~Q(feedback = ''), approved = True, prof__user__first_name__icontains = data['pro_name'])
         
@@ -134,16 +135,18 @@ def video_player(request,pfmid = 0, prof=False):
         pro_meeting = ProFrehserMeeting.objects.get(id = pfmid)
 
         # Code to record the video viewing count for the user and meeting
-        
-        video = InterviewVideo.objects.get_or_create(
-                video = pro_meeting,
-                user = User.objects.get(username = request.user)
-            )[0]
+        try:
+            video = InterviewVideo.objects.get_or_create(
+                    video = pro_meeting,
+                    user = User.objects.get(username = request.user)
+                )[0]
+        except:
+            return redirect('login_new')
         
 
         try:
             resp = get_video_otp(pro_meeting.meeting_details.vdo_id)
-            print(resp)
+            # print(resp)
             if str(resp.status_code) != '200':
                 raise Http404
         except:        

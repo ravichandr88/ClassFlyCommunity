@@ -333,15 +333,19 @@ class ChatConsumer(WebsocketConsumer):
                 try:        
                     print('If and elif done')
                     # Save data to database 
-                    Messages(
+                    message_object = Messages(
                     message    = message,
                     sender     = user,
                     chatgroup  = room
-                    ).save()
+                    )
+
+                    message_object.save()
+
                     print('Message saved successfully')
 
                     # if the user is not online try to send email
                     
+                    send_message_notification(user,room,message_object)
                 except:
                     print('Try not found ')
                     return

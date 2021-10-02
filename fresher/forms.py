@@ -27,7 +27,7 @@ class ClassFlyInterviewForm(BootstrapModelForm):
     designation  =    forms.CharField(max_length = 50, label = 'Designation',required = True)
     technologies =    forms.MultipleChoiceField(required = True, choices=[],widget=forms.CheckboxSelectMultiple( attrs={'onclick':"skill(value)"}) )
     date_time    =    forms.MultipleChoiceField(required = True, choices=[],widget=forms.RadioSelect( attrs={'onclick':"meet(value)"}))
-    price        =    forms.IntegerField(required = True)
+    price        =    forms.CharField(required = True)
 
     def __init__(self,skills, dates, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -126,6 +126,8 @@ def videocall(request):
 
     meeting = ProFrehserMeeting.objects.get(id=request.session['meeting'])
 
+    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0]
+
     
     if Prfessional.objects.filter(id =  meeting.prof.id).count() == 1 and request.session['category'] == 'p':
         user = 'prof'
@@ -473,6 +475,9 @@ def meeting_status(request,aid, mid, pfmid,t = 0): # aid (account id) -> Profess
     try:
         # Code to check whether the time is over for the meeting
         if  timezone.now() > meeting.record_stop_time:
+            meeting.record_stopped = True
+            meeting.save()
+
             return Response(data={'message':'stop'})
     except:
         pass
@@ -500,7 +505,7 @@ def meeting_status(request,aid, mid, pfmid,t = 0): # aid (account id) -> Profess
         
 
         time = int((pro_meeting.meeting_details.record_stop_time - timezone.now()).total_seconds())
-
+        print(time)
         data['time'] = time
     
         

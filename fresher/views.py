@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from intervideo.views import hraccount
 from intervideo.models import HRaccount
+from chatt.models import MeetingChat
 
 
 from rest_framework.decorators import api_view
@@ -122,14 +123,19 @@ def pro_dash(request):
 
     if request.method == 'POST':
         data = request.POST.dict()
-        print(data['meeting_id'])
-        if ProFrehserMeeting.objects.filter(id=int(data['meeting_id'])).count() == 0:
-            raise Http404
+        
+        try:
+            if ProFrehserMeeting.objects.filter(id=int(data['meeting_id'])).count() == 0:
+                raise Http404
+        except:
+            return redirect('pro_dashboard')
         
         meeting = ProFrehserMeeting.objects.get(id=int(data['meeting_id']))
 
         meeting.date_time =  timezone.datetime.fromisoformat(data['date'] +' '+ data['time'])
         
+        MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0]
+
         # If meeting is not approved, approve it 
         if not meeting.approved:
             meeting.approved = True
@@ -354,6 +360,16 @@ def hr_fresher_chat(request,fid):
 
 
 
+'''
+digital marketing strategy once app is ready
+after the launch
+HR pitch
+
+to get the job mela, what is probability of getting this job mela
+Job mela indirect pitch for HRs(passive voice)
 
 
+telecallers pitch: how to convince students 
+
+'''
 

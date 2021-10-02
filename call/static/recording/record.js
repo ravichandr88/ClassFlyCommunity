@@ -14,8 +14,11 @@
 
 
 
-
-
+//function for agora to know the page is loaded
+function notifyReady() {
+    if (typeof window.navigator.notifyReady === 'function')
+        window.navigator.notifyReady();
+}
 
 
 
@@ -446,7 +449,6 @@ var x = setInterval(function() {
     clearInterval(x);
     window.fun();
     document.getElementById("demo").innerHTML = "EXPIRED";
-  
     
   }
 }, 1000);

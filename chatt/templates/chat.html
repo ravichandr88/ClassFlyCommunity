@@ -430,7 +430,7 @@
 <div class="chat-body">
 <div class="chat-bubble">
 <div class="chat-content">
-<p>{{i.message}} </p>
+<pre>{{i.message}} </pre>
 <span class="chat-time">{{i.created_on}}</span>
 </div>
 </div>
@@ -448,7 +448,7 @@
 <div class="chat-body">
 <div class="chat-bubble">
 <div class="chat-content">
-<p>{{i.message}} </p>
+<pre>{{i.message}} </pre>
 <span class="chat-time">{{i.created_on}}</span>
 </div>
 </div>
@@ -463,7 +463,7 @@
 <div class="chat-body">
 <div class="chat-bubble">
 <div class="chat-content">
-<p>{{i.message}}</p>
+<pre>{{i.message}}</pre>
 <span class="chat-time">{{i.created_on}}</span>
 </div></div>
 </div>
@@ -475,7 +475,7 @@
 <div class="chat-body">
 <div class="chat-bubble">
 <div class="chat-content">
-<p>{{i.message}}</p>
+<pre>{{i.message}}</pre>
 <span class="chat-time">{{i.created_on}}</span>
 </div>
 </div>
@@ -1278,7 +1278,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;
                         '<div class="chat-body">'+
                         '<div class="chat-bubble">'+
                         '<div class="chat-content">'+
-                        '<p>' + data.message  + '</p>'+
+                        '<pre>' + data.message  + '</pre>'+
                         '<span class="chat-time">' + data.time + '</span>'+
                         '</div></div></div></div>';
                         
@@ -1296,7 +1296,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;
                                         '<div class="chat-body">'+
                                         '<div class="chat-bubble">'+
                                         '<div class="chat-content">'+
-                                        '<p>' + data.message + '</p>'+
+                                        '<pre>' + data.message + '</pre>'+
                                         '<span class="chat-time">' + data.time + '</span>'
                                         '</div>';
         }
@@ -1368,7 +1368,7 @@ element.scrollTop = element.scrollHeight - element.clientHeight;
         document.querySelector('#chat-message-input').focus();
         document.querySelector('#chat-message-input').onkeyup = function(e) {
             if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#send-message').click();
+                // document.querySelector('#send-message').click();
             }
         };
 

@@ -20,7 +20,7 @@ class TwoGroup(models.Model):
 
 class Messages(models.Model):
     chatgroup = models.ForeignKey(TwoGroup, related_name= 'chats', on_delete = models.CASCADE)
-    message   = models.CharField(max_length = 500, default = '')
+    message   = models.TextField(max_length = 1000, default = '')
     sender    = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'sent_messages')
     created_on = models.DateTimeField(auto_now =  True)
 
@@ -54,12 +54,12 @@ class MeetingChat(models.Model):
         # if not available return false
         if self.meeting.prof.user == user or self.meeting.fresher.user == user:
             return self
-        
+
         return False
 
 class MeetingMessages(models.Model):
     sender      = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'user_meet_chats')
-    message     = models.CharField(max_length = 1000, null = True)
+    message     = models.TextField(max_length = 1000, null = True)
     created_on  = models.DateTimeField(auto_now = True)
     meeting_room = models.ForeignKey(MeetingChat, on_delete = models.CASCADE, related_name = 'meeting_chats')
 
