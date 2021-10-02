@@ -108,7 +108,7 @@ from pro.sample_tasks import send_email
 def send_message_notification(sender,group,message):
     # get the email of the user, is it fresher or professional
     user = ''
-    last_seen 
+    last_seen = ''
     if sender == group.prof:
         user = group.fresher
         last_seen = group.fresher_lastseen
@@ -346,6 +346,7 @@ class ChatConsumer(WebsocketConsumer):
                     # if the user is not online try to send email
                     
                     send_message_notification(user,room,message_object)
+
                 except:
                     print('Try not found ')
                     return
@@ -404,7 +405,7 @@ class ChatConsumer(WebsocketConsumer):
 
     # Receive message from room group
     def chat_message(self, event):
-        
+            print('message sent sent to user')
             message = event['message']
             user    = event['user']
             
