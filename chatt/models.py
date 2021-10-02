@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models  import User 
 from fresher.models import ProFrehserMeeting
+from django.utils import timezone
 
 # Create your models here.
 
@@ -9,8 +10,8 @@ class TwoGroup(models.Model):
     prof = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'pro_chats')
     fresher = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'fre_chat')
     channel_name = models.CharField(max_length = 20, default = '')
-    prof_lastseen = models.DateTimeField(auto_now=True)
-    fresher_lastseen = models.DateTimeField(auto_now=True)
+    prof_lastseen = models.DateTimeField(default = timezone.now)
+    fresher_lastseen = models.DateTimeField(default = timezone.now)
     created_on = models.DateTimeField(auto_now = True)
 
 

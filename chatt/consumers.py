@@ -295,6 +295,9 @@ class ChatConsumer(WebsocketConsumer):
                 status_count = 0
                 last_seen = 'Chat Not opened'
 
+                print('prof_lastseen',room.prof_lastseen)
+                print('fresher_lastseen',room.fresher_lastseen)
+                
                 if user_position == 'prof':
                     # if the user position is "prof" then opposite user online status code, last_seen(for chatpage ) and room lastseen value for current position user
                     try:
