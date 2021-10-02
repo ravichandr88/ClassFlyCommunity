@@ -318,7 +318,8 @@ class ChatConsumer(WebsocketConsumer):
                     except:
                         status_count = 0
                 
-                
+                print('prof_lastseen',room.prof_lastseen)
+                print('fresher_lastseen',room.fresher_lastseen)
 
                 async_to_sync(self.channel_layer.group_send)(
                     self.room_group_name,
