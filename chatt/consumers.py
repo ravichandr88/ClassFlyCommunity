@@ -117,7 +117,7 @@ def send_message_notification(sender,group,message):
         user = group.prof
         last_seen = group.prof_lastseen
 
-    
+    print('last seen',last_seen , 'message created',message.created_on)
     # check whether the user is offline, if offline send email
     if last_seen < message.created_on - timezone.timedelta(minutes = 1):
 
@@ -298,6 +298,7 @@ class ChatConsumer(WebsocketConsumer):
                 if user_position == 'prof':
                     # if the user position is "prof" then opposite user online status code, last_seen(for chatpage ) and room lastseen value for current position user
                     try:
+                        print(user_position,'user_position proffesional')
                         status_count = room.fresher.user_status.status_count
                         last_seen    = str(room.fresher.user_status.last_seen.strftime("%d-%m-%Y  %I:%M:%S %p"))
                         
@@ -308,6 +309,7 @@ class ChatConsumer(WebsocketConsumer):
 
                 elif user_position == 'fresher':
                     try:
+                        print(user_position,'user_position fresher')
                         status_count = room.prof.user_status.status_count
                         last_seen    = str(room.prof.user_status.last_seen.strftime("%d-%m-%Y  %I:%M:%S %p"))
                         
