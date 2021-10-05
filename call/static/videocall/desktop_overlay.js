@@ -14,11 +14,12 @@ function update(){
     total_seconds = total_seconds-1;
     minutes = parseInt( ( total_seconds - (skills.length-id - 1) * 600) / 60, 10);  
     seconds = parseInt(( total_seconds - (skills.length-id - 1) * 600) % 60, 10);  
+    console.log(total_seconds,skills.length-id - 1,( total_seconds - (skills.length-id - 1) * 600))
     minutes = minutes < 10 ? "0" + minutes : minutes; 
     seconds = seconds < 10 ? "0" + seconds : seconds; 
     time = minutes + ":" + seconds ;  
     document.getElementById("skill"+id).innerHTML = skills[id] + ":"+time;
-    console.log('id',id,'pastid',past_id);
+    console.log('id',id,'pastid',past_id,tmp);
     if(id > 0 && id != past_id){
       
       var tmp = past_id;
@@ -27,7 +28,7 @@ function update(){
       {
       document.getElementById("skill"+tmp).innerHTML=skills[tmp] ;
       document.getElementById("skill"+tmp).style.color = "rgba(128, 128, 128, 0.3)";
-      tmp -= 1;  
+      tmp = tmp -  1;  
     }
     } 
   }

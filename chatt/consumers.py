@@ -209,20 +209,23 @@ class ChatConsumer(WebsocketConsumer):
 
     def disconnect(self, close_code):
         # Leave room group
-        str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
-        session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
-        if Session.objects.filter(session_key=session_key).count() == 1:
-            session = Session.objects.get(session_key=session_key)
-            uid = session.get_decoded().get('_auth_user_id')
-            user = User.objects.get(pk=uid)
-            user.user_status.last_seen = timezone.now()
-            user.user_status.save()
+        try:
+            str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
+            session_key = str(self.scope['headers']).split('sessionid=')[1].split("'")[0]
+            if Session.objects.filter(session_key=session_key).count() == 1:
+                session = Session.objects.get(session_key=session_key)
+                uid = session.get_decoded().get('_auth_user_id')
+                user = User.objects.get(pk=uid)
+                user.user_status.last_seen = timezone.now()
+                user.user_status.save()
 
 
-        async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name,
-            self.channel_name
-        )
+            async_to_sync(self.channel_layer.group_discard)(
+                self.room_group_name,
+                self.channel_name
+            )
+        except:
+            return
 
     # Receive message from WebSocket
     def receive(self, text_data):

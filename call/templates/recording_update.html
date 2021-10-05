@@ -21,6 +21,8 @@
 <body>
 	<div class="time_stamp">
 		<span class="call-duration" id="demo" style="top: -60px;width: max-content;left: -300px;">Clock</span>
+		
+		<span class="call-duration" id="chance" style="top: -60px;width: max-content;left: -200px;">Chance</span>
 	</div>
 	<div class="courses" style="border: 4px solid rgba(0, 0, 0, 0.3);background-color: rgba(87, 87, 87, 0.4);">
 		{% for i in skills %}
@@ -169,24 +171,29 @@ function update(){
   id = skills.length - parseInt(total_seconds / 600 ) - 1;
   total_seconds -= 1;
   if (total_seconds > 0){
-    total_seconds = total_seconds-1;
+    // total_seconds = total_seconds-1;
     minutes = parseInt( ( total_seconds - (skills.length-id - 1) * 600) / 60, 10);  
     seconds = parseInt(( total_seconds - (skills.length-id - 1) * 600) % 60, 10);  
-    minutes = minutes < 10 ? "0" + minutes : minutes; 
+	
+	console.log(total_seconds,(skills.length-id - 1),( total_seconds - (skills.length-id - 1) * 600))
+	
+	minutes = minutes < 10 ? "0" + minutes : minutes; 
     seconds = seconds < 10 ? "0" + seconds : seconds; 
     time = minutes + ":" + seconds ;  
     document.getElementById("skill"+id).innerHTML = skills[id] + ":"+time;
-    console.log('id',id,'pastid',past_id);
+	console.log('id',id,'pastid',past_id);
+	console.log('before',tmp); 
+	
     if(id > 0 && id != past_id){
-      
+	
       var tmp = past_id;
       past_id = id ;
       while(tmp >= 0)
-      {
-      document.getElementById("skill"+tmp).innerHTML=skills[tmp] ;
-      document.getElementById("skill"+tmp).style.color = "rgba(189, 189, 255)";
-      tmp -= 1;  
-    }
+    	{
+		document.getElementById("skill"+tmp).innerHTML=skills[tmp] ;
+		document.getElementById("skill"+tmp).style.color = "rgba(189, 189, 255)";
+		tmp -= 1;  
+    	}
     } 
   }
   else{

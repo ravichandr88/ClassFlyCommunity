@@ -296,23 +296,27 @@ function handleUserUnpublished(user) {
 });
 
 
-function meeting_active()
-{
-  if (h  < 15)
-  {
-  h = h + 1
-  setTimeout(meeting_active, interval);
-  // document.getElementById('code').innerHTML = h + 'secs';
-  }
-  else 
-  {
-    console.log('closed')
-    window.close(); 
-    // open(location, '_self').close();
-  }
 
-}
-setTimeout(meeting_active, check_interval);
+//functoin for the page to close within 15 seconds of meeting
+
+// function meeting_active()
+// {
+//   if (h  < 15)
+//   {
+//   h = h + 1
+//   setTimeout(meeting_active, interval);
+//   console.log(h, )
+//   // document.getElementById('code').innerHTML = h + 'secs';
+//   }
+//   else 
+//   {
+//     console.log('closed')
+//     window.close(); 
+//     // open(location, '_self').close();
+//   }
+
+// }
+// setTimeout(meeting_active, check_interval);
 
 
 
@@ -360,7 +364,8 @@ async function meeting_status()
         window.close();
       }
       
-      
+      document.getElementById('chance').innerHTML = chance;
+      console.log('chancccccccccccce',chance);
       // check whether the status of profesional or fresher has changed or not
       if (pro_count == res.pro )
       {
@@ -397,8 +402,7 @@ async function meeting_status()
 
       // the code wont connect when person is rejected for some reason
       console.log('failed',res.message);
-      window.close(); 
-     
+      window.close();      
 
     }
     
@@ -440,7 +444,7 @@ var x = setInterval(function() {
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
+  seconds = seconds < 10 ? "0"+seconds : seconds
   // Display the result in the element with id="demo"
   document.getElementById("demo").innerHTML =  hours + ":" + minutes + ":" + seconds ;
   // console.log('testing');

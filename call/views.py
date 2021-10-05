@@ -333,7 +333,7 @@ def connect_to_call_fresh(request, fid, mid, host=''):
         pro_meeting.meeting_details.record_start_time = timezone.now() 
         pro_meeting.meeting_details.save()
 
-        if host == 'classfly':       #varible to activate and deactivate the code while testing
+        if host == 'classfly' :       #varible to activate and deactivate the code while testing
             resp = start_record_api(pro_meeting)
 
             if str(resp.status_code) != '200':
@@ -342,13 +342,17 @@ def connect_to_call_fresh(request, fid, mid, host=''):
             
             # Before we start the meeting, save the record start time and fix the end time too.
             
+        try:
             meeting.sid = resp.json()['sid']
-            meeting.record_started = True
-            meeting.fre_joined = True
-            meeting.save()
-            print('meeting record started and saved to db')
-            # Returning time in seconds for the js to count down
-            # print((g - meeting.date_time ).total_seconds())
+        except:
+            meeting.sid = 'localhost'
+        
+        meeting.record_started = True
+        meeting.fre_joined = True
+        meeting.save()
+        print('meeting record started and saved to db')
+        # Returning time in seconds for the js to count down
+        # print((g - meeting.date_time ).total_seconds())
 
         skills_time = len(pro_meeting.skills.split(',')) + 1 #The last + 1 is for interaction apart from the topics
         # record end time is addition of 10 * skills minutes and + 1 for other discussion.
