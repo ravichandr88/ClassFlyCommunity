@@ -357,7 +357,7 @@ def connect_to_call_fresh(request, fid, mid, host=''):
         pro_meeting.meeting_details.save()
 
         time = int(((pro_meeting.meeting_details.record_start_time + timedelta( minutes = skills_time*10 ) ) - timezone.now()).total_seconds())
-        # print(skills_time, time) 
+        print(' skils count and record start time ',skills_time, time) 
         
         return Response(data={'message':'joined','time':time}) 
     
