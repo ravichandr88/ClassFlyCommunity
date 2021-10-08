@@ -126,7 +126,7 @@ def videocall(request):
 
     meeting = ProFrehserMeeting.objects.get(id=request.session['meeting'])
 
-    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0]
+    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))[0]
 
     
     if Prfessional.objects.filter(id =  meeting.prof.id).count() == 1 and request.session['category'] == 'p':
@@ -196,7 +196,7 @@ def videocall(request):
     record_uid.save()
 
     #Code to create chatting object for interview
-    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0]
+    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))[0]
 
 
 
@@ -214,7 +214,7 @@ def videocall(request):
     token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
 
 # check meetingchat , and create chat if does not exists , or get the one
-    meetchat    = MeetingChat.objects.get_or_create(meeting = meeting, channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0] 
+    meetchat    = MeetingChat.objects.get_or_create(meeting = meeting, channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))[0] 
     chats       = meetchat.meeting_chats.all()
 
     data = {
@@ -422,7 +422,7 @@ def record(request,fid=0,mid=0):
     currentTimestamp = int(time.time())
     privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
 
-    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id))[0]
+    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))[0]
 
     token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
 
