@@ -291,25 +291,26 @@ function handleUserUnpublished(user) {
 
 
 
-//functoin for the page to close within 15 seconds of meeting
+// functoin for the page to close within 15 seconds of meeting
 
-// function meeting_active()
-// {
-//   if (h  < 15)
-//   {
-//   h = h + 1
-//   setTimeout(meeting_active, interval);
-//   console.log(h, )
-//   // document.getElementById('code').innerHTML = h + 'secs';
-//   }
-//   else 
-//   {
-//     console.log('closed')
-//     window.close(); 
-//     // open(location, '_self').close();
-//   }
+function meeting_active()
+{
+  if (h  < 15)
+  {
+  h = h + 1
+  setTimeout(meeting_active, interval);
+  console.log(h, )
+  // document.getElementById('code').innerHTML = h + 'secs';
+  }
+  else 
+  {
+    console.log('closed')
+    window.close(); 
+    // open(location, '_self').close();
+  }
 
-// }
+}
+
 // setTimeout(meeting_active, check_interval);
 
 

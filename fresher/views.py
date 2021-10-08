@@ -294,7 +294,7 @@ def book_interview(request, prof = 0):  # page 22
             designation  = request.POST.get('designation'),
             date_time    = timezone.datetime.fromisoformat(date_time),
             skills       = technologies,
-            channel_name = 'car',
+            channel_name = str(timezone.now().time()).split('.')[1] + '_' + str(prof.id) + '_' + str(fresher.id),
             price        = len(technologies.split(','))*128,
             mode         = 'PRI'   #givn by profesnl about the student #Approved by Professional for meeting
             )
