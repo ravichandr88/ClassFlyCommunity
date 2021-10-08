@@ -22,5 +22,10 @@ urlpatterns = [
 	path('meeting_status/<str:aid>/<int:mid>/<int:pfmid>/<int:t>',views.meeting_status),
 	path('after_meeting/<int:pfmid>',views.after_record),
 	path('spot_file/<int:pfmid>',views.record_complete),
-	path('feedback/<int:mid>',views.meeting_feedback, name='meeting_feedback')
+	path('feedback/<int:mid>',views.meeting_feedback, name='meeting_feedback'),
+	path('stop_meeting/<int:pfmid>/<str:channel_name>/<str:uid>',views.stop_record_api)
 ]
+
+
+
+

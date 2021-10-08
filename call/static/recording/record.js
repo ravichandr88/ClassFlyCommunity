@@ -305,6 +305,7 @@ function meeting_active()
   else 
   {
     console.log('closed')
+    stop_meeting()
     window.close(); 
     // open(location, '_self').close();
   }
@@ -356,6 +357,7 @@ async function meeting_status()
       
       if (res.message == 'stop')
       {
+        stop_meeting();
         window.close();
       }
       
@@ -388,6 +390,7 @@ async function meeting_status()
       // check the chance given, if it is greater than 3, close the window
       if (chance > 5)
       {
+        stop_meeting();
         window.close(); 
       }
        
@@ -396,6 +399,7 @@ async function meeting_status()
 
       // the code wont connect when person is rejected for some reason
       console.log('failed',res.message);
+      stop_meeting();
       window.close();      
 
     }
@@ -407,6 +411,29 @@ setTimeout(meeting_status, check_interval);
 
 setTimeout(meeting_status, check_interval);
 
+
+function stop_meeting()
+{
+  console.log('stopping the meeting',record_uid);
+
+    async function meeting_status()
+    {
+  
+    // stop_meeting/<int:pfmid>/<str:channel_name>/<str:uid>
+    const res = await fetch('/stop_meeting/' + pfmid + '/' + option.channel + '/' + record_uid )
+      .then(res => res.json());
+      if (res.message == 'success'){ 
+        leave();
+        document.getElementById("body_div").innerHTML = '';
+      }
+      else{
+      console.log('error');
+      }  
+
+    }
+
+    meeting_status();
+}
 
 
  
@@ -460,4 +487,4 @@ var x = setInterval(function() {
 
 $(document).ready(function(){
   notifyReady();
-})
+});

@@ -7,6 +7,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 from .models import RecordingUid
 from chatt.models import MeetingChat, MeetingMessages
+from pro.sample_tasks import send_email
+
 # Create your views here.
 
 from django.contrib.auth.models import User
@@ -126,8 +128,13 @@ def videocall(request):
 
     meeting = ProFrehserMeeting.objects.get(id=request.session['meeting'])
 
-    meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))[0]
-
+    meetchat = ''
+    print('coded',meeting.id,str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))
+    try:
+        meetchat = MeetingChat.objects.get(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))
+    except:
+        meetchat = MeetingChat(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))
+        meetchat.save()
     
     if Prfessional.objects.filter(id =  meeting.prof.id).count() == 1 and request.session['category'] == 'p':
         user = 'prof'
@@ -192,7 +199,7 @@ def videocall(request):
     uid = random.randrange(22222222,99999999)
     
     # Prepare object for recording, 
-    record_uid = RecordingUid.objects.get(meeting = meeting) if RecordingUid.objects.filter(meeting = meeting).count() == 1 else RecordingUid(pro_uid = int(str(uid) + str(meeting.prof.id))%10000000,fresh_uid = int(str(uid) + str(meeting.fresher.id))%10000000,meeting = meeting)
+    record_uid = RecordingUid.objects.get(meeting = meeting) if RecordingUid.objects.filter(meeting = meeting).count() == 1 else RecordingUid(pro_uid = int(str(uid) + str(meeting.prof.id))%10000000, fresh_uid = int(str(uid) + str(meeting.fresher.id))%10000000, meeting = meeting, record_uid =  int(str(uid) + str(meeting.id))%10000000)
     record_uid.save()
 
     #Code to create chatting object for interview
@@ -258,7 +265,7 @@ def connect_to_call_pro(request,pid,mid):
     if Prfessional.objects.filter(id = pid).count() == 0:
         return Response(data={'message':'Not valid Professional'}, status=404)
 
-    pro = Prfessional.objects.get(id = pid)
+    
 
     profremeeting = ProFrehserMeeting.objects.get(id = mid, prof__id = pid)
 
@@ -267,7 +274,7 @@ def connect_to_call_pro(request,pid,mid):
         return Response(data={'message':'Not valid Meeting'}, status=404)
 
     meeting = ProFrehserMeeting.objects.get(id = mid, prof__id = pid).meeting_details
-    fresher = profremeeting.fresher
+    
     # print(meeting) 
 
     meeting.pro_joined = True
@@ -286,20 +293,33 @@ def connect_to_call_pro(request,pid,mid):
 # function called by fresher to know whether the professional has joinde the meeting or not
 @csrf_exempt
 @api_view(['GET'])
-def pro_joined(request,mid,fid):
-    
-    if ProFrehserMeeting.objects.filter(id = mid,fresher__id = fid).count() == 0:
+def pro_joined(request,mid = '',fid = ''):
+
+    meeting  =   ''
+    record_uid = ''
+
+    try:
+        print('Meeting')
+        meeting = ProFrehserMeeting.objects.get(id = mid, fresher__id = fid).meeting_details
+        print('Record')
+        record_uid = RecordingUid.objects.get(meeting = ProFrehserMeeting.objects.get(id = mid, fresher__id = fid))
+
+    except:
+        print('Expception reached ------------')
         return Response(data={'message':'Not valid meeting '}, status = 400)
 
-    meeting = ProFrehserMeeting.objects.get(id = mid, fresher__id = fid).meeting_details
+
     print('Line 274', meeting.pro_joined, not meeting.record_stopped)
+    
+
     if meeting.pro_joined and not meeting.record_stopped :
         # Code to get agora record resource ID
         pro_meeting = ProFrehserMeeting.objects.get(id=mid, fresher__id = fid)
 
         # REST API for calling the resouceID for the recording
 
-        resp = record_resource_id(pro_meeting)
+        resp = record_resource_id(pro_meeting,record_uid)
+
         print('line 274==','got resource id',resp)
 
         if str(resp.status_code) != '200':
@@ -310,6 +330,9 @@ def pro_joined(request,mid,fid):
 
     else:
         return Response(data={'message':'Not yet'})
+
+
+
 
 
 # Function to connect Fresher for video call, 
@@ -435,6 +458,7 @@ def record(request,fid=0,mid=0):
             'mid':  meeting.meeting_status.id,  #MeetingActive table id
             'pfmid': meeting.id, #ProFreshMeeting id ,
             'pro_uid': record_uid.pro_uid,
+            'record_uid':record_uid.record_uid,
             'fresh_uid':record_uid.fresh_uid,
             'skills':meeting.skills.replace("'",'').split(','),
             'meet':meeting,
@@ -514,7 +538,7 @@ def meeting_status(request,aid, mid, pfmid,t = 0): # aid (account id) -> Profess
     
         
     print(data)
-    
+
     return Response(data = data )
 
 
@@ -535,13 +559,13 @@ def video_play(request):
 # Call to get resource ID for Recording Meeting
 # Called when fresher pinged to know the status of Professional joined the meeting or not
 # 
-def record_resource_id(pro_meeting):
+def record_resource_id(pro_meeting,record_uid):
     
     url = "https://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/acquire"
 
     data = { 
     "cname": pro_meeting.channel_name,
-    "uid": '39690211',
+    "uid": record_uid.record_uid,
     "clientRequest":{
     "resourceExpiredHour": 24,
     "scene": 1
@@ -549,7 +573,6 @@ def record_resource_id(pro_meeting):
     }
 
         
-
     headers = {'Content-type': 'application/json;charset=utf-8',
             'Authorization': 'Basic NWYzZWZhMTM4MTY4NDM3MThkMDc0OTI1ZWI3MzBlM2M6YWQ1NTVjODIzYTA3NGZmMGE4NDhiZjY3NjdmMDgwNDY='          
     }
@@ -586,9 +609,6 @@ def meeting_error_email(meeting,resp,message=''):
 def start_record_api(pro_meeting):
         
     # return 
-    
-
-
     url = 'https://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/' + pro_meeting.meeting_details.resource_id + '/mode/web/start'
     
 
@@ -609,7 +629,7 @@ def start_record_api(pro_meeting):
                         "audioProfile":0,
                         "videoWidth":1280,
                         "videoHeight":720,
-                        "maxRecordingHour":2,
+                        "maxRecordingHour":1,
                         "readyTimeout": 60
                 }
             }]
@@ -812,12 +832,57 @@ def meeting_feedback(request,mid=0):
             meeting.save()
 
             return redirect('pro_dashboard')
+           
     print(form.errors.as_text)
     title = 'Feedback'
     return render(request,'dform.html',context={'form':form,'title':title})    #useapp templates signupcopy.html
 
 
 
+@api_view(['GET'])
+def stop_record_api(request, pfmid = 0, channel_name = '', uid = ''):
+
+    pro_meeting = ''
+    record_uid  = ''
+
+    if channel_name == '' or uid == '' or pfmid == 0:
+        raise Http404
+
+    try:
+        print('starting')
+        pro_meeting = ProFrehserMeeting.objects.get(id = pfmid,channel_name = channel_name)
+        print('')
+        record_uid = RecordingUid.objects.get(meeting = pro_meeting)
+
+    except:
+        send_email(User.objects.get(username = 'bunny'),'ClassFly Record End','Record stop command failed , meeting id = {}'.format(pfmid))
+        return Response(data={'message':'error'},status=400)
 
 
+    url = "http://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/" +  pro_meeting.meeting_details.resource_id + "/sid/<sid>/mode/web/stop"
+    
+    data ={
+        "cname": channel_name,
+        "uid": uid, 
+        "clientRequest":
+            {
+            }
+        }
+    
+    
+    headers = {'Content-type': 'application/json;charset=utf-8',
+            'Authorization': 'Basic NWYzZWZhMTM4MTY4NDM3MThkMDc0OTI1ZWI3MzBlM2M6YWQ1NTVjODIzYTA3NGZmMGE4NDhiZjY3NjdmMDgwNDY='          
+    }
+
+    resp = requests.post(url=url,data=json.dumps(data),headers=headers)
+    print(resp.content)
+    if str(resp.status_code) == '200':
+
+        return Response(data={'message':'success'})
+    
+    else:
+
+        send_email(User.objects.get(username = 'bunny'),'ClassFly Record Stop','Record stop command failed , meeting id = {}, Resp_contnet {}'.format(pfmid, str(resp.content)))
+        return Response(data={'message':'error'})
+    
 

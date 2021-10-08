@@ -7,8 +7,9 @@ from fresher.models import ProFrehserMeeting
 # Table to store uid for recording purpose
 class RecordingUid(models.Model):
     meeting         = models.OneToOneField(ProFrehserMeeting, on_delete = models.CASCADE, related_name = 'uids')
-    pro_uid         = models.IntegerField(default=0)
-    fresh_uid       = models.IntegerField(default=0)
+    pro_uid         = models.IntegerField(default = 0)
+    fresh_uid       = models.IntegerField(default = 0)
+    record_uid      = models.IntegerField(default = 0)
 
     def __str__(self):
         return "Meeting {} profUid {} FresherUid {}".format(self.meeting.id, self.pro_uid, self.fresh_uid)

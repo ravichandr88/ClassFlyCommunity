@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="{% static 'recording/Videocall/smarthr-laravel/html-template/light/assets/css/line-awesome.min.css' %}">
 <link rel="stylesheet" href="{% static 'recording/Videocall/smarthr-laravel/html-template/light/assets/css/style.css' %}">
 </head>
-<body>
+<body id='body_div'>
 	<div class="time_stamp">
 		<span class="call-duration" id="demo" style="top: -60px;width: max-content;left: -300px;">Clock</span>
 		
@@ -120,6 +120,8 @@
 		token: '{{token}}'
 	};
 
+	
+
 	//variable for meeting status
 
 	var aid = '{{aid}}'
@@ -127,6 +129,7 @@
 	var pfmid = '{{pfmid}}'
 	var pro_uid = '{{pro_uid}}'
 	var fresh_uid = '{{fresh_uid}}'
+	var record_uid = '{{record_uid}}';
 
 	// console.log(option);
 
