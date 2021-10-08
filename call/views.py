@@ -565,7 +565,7 @@ def record_resource_id(pro_meeting,record_uid):
 
     data = { 
     "cname": pro_meeting.channel_name,
-    "uid": record_uid.record_uid,
+    "uid": str(record_uid.record_uid),
     "clientRequest":{
     "resourceExpiredHour": 24,
     "scene": 1
@@ -578,6 +578,8 @@ def record_resource_id(pro_meeting,record_uid):
     }
 
     resp = requests.post(url=url,data=json.dumps(data),headers=headers)
+
+    print(resp.content)
 
     meeting = pro_meeting.meeting_details
     
