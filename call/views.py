@@ -869,7 +869,7 @@ def stop_record_api(request, pfmid = 0, channel_name = '', uid = ''):
         return Response(data={'message':'error'},status=400)
 
 
-    url = "http://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/" +  pro_meeting.meeting_details.resource_id + "/sid/<sid>/mode/web/stop"
+    url = "http://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/" +  pro_meeting.meeting_details.resource_id + "/sid/" + pro_meeting.meeting_details.sid + "/mode/web/stop"
     
     data ={
         "cname": channel_name,
