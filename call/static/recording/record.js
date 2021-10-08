@@ -410,12 +410,14 @@ setTimeout(meeting_status, check_interval);
 
 
  
-window.fun = function()
-{
-  this.document.getElementById('leave').click();
-  window.location = '/f_dashh';
+// window.fun = function()
+// {
+//   // this.document.getElementById('leave').click();
+
+//   leave();
+//   window.location = '/f_dashh';
   
-}
+// }
 
 
  function tick_tock(time)
