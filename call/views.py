@@ -355,9 +355,17 @@ def connect_to_call_fresh(request, fid, mid, host=''):
         
         pro_meeting.meeting_details.record_start_time = timezone.now() 
         pro_meeting.meeting_details.save()
+        record_uid = ''
+
+        try:
+            record_uid = RecordingUid.objects.get(meeting = pro_meeting)
+        except:
+            send_email(User.objects.get(username='bunny'),'Start Record Eror','No record uid found ')
+
+            return Response(data={'message':'no record uid found'})
 
         if host == 'classfly' :       #varible to activate and deactivate the code while testing
-            resp = start_record_api(pro_meeting)
+            resp = start_record_api(pro_meeting,record_uid)
 
             if str(resp.status_code) != '200':
                 meeting_error_email(pro_meeting,resp)
@@ -608,7 +616,7 @@ def meeting_error_email(meeting,resp,message=''):
         send_mail( subject, message, email_from, recipient_list )
 
 
-def start_record_api(pro_meeting):
+def start_record_api(pro_meeting,record_uid):
         
     # return 
     url = 'https://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/' + pro_meeting.meeting_details.resource_id + '/mode/web/start'
@@ -617,7 +625,7 @@ def start_record_api(pro_meeting):
     
     data = {
     "cname":pro_meeting.channel_name,
-    "uid":'39690211',
+    "uid":str(record_uid.record_uid),
     "clientRequest":{
         "token": "006e73019d92f714c95b9bc47ea63de404cIADVMPOGFws086UlSkWOq1HVa79tc6nmik3Gi15gOgZDVJ3mPXeby/NFIgCCVCMBAGbdYAQAAQCQItxgAgCQItxgAwCQItxgBACQItxg",
         "extensionServiceConfig": {
