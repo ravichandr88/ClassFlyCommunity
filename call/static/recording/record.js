@@ -14,12 +14,6 @@
 
 
 
-//function for agora to know the page is loaded
-function notifyReady() {
-    if (typeof window.navigator.notifyReady === 'function')
-        window.navigator.notifyReady();
-}
-
 
 
  
@@ -462,4 +456,6 @@ var x = setInterval(function() {
 
 
 
-
+$(document).ready(function(){
+  notifyReady();
+})

@@ -129,7 +129,14 @@
 	var fresh_uid = '{{fresh_uid}}'
 
 	// console.log(option);
-		
+
+	//function for agora to know the page is loaded
+	function notifyReady() {
+		console.log('Callllllllllllllllllllllllllllllllllllled')
+		if (typeof window.navigator.notifyReady === 'function')
+			window.navigator.notifyReady();
+	}
+	
 
 
 	</script>
@@ -330,7 +337,10 @@ function update(){
 		chatSocket.onclose = function(e) {
 			// alert('Chatting Disconnected');
             console.error('Chat socket closed unexpectedly');
-        };
+		};
+		
+
+
 </script>
 
 
