@@ -481,7 +481,7 @@ def meeting_status(request,aid, mid, pfmid,t = 0): # aid (account id) -> Profess
         if  timezone.now() > meeting.record_stop_time:
             meeting.record_stopped = True
             meeting.save()
-
+            print('record. meeting stop')
             return Response(data={'message':'stop'})
     except:
         pass
@@ -509,11 +509,11 @@ def meeting_status(request,aid, mid, pfmid,t = 0): # aid (account id) -> Profess
         
 
         time = int((pro_meeting.meeting_details.record_stop_time - timezone.now()).total_seconds())
-        print(time)
+        
         data['time'] = time
     
         
-
+    print(data)
     return Response(data = data )
 
 

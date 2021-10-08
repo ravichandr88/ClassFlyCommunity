@@ -383,8 +383,7 @@ async function meeting_status()
       
       console.log(pro_count, fre_count, rec_count);
 
-      
-      
+          
       // check the chance given, if it is greater than 3, close the window
       if (chance > 5)
       {
