@@ -89,9 +89,14 @@
 <div class="small text-muted">{{meeting.date_time}}</div>
 <a href="chatting/{{meeting.prof.user.id}}_{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
 <a href="/fresher/{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #56f5fc">View Profile</a>
+
 <!-- button to join meeting -->
 <a href="#" class="btn btn-white btn-sm m-t-10" style="background-color: #f5f2b5" id="{{meeting.id}}"></a>
+
+<!-- button to update the meeting -->
+{% if not  meeting.meeting_details.pro_joined %}
 <a href="/fresher/{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" data-toggle="modal" data-target="#add_client" style="background-color: #56f5fc" onclick="update({{meeting.id}})">Update</a>
+{% endif %}
 
 </div>
 </div> 
@@ -142,16 +147,15 @@
 <a href="#" class="avatar"><img alt="" id = 'prof{{meeting.id}}' src="#"></a>
 </div>
 
-
-
 <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.company}}</a></h4>
 <h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.user.first_name}}</a></h5>
 <div class="small text-muted">{{meeting.date_time}}</div>
 <a href="chatting/{{meeting.prof.user.id}}_{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
 <a href="/fresher/{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #56f5fc">View Profile</a>
 <!-- button to join meeting -->
-<a href="#" class="btn btn-white btn-sm m-t-10" data-toggle="modal" data-target="#add_client" id="{{meeting.id}}"> Approve</a>
-<a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_client">Reject</a>
+
+<!-- <a href="#" class="btn btn-white btn-sm m-t-10" data-toggle="modal" data-target="#add_client" id="{{meeting.id}}"> Approve</a> -->
+<!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_client">Reject</a> -->
 
 
 </div>
@@ -315,7 +319,24 @@ var url = "{{i.fresher.profile_pic}}";
 
  fetch(url).then(function(response) {
    response.text().then(function(text)
-    {document.getElementById('prof{{i.id}}').src = text;});});
+    {
+        $("img[id*='prof{{i.id}}']").attr({src:text});
+    });});
+
+'{% endfor %}'
+
+
+'{% for i in done_meetings %}'
+
+var url = "{{i.fresher.profile_pic}}";
+
+console.log('done meetings',url);
+
+ fetch(url).then(function(response) {
+   response.text().then(function(text)
+    {
+        $("img[id*='prof{{i.id}}']").attr({src:text});
+    });});
 
 '{% endfor %}'
 

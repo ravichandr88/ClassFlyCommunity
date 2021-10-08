@@ -294,9 +294,9 @@ var h = 0;
 var interval = 1000;
 var check_interval = 20000;
 
-var pro_count = 0;  // profesional count
-var fre_count = 0;  //fresher return count
-var rec_count = 0;  // recording count
+var pro_count = -1;  // profesional count
+var fre_count = -1;  //fresher return count
+var rec_count = -1;  // recording count
 
 var chance = 0;   //variable to record the chance given to keep up with meeting.,
 // if the chance is gfreater than 3, stop the meeting and recording.
@@ -319,8 +319,14 @@ async function meeting_status()
       }
       else if( rec_count == res.record ) 
       {
+       
         if(JSON.stringify(window.location).split('feedback').slice(0,1)[0].split(':')[2].slice(2,) != 'localhost')
-        chance = chance + 1;
+        {
+          chance = chance + 1;
+          return 
+        }
+        alert('reocrding stopped,');
+        
       }
       else{
         chance = 0;

@@ -97,7 +97,7 @@
 <div class="header">
 <div class="header-left">
 <a href="#" class="logo">
-<img src="{% static 'videocall/smarthr-laravel/html-template/light/assets/img/logo.png' %}" width="40" height="40" alt="">
+<img src="{% static '3.png' %}" width="40" height="40" alt="">
 </a>
 </div>
 <a id="toggle_btn" href="#">
@@ -376,14 +376,16 @@
 <div class="navbar">
 <div class="user-details">
 <div class="float-left user-img">
- <a class="avatar" href="#" title="Mike Litorus">
-<img src="{% static 'videocall/smarthr-laravel/html-template/light/assets/img/profiles/avatar-05.jpg' %}" alt="" class="rounded-circle">
+ <a class="avatar" href="#" title="">
+
+<img src="" alt="" class="rounded-circle" id="pic">
+
 <span class="status online"></span>
 </a>
 </div>
 
 <div class="user-info float-left">
-<a href="{% static 'videocall/smarthr-laravel/html-template/light/profile.html' %}"><span>Mike Litorus</span></a>
+<a href="#"><span>{{oppo_user_name}}</span></a>
 <span class="last-seen">Online</span>
 </div>
 </div>
@@ -469,6 +471,7 @@
 <i class="fa fa-phone phone"></i>Connect
 </a>
 </li>
+<p id="record_status"></p>
 
 
 <!-- 
@@ -502,7 +505,9 @@
 <li class="nav-item"><a class="nav-link active" href="#calls_tab" data-toggle="tab">Topics</a></li>
 
 <li class="nav-item"><a class="nav-link" href="#chats_tab" data-toggle="tab">Chats</a></li>
-<li class="nav-item"><a class="nav-link" href="#profile_tab" data-toggle="tab">Profile</a></li>
+
+<!-- <li class="nav-item"><a class="nav-link" href="#profile_tab" data-toggle="tab">Profile</a></li> -->
+
 </ul>
 </div>
 <div class="tab-content chat-contents">
@@ -573,6 +578,8 @@
 </div>
 </div>
 </div>
+
+<!-- 
 <div class="content-full tab-pane" id="profile_tab">
 <div class="display-table">
 <div class="table-row">
@@ -586,8 +593,8 @@
 <h3 class="user-name m-t-10 mb-0">John Doe</h3>
 <small class="text-muted">Web Designer</small>
 
-</div>
-<div class="chat-profile-info">
+</div> -->
+<!-- <div class="chat-profile-info">
 <ul class="user-det-list">
 <li>
 <span>Username:</span>
@@ -606,7 +613,7 @@
 <span class="float-right text-muted">9876543210</span>
 </li>
 </ul>
-</div>
+</div> -->
 
 <!-- <div>
 <ul class="nav nav-tabs nav-tabs-solid nav-justified mb-0">
@@ -665,11 +672,22 @@
 </div>
 </div> -->
 
+<!-- </div>
 </div>
 </div>
 </div>
 </div>
-</div>
+
+
+ -->
+
+
+
+
+
+
+
+
 </div>
 </div>
 </div>
@@ -1023,6 +1041,14 @@ dashboard.png
     $("img[id*='profpic']").attr({src:prof_image_src});
     
     $("img[id*='fresherpic']").attr({src:fresher_image_src});
+
+    if(user == 'prof')
+    {
+        $("img[id*='pic']").attr({src:prof_image_src});
+    }
+    else{
+        $("img[id*='pic']").attr({src:fresher_image_src});
+    }
     
 
     }); //end of jquery code
@@ -1046,7 +1072,8 @@ dashboard.png
         if('{{meet.prof.user.id}}' == data.user )
         {
         chat_content += '<img alt="" src="' + prof_image_src + '" id="profpic">';
-        }
+        
+    }
         else if('{{meet.fresher.user.id}}' == data.user){
             chat_content += '<img alt="" src="' + fresher_image_src + '" id="profpic">';
         } 

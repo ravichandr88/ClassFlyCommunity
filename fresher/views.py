@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from intervideo.views import hraccount
 from intervideo.models import HRaccount
 from chatt.models import MeetingChat
+from itertools import chain
 
 
 from rest_framework.decorators import api_view
@@ -174,15 +175,18 @@ def pro_dash(request):
     
     # State 3 -> Meeting Done
     # need an empty query list
-    done_meetings       =   ProFrehserMeeting.objects.filter(id=0)
+    done_meetings   =  []
     
     for i in ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = True, rejected = False ,paid= True):
         try:
             if i.meeting_details.record_stopped:
-                done_meetings = done_meetings | i
+                # print('line 182 and good',i)
+                done_meetings.append(i)
+                # print(done_meetings)
         except:
             pass
     
+
     # State 4 -> Rejected
     reject_meetings     =   ProFrehserMeeting.objects.filter(prof__user__username = request.user,approved = False, rejected = True,paid= True)
 
@@ -190,6 +194,7 @@ def pro_dash(request):
     today = timezone.now()
     meetings = approved_meetings | booked_meetings
     # return render(request,'dashboard/dist/dash_pro.html', context = {'meetings':meetings,'self':user,'today':today})
+    
     return render(request,'pro_dash.html', context = {
         'meetings':meetings,
         'approved_meetings':approved_meetings,
@@ -197,6 +202,7 @@ def pro_dash(request):
         'done_meetings':done_meetings,
         'reject_meetings':reject_meetings,
         'self':user,'today':today,
+        'time_zone':timezone.now(),
         'chats': chats(request.user)
         })
 

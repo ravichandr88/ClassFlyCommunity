@@ -792,7 +792,8 @@ def meeting_feedback(request,mid=0):
 
     
     try:
-        if meeting.meeting_details.record_stop_time > timezone.now() + timezone.timedelta(minutes = 40):
+        # if meeting.meeting_details.record_stop_time > timezone.now() + timezone.timedelta(minutes = 40):
+        if len(meeting.feedback) > 3:
             return HttpResponse('You have already submitted the feedback')
     except:
             raise Http404
