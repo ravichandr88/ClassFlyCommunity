@@ -8,7 +8,7 @@ urlpatterns = [
     path('community/v1',views.start),
     path('search_now',views.searchpage),
     path('prologin',views.login_view,name='login_new'),
-    path('prohome',views.homepage, name='pro_home'),
+    # path('prohome',views.homepage, name='pro_home'),
     path('profile',views.profile_card),
     path('project_now',views.project_detail),
     path('prosignup/<str:type>',views.signup),
