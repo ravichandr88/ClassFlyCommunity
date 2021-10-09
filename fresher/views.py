@@ -135,7 +135,7 @@ def pro_dash(request):
 
         meeting.date_time =  timezone.datetime.fromisoformat(data['date'] +' '+ data['time'])
         
-        MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.fresher.id))[0]
+        MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))[0]
 
         # If meeting is not approved, approve it 
         if not meeting.approved:
