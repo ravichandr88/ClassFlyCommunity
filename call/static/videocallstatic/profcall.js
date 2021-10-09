@@ -271,19 +271,23 @@ async function meeting_status()
       {
           chance = chance + 1;
       }
-      else if( pro_count == res.fres)
+      else if( fre_count == res.fres)
       {
         chance = chance + 1;
       }
       else if( rec_count == res.record ) 
       {
-        alert('record stopped, sorry');
-        document.getElementById("record_status").innerHTML = 'Sorry, Record stopped';
+        document.getElementById("record_status").innerHTML = 'Record not yet started or stopped';
         // code to stop videocall moving away for feedback if it is localhost(testing)
         if(JSON.stringify(window.location).split('feedback').slice(0,1)[0].split(':')[2].slice(2,) != 'localhost')
         chance = chance + 1;
       }
       else{
+        chance = 0;
+      }
+
+      if(rec_count == res.record && fre_count == res.fres)
+      {
         chance = 0;
       }
 
