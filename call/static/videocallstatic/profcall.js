@@ -284,6 +284,7 @@ async function meeting_status()
       }
       else{
         chance = 0;
+        document.getElementById("record_status").innerHTML = ''
       }
 
       if(rec_count == res.record && fre_count == res.fres)

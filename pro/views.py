@@ -52,6 +52,20 @@ def start(request):
     return redirect('start')
 
 def startpage(request):
+
+    if request.user is  not 'AnonymousUser':
+
+        if Prfessional.objects.filter(user__username = request.user).count() == 1:
+            return redirect('pro_dashboard')
+        
+        elif Fresher.objects.filter(user__username = request.user).count() == 1:
+            return redirect('f_dashboard')
+        
+        elif HRaccount.objects.filter(user__username = request.user).count() == 1:
+            return redirect('hrdashboard')
+        
+        
+
     return render(request,'startpage.html',context={})
 
 
