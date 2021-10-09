@@ -4,7 +4,7 @@ from . import views
  
 
 urlpatterns = [
-
+    path('prohome',views.video_player, name='pro_home'),# just a new url for classfly videos player page
     path('player_now/<int:pfmid>',views.video_player),
     path('player_now',views.video_player),
     path('hr_dash/<int:id>',views.hr_dashboard),
