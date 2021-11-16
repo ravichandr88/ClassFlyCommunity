@@ -178,9 +178,9 @@ window.setInterval(update, 1000);
 function update(){
   // setInterval(update, 1000);
   id = skills.length - parseInt(total_seconds / 600 ) - 1;
-  total_seconds -= 1;
+//   total_seconds -= 1;
   if (total_seconds > 0){
-    // total_seconds = total_seconds-1;
+    total_seconds = total_seconds-1;
     minutes = parseInt( ( total_seconds - (skills.length-id - 1) * 600) / 60, 10);  
     seconds = parseInt(( total_seconds - (skills.length-id - 1) * 600) % 60, 10);  
 	
@@ -191,7 +191,7 @@ function update(){
     time = minutes + ":" + seconds ;  
     document.getElementById("skill"+id).innerHTML = skills[id] + ":"+time;
 	console.log('id',id,'pastid',past_id);
-	console.log('before',tmp); 
+	console.log('before',seconds); 
 	
     if(id > 0 && id != past_id){
 	

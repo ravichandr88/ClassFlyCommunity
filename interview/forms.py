@@ -51,7 +51,7 @@ class StudentForm(BootstrapModelForm):
     master_passout = forms.CharField(label='Master Degree Passout Year', required = False ,widget=forms.TextInput(attrs={'min':2016,'max': 2030,'type': 'number'}))
     about_yourself = forms.CharField(required=False,max_length=500, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'id':"exampleFormControlTextarea1"}))
     city           = forms.CharField(label='Current Living Place',max_length = 50, required = True)
-    total_experience = forms.CharField(label='Experience in Months', widget=forms.TextInput(attrs={'min':2,'max': 48,'type': 'number'}))
+    total_experience = forms.CharField(label='Experience in Months', widget=forms.TextInput(attrs={'min':0,'max': 48,'type': 'number'}))
     about_yourself = forms.CharField(required=False,max_length=500, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'id':"exampleFormControlTextarea1"}))
     exp_company_1 = forms.CharField(max_length=80, required=False)
     exp_work_1 = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Technologies used and project done."}))

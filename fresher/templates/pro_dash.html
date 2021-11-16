@@ -77,6 +77,7 @@
 <div class="profile-img">
 <a href="#" class="avatar"><img alt="" id = 'prof{{meeting.id}}' src="#"></a>
 </div>
+
 <!-- <div class="dropdown profile-action">
 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 <div class="dropdown-menu dropdown-menu-right">
@@ -84,8 +85,8 @@
 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_client"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
 </div>
 </div> -->
-<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.company}}</a></h4>
-<h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.user.first_name}}</a></h5>
+<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.designation}}</a></h4>
+<h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.fresher.user.first_name}}</a></h5>
 <div class="small text-muted">{{meeting.date_time}}</div>
 <a href="chatting/{{meeting.prof.user.id}}_{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
 <a href="/fresher/{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #56f5fc">View Profile</a>
@@ -116,7 +117,7 @@
 <a href="#" class="avatar"><img alt="" id = 'prof{{meeting.id}}' src="#"></a>
 </div>
 
-
+ 
 <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.company}}</a></h4>
 <h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.user.first_name}}</a></h5>
 <div class="small text-muted">{{meeting.date_time}}</div>
