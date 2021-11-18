@@ -203,7 +203,7 @@ def resumeview(request, edit = 0):
 @usertype
 def prosignup(request, edit = 0):
     # edit = 1, refers to update of the curent data, edit = 0 means it is filling a new one
-    request.session['type'] == 'company'
+    request.session['type'] = 'company'
 
     #special input field for adding skills
     skills = """
@@ -495,7 +495,7 @@ def company_singup(request, edit = 0):
         raise Http404
 
     
-    request.session['type'] == 'company'
+    request.session['type'] = 'company'
     form = CompanyForm()
     
     
