@@ -88,7 +88,7 @@ class ProExperience(models.Model):
     pro = models.ForeignKey(Prfessional, on_delete = models.CASCADE, related_name='experience')
     company = models.CharField(max_length = 80)
     designation = models.CharField(max_length = 80)
-    project = models.CharField(max_length = 60)
+    project = models.CharField(max_length = 500)
     cfrom = models.CharField(max_length = 20)
     cto = models.CharField(max_length = 20)
 

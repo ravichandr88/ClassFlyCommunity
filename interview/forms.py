@@ -138,7 +138,7 @@ RELEVANCE_CHOICES=(
 class Experienc(BootstrapModelForm): 
     company = forms.CharField(max_length=60)
     designation = forms.CharField(max_length=60)
-    project = forms.CharField(widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Work details"}))
+    project = forms.CharField(widget=forms.Textarea(attrs={'rows': 5,'class' : 'form-control','style':"color: #666666;background: #e6e6e6;",'placeholder':"Work details","maxlength":"500"}))
     from_Month =  forms.ChoiceField(choices = RELEVANCE_CHOICES)
     from_Year = forms.CharField(label='From Year', widget=forms.TextInput(attrs={'min':2000,'max': 2022,'type': 'number'}))
     to_Month =  forms.ChoiceField(choices = RELEVANCE_CHOICES)
