@@ -93,19 +93,21 @@ class LoginForm(BootstrapModelForm):
             # print('entered')
             if User.objects.filter(username=phone_number).count() != 0:
                 user = User.objects.get(username=phone_number) 
-            
+                
             elif Phonenumber.objects.filter(phone_number = phone_number).count() != 0:
                 user = Phonenumber.objects.get(phone_number = phone_number).user
-                
+
+            elif User.objects.filter(email=phone_number).count() !=0
+                user = User.objects.get(email=phone_number)
 
             else:
-                User.objects.get(username=phone_number)
+                self.add_error('phone_number', 'Username/Phone Number/Email not found')
 
 
 
             # print(user,'---------')
         except:
-            self.add_error('phone_number', 'Phone Number not found')
+            self.add_error('phone_number', 'Username/Phone Number/Email not found')
             # print(user,'---------')
              
             # raise forms.ValidationError("Please correct the errors below.")
@@ -117,7 +119,7 @@ class LoginForm(BootstrapModelForm):
             print('redirected for phone otp')
             self.phone_redirect = True
 
-        elif  user.email == '': 
+        elif  user user.email == '': 
             self.add_error('phone_number', 'Email OTP not confirmed')
             print('redirected for email')
             self.email_redirect = True
