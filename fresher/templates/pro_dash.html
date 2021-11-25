@@ -118,8 +118,8 @@
 </div>
 
  
-<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.company}}</a></h4>
-<h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.prof.user.first_name}}</a></h5>
+<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.designation}}</a></h4>
+<h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="#">{{meeting.fresher.user.first_name}}</a></h5>
 <div class="small text-muted">{{meeting.date_time}}</div>
 <a href="chatting/{{meeting.prof.user.id}}_{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #fac04d">Message</a>
 <a href="/fresher/{{meeting.fresher.user.id}}" class="btn btn-white btn-sm m-t-10" style="background-color: #56f5fc">View Profile</a>
@@ -239,7 +239,7 @@
         <center> Please message the respective applicant before approving the meeting.
             If you are not comfortable with timings,<u style="color: red"> You can change and approve. </u>
         <h4>Skills:</h4>
-        <p><u style="color:blue">Java, Skills, God , Not god</u></p>
+        <p><u style="color:blue" id="skill"></u></p>
         <h4>Date & Timing</h4>
         <h3 id="datetime"></h3>
     </center>
@@ -398,7 +398,7 @@ var reject_id = 0;
 var booking_timings = {
     // Code to show approve button for the professional, these meeting consist of aprroved and pending meetings only
    {% for i in meetings %}
-    '{{i.id}}':['{{i.date_time.year}}-{{i.date_time.month}}-{{i.date_time.day}}','{{i.date_time.time}}','{{i.date_time}}'],
+    '{{i.id}}':['{{i.date_time.year}}-{{i.date_time.month}}-{{i.date_time.day}}','{{i.date_time.time}}','{{i.date_time}}','{{i.skills}}'],
    {% endfor %}
     }
     //      
@@ -439,6 +439,7 @@ else{
 document.getElementById("datetime").innerHTML = booking_timings[id][2];
 document.getElementById('time_input').value = t;
 document.getElementById('meeting_id').value = id;
+document.getElementById('skill').innerHTML = booking_timings[id][3];
 }
 
 // <!-- end of code for handle input of  update timeings -->
