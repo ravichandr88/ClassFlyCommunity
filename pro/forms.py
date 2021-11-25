@@ -97,7 +97,7 @@ class LoginForm(BootstrapModelForm):
             elif Phonenumber.objects.filter(phone_number = phone_number).count() != 0:
                 user = Phonenumber.objects.get(phone_number = phone_number).user
 
-            elif User.objects.filter(email=phone_number).count() !=0
+            elif User.objects.filter(email=phone_number).count() !=0:
                 user = User.objects.get(email=phone_number)
 
             else:
@@ -119,7 +119,7 @@ class LoginForm(BootstrapModelForm):
             print('redirected for phone otp')
             self.phone_redirect = True
 
-        elif  user user.email == '': 
+        elif  user is not None and user.email == '': 
             self.add_error('phone_number', 'Email OTP not confirmed')
             print('redirected for email')
             self.email_redirect = True
