@@ -197,9 +197,15 @@ def videocall(request):
     currentTimestamp = int(time.time())
     privilegeExpiredTs = currentTimestamp + expireTimeInSeconds
     uid = random.randrange(22222222,99999999)
+    record_uid = ''
     
     # Prepare object for recording, 
-    record_uid = RecordingUid.objects.get(meeting = meeting) if RecordingUid.objects.filter(meeting = meeting).count() == 1 else RecordingUid(pro_uid = int(str(uid) + str(meeting.prof.id))%10000000, fresh_uid = int(str(uid) + str(meeting.fresher.id))%10000000, meeting = meeting, record_uid =  int(str(uid) + str(meeting.id))%10000000)
+    if RecordingUid.objects.filter(meeting = meeting).count() == 0:
+         record_uid = RecordingUid(pro_uid = int(str(uid) + str(meeting.prof.id))%10000000, fresh_uid = int(str(uid) + str(meeting.fresher.id))%10000000, meeting = meeting, record_uid =  int(str(uid) + str(meeting.id))%10000000)
+        
+    else:
+        record_uid = RecordingUid.objects.get(meeting = meeting)
+
     record_uid.save()
 
     #Code to create chatting object for interview
@@ -349,6 +355,7 @@ def connect_to_call_fresh(request, fid, mid, host=''):
     meeting = pro_meeting.meeting_details
 
 
+
     # End of code for the REST API resourceID code
     
     if meeting.pro_joined and not meeting.record_stopped:
@@ -365,12 +372,15 @@ def connect_to_call_fresh(request, fid, mid, host=''):
             return Response(data={'message':'no record uid found'})
 
         if host == 'classfly' :       #varible to activate and deactivate the code while testing
+            if meeting.record_started == True:
+                resp = stop_record(pro_meeting)
+
             resp = start_record_api(pro_meeting,record_uid)
 
             if str(resp.status_code) != '200':
                 meeting_error_email(pro_meeting,resp)
                 return Response(data={'message':resp.json()['reason']})
-            
+
             # Before we start the meeting, save the record start time and fix the end time too.
             
         try:
@@ -447,7 +457,7 @@ def record(request,fid=0,mid=0):
     appID = "e73019d92f714c95b9bc47ea63de404c"
     appCertificate = "ed36762fba3f4e42acaf99c6265ec4c3"
     channelName = meeting.channel_name
-    uid = random.randrange(10000000,20000000)
+    # uid = random.randrange(10000000,20000000)
     # userAccount = str(uid)
     expireTimeInSeconds = 3600
     currentTimestamp = int(time.time())
@@ -455,13 +465,13 @@ def record(request,fid=0,mid=0):
 
     meetchat = MeetingChat.objects.get_or_create(meeting = meeting,channel_name = str(meeting.prof.id) + '_' + str(meeting.fresher.id) + '_' + str(meeting.id))[0]
 
-    token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, uid, Role_Attendee, privilegeExpiredTs)
+    token = RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channelName, record_uid.record_uid, Role_Attendee, privilegeExpiredTs)
 
     data = {
             'token' : token,
             'appid': appID,
             'channel': channelName,
-            'uid': uid,
+            'uid': record_uid.record_uid,
             'aid':  'r',
             'mid':  meeting.meeting_status.id,  #MeetingActive table id
             'pfmid': meeting.id, #ProFreshMeeting id ,
@@ -868,24 +878,10 @@ def stop_record_api(request, pfmid = 0, channel_name = '', uid = ''):
         send_email(User.objects.get(username = 'bunny'),'ClassFly Record End','Record stop command failed , meeting id = {}'.format(pfmid))
         return Response(data={'message':'error'},status=400)
 
-
-    url = "http://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/" +  pro_meeting.meeting_details.resource_id + "/sid/" + pro_meeting.meeting_details.sid + "/mode/web/stop"
-    
-    data ={
-        "cname": channel_name,
-        "uid": uid, 
-        "clientRequest":
-            {
-            }
-        }
-    
-    
-    headers = {'Content-type': 'application/json;charset=utf-8',
-            'Authorization': 'Basic NWYzZWZhMTM4MTY4NDM3MThkMDc0OTI1ZWI3MzBlM2M6YWQ1NTVjODIzYTA3NGZmMGE4NDhiZjY3NjdmMDgwNDY='          
-    }
-
-    resp = requests.post(url=url,data=json.dumps(data),headers=headers)
+    # rest api code
+    resp = stop_record(pro_meeting)
     print(resp.content)
+
     if str(resp.status_code) == '200':
 
         return Response(data={'message':'success'})
@@ -896,3 +892,23 @@ def stop_record_api(request, pfmid = 0, channel_name = '', uid = ''):
         return Response(data={'message':'error'})
     
 
+# def REST API
+def stop_record(pro_meeting):
+    
+    url = "http://api.agora.io/v1/apps/e73019d92f714c95b9bc47ea63de404c/cloud_recording/resourceid/" +  pro_meeting.meeting_details.resource_id + "/sid/" + pro_meeting.meeting_details.sid + "/mode/web/stop"
+    
+    record = RecordingUid.objects.get(meeting = pro_meeting)
+
+    data ={
+        "cname": pro_meeting.channel_name,
+        "uid": record.record_uid, 
+        "clientRequest":
+            {
+            }
+        }
+        
+    headers = {'Content-type': 'application/json;charset=utf-8',
+            'Authorization': 'Basic NWYzZWZhMTM4MTY4NDM3MThkMDc0OTI1ZWI3MzBlM2M6YWQ1NTVjODIzYTA3NGZmMGE4NDhiZjY3NjdmMDgwNDY='          
+    }
+
+    return requests.post(url=url,data=json.dumps(data),headers=headers)

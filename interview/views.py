@@ -758,3 +758,7 @@ def hr_waiting(request):
 
 
 
+'''
+laws for professionals to take interviews
+
+'''
