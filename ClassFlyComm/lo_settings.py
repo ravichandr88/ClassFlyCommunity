@@ -213,7 +213,7 @@ DATETIME_FORMAT="%Y-%m-%d %H:%M:%S"
 
 from django.urls import reverse_lazy
 
-LOGIN_URL =  reverse_lazy('login')
+LOGIN_URL =  reverse_lazy('prologin')
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 

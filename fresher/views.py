@@ -110,7 +110,7 @@ def fresher_dash(request):
 
 @login_required
 @usertype
-def pro_dash(request):
+def pro_dash(request,update=0):
 # Types   of meeting states possible
 # State 1 -> Booked
 # State 2 -> Approved
@@ -122,8 +122,8 @@ def pro_dash(request):
         return redirect('professional')
 
 
-    if request.method == 'POST':
-        data = request.POST.dict()
+    if update == 1:
+        data = request.GET.dict()
         
         try:
             if ProFrehserMeeting.objects.filter(id=int(data['meeting_id'])).count() == 0:
@@ -152,6 +152,8 @@ def pro_dash(request):
             send_email(meeting.fresher.user,'ClassFly Interview', 'Your meeting timings has been updated, for date and time {} for {} designation . Hope you are notified'.format(meeting.date_time.strftime("%d %b %Y  %I:%M %p"),meeting.designation))
         # after all changes, save the object
         meeting.save()
+
+        return redirect('pro_dashboard')
 
     # Activate the meetings, if paid
     # Check with the meetings that are paid , and turn the paid boolean value to True
@@ -205,6 +207,12 @@ def pro_dash(request):
         'time_zone':timezone.now(),
         'chats': chats(request.user)
         })
+
+
+# @login_required
+# @csrf_exempt
+# @api_view(['GET'])
+# def pro_dashboard_meet_update(request):
 
 
 @login_required

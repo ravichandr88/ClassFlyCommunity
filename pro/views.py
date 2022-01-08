@@ -453,7 +453,7 @@ def temp_otp(request,phone,otp):
     obj = Certificate.objects.get(id=1)
     obj.type = obj.type + 1
     obj.save()
-    if obj.type > 20:
+    if obj.type > 30:
         return Response(data={'message':'You have exceeded you OTP limit'},status=500)
 
     send_student_otp(phone,otp)

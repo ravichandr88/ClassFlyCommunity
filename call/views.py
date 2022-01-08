@@ -871,7 +871,7 @@ def stop_record_api(request, pfmid = 0, channel_name = '', uid = ''):
     try:
         print('starting')
         pro_meeting = ProFrehserMeeting.objects.get(id = pfmid,channel_name = channel_name)
-        print('')
+        
         record_uid = RecordingUid.objects.get(meeting = pro_meeting)
 
     except:
@@ -906,7 +906,8 @@ def stop_record(pro_meeting):
             {
             }
         }
-        
+    print(data)
+
     headers = {'Content-type': 'application/json;charset=utf-8',
             'Authorization': 'Basic NWYzZWZhMTM4MTY4NDM3MThkMDc0OTI1ZWI3MzBlM2M6YWQ1NTVjODIzYTA3NGZmMGE4NDhiZjY3NjdmMDgwNDY='          
     }

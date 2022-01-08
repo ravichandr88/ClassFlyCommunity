@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
- 
+
 urlpatterns = [
     path('searchpage',views.search_professional, name='pro_search'),
     path('searchpage/<int:page>',views.search_professional, name='pro_search'), 
@@ -8,6 +8,7 @@ urlpatterns = [
     path('pro/<int:pro>',views.pro_profile), 
     path('book/<str:prof>',views.book_interview),
     path('pro_dashboard', views.pro_dash ,name = 'pro_dashboard'),
+    path('pro_dashboard/<int:update>', views.pro_dash ,name = 'pro_dashboard'),  #url to update the status of the meeting
     path('fresher/<int:fre>',views.fresher_profile),
     path('reject/<int:mid>',views.reject_meeting),
     path('chat_now/<int:fid>',views.hr_fresher_chat),

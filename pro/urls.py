@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from . import projects
  
+ 
 
 urlpatterns = [
     path('startpage',views.startpage, name='start'),
