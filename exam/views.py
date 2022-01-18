@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from .validation import user_validation
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import redirect
 import random
 import string
@@ -257,6 +258,44 @@ def regsiter_individually(request,id,exid):
             return HttpResponse('Successfully Added {} to {}'.format(user.username,exam.name))
     else:
         return HttpResponse('Wrong Method used')
+
+@login_required
+def register_for_exam_ui(request,uid=0):
+    if request.method == 'GET':
+        if uid != 0:
+            # verify user id
+            subjects = ExamSubject.objects.all()
+            return HttpResponse('Successfully registerd')
+        else:
+            return render(request,'examregister.html',context={'subjects':[]})
+    elif request.method == 'POST':
+        data = request.POST.dict()
+        print(data)
+        if 'email' in data.keys() :
+            if data['email'] == '' and data['phone'] == '':
+                return HttpResponse('Please enter phone or email')
+            # return render(request,'examregister.html',context={'subjects':[]})
+            users = []
+            if data['email'] != '':
+                users = User.objects.filter(email=data['email'])
+            elif data['phone'] != '':
+                users = User.objects.filter(username=data['phone'])
+            print(users)
+            if len(users) == 0:
+                return HttpResponse('No user found')
+            else:
+                subjects = ExamSubject.objects.all()
+                return render(request,'examregister.html',context={'subjects':subjects,'user':users[0]})
+        else:
+            data = request.POST.dict()
+            del data['csrfmiddlewaretoken']
+            user = User.objects.get(id=uid)
+            for exam_subject_id in data:
+                exam = ExamSubject.objects.get(id=exam_subject_id)
+                ExamUser(user=user,subject=exam).save()
+            return redirect('examregister')
+    return HttpResponse('Nothing happned') 
+
 
 #Saves the questions from the computer
 @csrf_exempt

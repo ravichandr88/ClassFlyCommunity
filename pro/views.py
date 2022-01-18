@@ -91,7 +91,7 @@ def signup(request,type="student"):
 
     # Signup candidate type of registration, -> student,proessional,company
     request.session['type'] = type
-
+ 
     
     if request.method == 'POST':
 # check if the username exists and not activated, dele the user account

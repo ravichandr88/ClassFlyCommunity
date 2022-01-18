@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>ClassFly</title>
+    </head>
+    <body>
+        Register for ClassFly Exam
+
+<input type="text" placeholder="PhoneNumber/Email">
+<button>Check</button>
+        
+<form action="" method="POST">
+    {% for subject in subjects %}
+    <input type="checkbox" id="ele{{subject.id}}" name="{{subject.id}}" value="{{subject.id}}">
+    <label for="{{subject.id}}"> {{subject.name}}</label><br>
+    {% endfor %}
+
+    <input type="submit" value="Submit">
+  </form>
+    </body>
+</html>

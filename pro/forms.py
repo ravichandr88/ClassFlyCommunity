@@ -59,7 +59,7 @@ class SignupForm( UserCreationForm , BootstrapModelForm):
         fields = ['username','first_name','password1','password2']
         icons = {'password1': 'fa fa-lock','username':'fa fa-mobile','password2':'fa fa-lock','first_name':'fa fa-user'}
         place_holder = {'password1':'Min 8 characters','username':'Phone Number','password2':'Re-Enter Password'}
-    
+     
     class Media:
         js = ('login/js/signup.js',)
 # name = forms.CharField(max_length=30,widget=forms.TextInput(attrs={'class' : 'input100'}),required=True,help_text='Your name')

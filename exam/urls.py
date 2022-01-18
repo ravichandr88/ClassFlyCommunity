@@ -15,6 +15,8 @@ path('question/<int:qid>',views.question),  #question to answer
 path('answer/<int:qid>/<int:exuid>/<slug:ans>',views.answer),
 path('certificate/<str:id>',views.certificate), 
 path('budget',views.budget),
-path('pathway/solo/<int:id>/<int:exid>',views.regsiter_individually)
+path('pathway/solo/<int:id>/<int:exid>',views.regsiter_individually),
+path('register/exam',views.register_for_exam_ui,name='examregister'),
+path('register/exam/<int:uid>',views.register_for_exam_ui)
 
 ]
